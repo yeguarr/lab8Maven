@@ -1,0 +1,7 @@
+switcher.noCommand
+register.invalid.user
+login.invalid.user
+invalid.user
+empty
+success
+failure
