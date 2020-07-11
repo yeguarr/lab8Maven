@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 
+import static program.Client.SendCommand;
+
 public class LoginWindow {
     JButton registerButton;
     JFrame frame;
@@ -54,14 +56,11 @@ public class LoginWindow {
         panel.add(loginButton);
         loginButton.addActionListener(actionEvent -> {
             try {
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
                 MainClient.user = new User(usernameText.getText(), new String(passwordText.getPassword()));
                 Command command = new Command(MainClient.user, Commands.LOGIN);
-                objectOutputStream.writeObject(command);
-                objectOutputStream.flush();
-                ByteBuffer bb = ByteBuffer.wrap(byteArrayOutputStream.toByteArray());
-                Client.messages.add(bb);
+
+                SendCommand(command);
+
                 ProgramWindow obj = new ProgramWindow();
                 obj.display();
                 frame.dispose();
@@ -78,7 +77,6 @@ public class LoginWindow {
 
         frame.setVisible(true);
     }
-
 
     public class RegisterButton implements ActionListener{
         @Override

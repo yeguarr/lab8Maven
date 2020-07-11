@@ -56,6 +56,19 @@ public class Route implements Comparable<Route>, Serializable {
                 ", distance=" + distance +
                 '\n';
     }
+    public Route() {
+        this.creationDate = ZonedDateTime.now();
+    }
+
+    public Route(Integer id, String name, Coordinates coordinates, Location from, Location to, Long distance) {
+        this.id = id;
+        this.name = name;
+        this.coordinates = coordinates;
+        this.creationDate = ZonedDateTime.now();
+        this.from = from;
+        this.to = to;
+        this.distance = distance;
+    }
 
     public Integer getId() {
         return id;

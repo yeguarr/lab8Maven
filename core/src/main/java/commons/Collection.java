@@ -40,20 +40,6 @@ public class Collection implements Serializable {
         }
         return false;
     }
-
-    /**
-     * Метод, осуществляющий поиск элемента по id
-     */
-    public Route searchById(Integer id) {
-        for (User user: map.keySet()) {
-            for (Route r : map.get(user)) {
-                if (r.getId().equals(id))
-                    return r;
-            }
-        }
-        return null;
-    }
-
     public Date getDate() {
         return date;
     }

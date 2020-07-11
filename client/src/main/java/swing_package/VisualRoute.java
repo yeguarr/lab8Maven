@@ -1,5 +1,7 @@
 package swing_package;
 
+import commons.Route;
+
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
@@ -15,8 +17,16 @@ public class VisualRoute {
     PointPack current;
     PointPack desired;
     double a = 0;
+    boolean dying = false;
+    public Route route;
 
-    public VisualRoute(PointPack old, PointPack desired, Color c) {
+    public Route getRoute() {
+        return route;
+    }
+
+
+    public VisualRoute(PointPack old, PointPack desired, Route route, Color c) {
+        this.route = route;
         this.c = c;
         this.old = old;
         this.current = new PointPack(old);
@@ -26,7 +36,8 @@ public class VisualRoute {
         q.setCurve(current.first, current.second, current.third);
     }
 
-    public VisualRoute(PointPack desired, Color c) {
+    public VisualRoute(Route route, Color c) {
+        this.route = route;
         this.c = c;
         Point2D first = new Point2D.Double();
         first.setLocation(0, 0);
@@ -38,16 +49,32 @@ public class VisualRoute {
         radius.setLocation(0, 0);
         this.old = new PointPack(first, second, third, radius);
         this.current = new PointPack(old);
-        this.desired = desired;
+        this.desired = PointPack.createPointPack(route);
         el1.setFrameFromCenter(current.first.getX(), current.first.getY(), current.first.getX() + current.radius.getX(), current.first.getY() - current.radius.getX());
         el2.setFrameFromCenter(current.third.getX(), current.third.getY(), current.third.getX() + current.radius.getY(), current.third.getY() - current.radius.getY());
         q.setCurve(current.first, current.second, current.third);
     }
 
-    public void setDesired(PointPack desired) {
+    public void kill() {
+        Point2D first = new Point2D.Double();
+        first.setLocation(0, 0);
+        Point2D second = new Point2D.Double();
+        second.setLocation(0, 0);
+        Point2D third = new Point2D.Double();
+        third.setLocation(0, 0);
+        Point2D radius = new Point2D.Double();
+        radius.setLocation(0, 0);
+        dying = true;
         a = 0.0;
         this.old = new PointPack(this.current);
-        this.desired = desired;
+        this.desired =  new PointPack(first, second, third, radius);
+    }
+
+    public void setDesired(Route route) {
+        a = 0.0;
+        this.route = route;
+        this.old = new PointPack(this.current);
+        this.desired = PointPack.createPointPack(route);
     }
 
     public boolean update() {
@@ -61,6 +88,12 @@ public class VisualRoute {
             return true;
         }
         return false;
+    }
+
+    public boolean isTouching(double X, double Y) {
+        if (((current.first.getX()- X)*(current.first.getX() - X)+(current.first.getY() - Y)*(current.first.getY() - Y) - current.radius.getX()*current.radius.getX() < 0.0))
+            return true;
+        else return (((current.third.getX()- X)*(current.third.getX() - X)+(current.third.getY() - Y)*(current.third.getY() - Y) - current.radius.getY()*current.radius.getY() < 0.0));
     }
 
     public void updateComponents(double dX, double dY, double scale, double scaleCount, int grid) {
@@ -109,6 +142,46 @@ public class VisualRoute {
                     second.equals(pointPack.second) &&
                     third.equals(pointPack.third) &&
                     Objects.equals(radius, pointPack.radius);
+        }
+
+        public static PointPack createPointPack(Route route) {
+            if (route.getFrom() != null) {
+                double x1 = route.getFrom().getX();
+                double y1 = route.getFrom().getY();
+                double r1 = Math.log(Math.abs((double) route.getFrom().getZ()) + 1);
+                double x3 = route.getTo().getX();
+                double y3 = route.getTo().getY();
+                double r2 = Math.log(Math.abs((double) route.getTo().getZ()) + 1);
+                double x2 = route.getCoordinates().getX();
+                double y2 = route.getCoordinates().getY();
+                Point2D first = new Point2D.Double();
+                first.setLocation(x1, y1);
+                Point2D second = new Point2D.Double();
+                second.setLocation(x2, y2);
+                Point2D third = new Point2D.Double();
+                third.setLocation(x3, y3);
+                Point2D radius = new Point2D.Double();
+                radius.setLocation(r1, r2);
+                return new VisualRoute.PointPack(first, second, third, radius);
+            } else {
+                double x1 = route.getTo().getX();
+                double y1 = route.getTo().getY();
+                double r1 = 0.0;
+                double x3 = route.getTo().getX();
+                double y3 = route.getTo().getY();
+                double r2 = Math.log(Math.abs((double) route.getTo().getZ()) + 1);
+                double x2 = route.getTo().getX();
+                double y2 = route.getTo().getY();
+                Point2D first = new Point2D.Double();
+                first.setLocation(x1, y1);
+                Point2D second = new Point2D.Double();
+                second.setLocation(x2, y2);
+                Point2D third = new Point2D.Double();
+                third.setLocation(x3, y3);
+                Point2D radius = new Point2D.Double();
+                radius.setLocation(r1, r2);
+                return new PointPack(first, second, third, radius);
+            }
         }
 
         @Override

@@ -2,178 +2,160 @@ package program;
 
 import command.*;
 import commons.*;
-import exceptions.EndOfFileException;
-import exceptions.FailedCheckException;
+import swing_package.AlarmWindow;
 
-import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
  * Класс - обработчик команд с консоли
  */
 
 public class CommanderClient {
-
-    /**
-     * Обработка команд, вводимых с консоли
-     */
-    public static Command switcher(User user, String s1, String s2) throws EndOfFileException {
-        switch (s1) {
-            case ("help"):
-                return new Command(user, Commands.HELP);
-            case ("info"):
-                return new Command(user, Commands.INFO);
-            case ("show"):
-                return new Command(user, Commands.SHOW);
-            case ("add"):
-                return add(user, s2);
-            case ("update"):
-                return update(user, s2);
-            case ("remove_by_id"):
-                return removeById(user, s2);
-            case ("clear"):
-                return new Command(user,Commands.CLEAR);
-            case ("execute_script"):
-                return new ExecuteScript(user, s2);
-            case ("exit"):
-                return new Command(user, Commands.EXIT);
-            case ("add_if_min"):
-                return addIfMin(user, s2);
-            case ("remove_greater"):
-                return removeGreater(user, s2);
-            case ("remove_lower"):
-                return removeLower(user, s2);
-            case ("average_of_distance"):
-                return new Command(user, Commands.AVERAGE_OF_DISTANCE);
-            case ("min_by_creation_date"):
-                return new Command(user, Commands.MIN_BY_CREATION_DATE);
-            case ("print_field_ascending_distance"):
-                return new Command(user, Commands.PRINT_FIELD_ASCENDING_DISTANCE);
-            case("login"):
-                return login(user);
-            case("register"):
-                return register(user);
+    public static void switcher(Command com, Collection c) {
+        switch (com.getCurrent()) {
+            case ADD://да
+                 add(c, com);
+                 return;
+            case UPDATE://да
+                 update(c, com);
+                 return;
+            case REMOVE_BY_ID://да
+                 removeById(c, com);
+                 return;
+            case CLEAR://да
+                 clear(c, com);
+                 return;
+            case ADD_IF_MIN://да
+                 addIfMin(c, com);
+                 return;
+            case REMOVE_GREATER://да
+                 removeGreater(c, com);
+                 return;
+            case REMOVE_LOWER://да
+                 removeLower(c, com);
+                 return;
+            case INFO: {
+                AlarmWindow obj = new AlarmWindow();
+                obj.display("INFO", ((Info) com).returnObj());
+                break;
+            }
+            case ERROR: {
+                AlarmWindow obj = new AlarmWindow();
+                obj.display("ERROR", ((ErrorCommand) com).returnObj());
+                break;
+            }
+            case SHOW: {
+                MainClient.collection = ((Show) com).returnObj();
+                break;
+            }
             default:
                 Writer.writeln("Такой команды нет");
         }
-        return null;
-    }
-
-    private static Command register(User user) throws EndOfFileException {
-        String login = Console.handlerS("Введите логин: ", Utils.loginCheck);
-        String password = Console.handlerS("Введите пароль: ", Utils.passwordCheck);
-        user.changeUser(login, password);
-        return new Command(user, Commands.REGISTER);
-    }
-
-    private static Command login(User user) throws EndOfFileException {
-        String login = Console.handlerS("Введите логин: ", Utils.loginCheck);
-        String password = Console.handlerS("Введите пароль: ", Utils.passwordCheck);
-        user.changeUser(login, password);
-        return new Command(user, Commands.LOGIN);
     }
 
     /**
      * Удаляет все элементы коллекции, которые меньше чем заданный
      */
-    public static Command removeLower(User user, String s) throws EndOfFileException {
-        Route newRoute = toAddWithoutId(s);
-        return new CommandWithObj(user, Commands.REMOVE_LOWER, newRoute);
+    public static void removeLower(Collection c, Command com) {
+        Route newRoute = (Route) com.returnObj();
+        List<Route> list = properUser(com.getUser(), c);
+        if (list != null) {
+            list.removeIf(route -> route.compareTo(newRoute) < 0);
+        }
     }
 
     /**
      * Удаляет все элементы коллекции, которые больше чем заданный
      */
-    public static Command removeGreater(User user, String s) throws EndOfFileException {
-        Route newRoute = toAddWithoutId(s);
-        return new CommandWithObj(user, Commands.REMOVE_GREATER, newRoute);
+    public static void removeGreater(Collection c, Command com) {
+        Route newRoute = (Route) com.returnObj();
+        List<Route> list = properUser(com.getUser(), c);
+        if (list != null) {
+            list.removeIf(route -> route.compareTo(newRoute) > 0);
+        }
     }
 
     /**
      * Добавляет новый элемент в коллекцию, если его значение меньше, чем у наименьшего элемента этой коллекции
      */
-    public static Command addIfMin(User user, String s) throws EndOfFileException {
-        Route newRoute = toAddWithoutId(s);
-        return new CommandWithObj(user, Commands.ADD_IF_MIN, newRoute);
+    public static void addIfMin(Collection c, Command com) {
+        int id = c.getNextId();
+        Route newRoute = routeWithId((Route) com.returnObj(), id);
+        List<Route> list = properUser( com.getUser(), c);
+        if (list != null) {
+            if (newRoute.compareTo(list.stream().sorted().findFirst().orElse(newRoute)) < 0) {
+                list.add(newRoute);
+            }
+        }
+    }
+
+    /**
+     * Удаляет все элементы из коллекции
+     */
+    public static void clear(Collection c, Command com) {
+        List<Route> list = properUser(com.getUser(), c);
+        if (list != null) {
+            list.clear();
+        }
     }
 
     /**
      * Удаляет все элементы по его id
      */
-    public static Command removeById(User user, String s) throws EndOfFileException {
-        int id;
-        try {
-            id = Utils.routeIdCheck.checker(Integer.parseInt(s));
-        } catch (NumberFormatException | FailedCheckException e) {
-            id = Console.handlerI("Введите int id: ", Utils.routeIdCheck);
+    public static void removeById(Collection c, Command com) {
+        List<Route> list = properUser(com.getUser(), c);
+        if (list != null) {
+            Integer id = (Integer) com.returnObj();
+            Route route = null;
+            for (Route r : list) {
+                if (r.getId().equals(id))
+                    route = r;
+            }
+            if (route != null) {
+                list.remove(route);
+            }
         }
-        return new RemoveById(user, id);
     }
 
     /**
      * Перезаписывает элемент списка с указанным id
      */
-    public static Command update(User user, String s) throws EndOfFileException {
-        int id;
-        try {
-            id = Utils.routeIdCheck.checker(Integer.parseInt(s));
-        } catch (NumberFormatException | FailedCheckException e) {
-            id = Console.handlerI("Введите int id: ", Utils.routeIdCheck);
+    public static void update(Collection c, Command com) {
+        List<Route> list = properUser(com.getUser(), c);
+        if (list != null) {
+            int id = ((Route) com.returnObj()).getId();
+            Route route = null;
+            for (Route r : list) {
+                if (r.getId().equals(id)) {
+                    route = r;
+                }
+            }
+            if (route != null) {
+                list.set(list.indexOf(route), (Route) com.returnObj());
+            }
         }
-        String name = Console.handlerS("Введите String name: ", Utils.routeNameCheck);
-        Route newRoute = toAddWithoutId(name);
-        newRoute.setId(id);
-        return new CommandWithObj(user, Commands.UPDATE, newRoute);
     }
 
     /**
      * Добавляет элемент в список
      */
-    public static Command add(User user, String s) throws EndOfFileException {
-        Route newRoute = toAddWithoutId(s);
-        return new CommandWithObj(user, Commands.ADD, newRoute);
+    public static void add(Collection c, Command com) {
+        List<Route> list = properUser(com.getUser(), c);
+        if (list != null) {
+            int id = c.getNextId();
+            list.add(routeWithId((Route) com.returnObj(), id));
+            Writer.writeln("add");
+        }
     }
 
-    public static Route toAddWithoutId(String s) throws EndOfFileException {
-        Route route = new Route();
-        route.setId(null);
-        try {
-            Utils.routeNameCheck.checker(s);
-            Writer.writeln("Поле name: " + s);
-        } catch (FailedCheckException e) {
-            s = Console.handlerS("Введите String name, диной больше 0: ", Utils.routeNameCheck);
-        }
-        route.setName(s);
+    public static Route routeWithId(Route r, int id) {
+        r.setId(id);
+        return r;
+    }
 
-        Writer.writeln("Ввoд полей Coordinates");
-        int cx = Console.handlerI("      Введите int x, не null: ", Utils.coordinatesXCheck);
-        Long cy = Console.handlerL("     Введите Long y, величиной больше -765: ", Utils.coordinatesYCheck);
-        route.setCoordinates(new Coordinates(cx, cy));
-
-        ZonedDateTime creationTime = ZonedDateTime.now();
-        route.setCreationDate(creationTime);
-
-        Writer.writeln("Ввoд полей Location to");
-        Long x = Console.handlerL("     Введите Long x, не null: ", Utils.locationXYZCheck);
-        long y = Console.handlerL("     Введите long y, не null: ", Utils.locationXYZCheck);
-        long z = Console.handlerL("     Введите long z, не null: ", Utils.locationXYZCheck);
-        String name = Console.handlerS("     Введите поле name, длиной меньше 867: ", Utils.locationNameCheck);
-        route.setTo(new Location(x, y, z, name));
-
-        Writer.writeln("Является ли From null'ом?");
-        if (!Console.handlerB("     Введите Bool: ", Utils.boolCheck)) {
-            Writer.writeln("Ввoд полей Location from");
-            x = Console.handlerL("     Введите Long x, не null: ", Utils.locationXYZCheck);
-            y = Console.handlerL("     Введите long y, не null: ", Utils.locationXYZCheck);
-            z = Console.handlerL("     Введите long z, не null: ", Utils.locationXYZCheck);
-            name = Console.handlerS("     Введите поле name, длиной меньше 867: ", Utils.locationNameCheck);
-            route.setFrom(new Location(x, y, z, name));
-        } else
-            route.setFrom(null);
-
-
-        Long distance = Console.handlerL("Введите Long distance, величиной больше 1:", Utils.routeDistanceCheck);
-        route.setDistance(distance);
-
-        return route;
+    public static List<Route> properUser(User user, Collection collection) {
+        if (collection.isUserInMap(user))
+            return collection.map.get(user);
+        return null;
     }
 }

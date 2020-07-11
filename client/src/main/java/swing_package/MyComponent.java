@@ -1,31 +1,29 @@
 package swing_package;
 
-import commons.Collection;
-import commons.Route;
-import commons.User;
+import commons.*;
 import program.MainClient;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class MyComponent extends JComponent implements ActionListener {
 
     int WIDTH = 500;
     int HEIGHT = 500;
-    double setX = WIDTH / 2;
-    double setY = HEIGHT / 2;
+    double setX = (double) WIDTH / 2;
+    double setY = (double) HEIGHT / 2;
     double dX = setX;
     double dY = setY;
     double scaleCount = 16.0;
     double scale = 2.0;
     int GRID_SIZE = 60;
     int GRID_NUMBER = GRID_SIZE / 4;
-    boolean isDark = true;
-    private Map<Route, VisualRoute> map = new HashMap<>();
+    boolean isDark = false;
+    private java.util.List<VisualRoute> visualRouteList = new LinkedList<>();
 
     MyComponent() {
         MyMouseListener listener = new MyMouseListener();
@@ -36,52 +34,6 @@ public class MyComponent extends JComponent implements ActionListener {
 
         Timer t = new Timer(50, this);
         t.start();
-    }
-
-    public void update() {
-        for (User user : MainClient.collection.map.keySet()) {
-            for (Route route : MainClient.collection.map.get(user)) {
-                if (!map.containsKey(route)) {
-                    if (route.getFrom() != null) {
-                        double x1 = route.getFrom().getX();
-                        double y1 = route.getFrom().getY();
-                        double r1 = (double) route.getFrom().getZ() / 10;
-                        double x3 = route.getTo().getX();
-                        double y3 = route.getTo().getY();
-                        double r2 = (double) route.getTo().getZ() / 10;
-                        double x2 = route.getCoordinates().getX();
-                        double y2 = route.getCoordinates().getY();
-                        Point2D first = new Point2D.Double();
-                        first.setLocation(x1, y1);
-                        Point2D second = new Point2D.Double();
-                        second.setLocation(x2, y2);
-                        Point2D third = new Point2D.Double();
-                        third.setLocation(x3, y3);
-                        Point2D radius = new Point2D.Double();
-                        radius.setLocation(r1, r2);
-                        map.put(route, new VisualRoute(new VisualRoute.PointPack(first, second, third, radius), Color.getHSBColor(((float) Math.abs(user.login.hashCode())) / Integer.MAX_VALUE, 1.f, isDark ? 0.7f : 1.f)));
-                    } else {
-                        double x1 = route.getTo().getX();
-                        double y1 = route.getTo().getY();
-                        double r1 = 0.0;
-                        double x3 = route.getTo().getX();
-                        double y3 = route.getTo().getY();
-                        double r2 = (double) route.getTo().getZ() / 10;
-                        double x2 = route.getTo().getX();
-                        double y2 = route.getTo().getY();
-                        Point2D first = new Point2D.Double();
-                        first.setLocation(x1, y1);
-                        Point2D second = new Point2D.Double();
-                        second.setLocation(x2, y2);
-                        Point2D third = new Point2D.Double();
-                        third.setLocation(x3, y3);
-                        Point2D radius = new Point2D.Double();
-                        radius.setLocation(r1, r2);
-                        map.put(route, new VisualRoute(new VisualRoute.PointPack(first, second, third, radius), Color.getHSBColor(((float) Math.abs(user.login.hashCode())) / Integer.MAX_VALUE, 1.f, isDark ? 0.7f : 1.f)));
-                    }
-                }
-            }
-        }
     }
 
     public static String fmt(double d) {
@@ -133,6 +85,7 @@ public class MyComponent extends JComponent implements ActionListener {
             }
         }
         g2d.setStroke(b2);
+        drawShapes(g2d);
         g2d.setPaint(isDark ? Color.GRAY : Color.BLACK);
         Font f = new Font("Arial", Font.BOLD, 15);
         g2d.setFont(f);
@@ -157,18 +110,31 @@ public class MyComponent extends JComponent implements ActionListener {
                 drawCenteredString(g2d, fmt(i * scaleCount / GRID_SIZE), (float) (i * scale + dX), (float) Math.max(Math.min((dY - 10), HEIGHT - 15), 15), f);
             }
         }
-        drawShapes(g2d);
     }
 
     private void drawShapes(Graphics2D g2d) {
         Font f = new Font("Arial", Font.BOLD, 10);
-        for (Route r : map.keySet()) {
-            VisualRoute vr = map.get(r);
+        for (VisualRoute vr : visualRouteList) {
             vr.updateComponents(dX, dY, scale, scaleCount, GRID_SIZE);
             g2d.setPaint(vr.c);
             g2d.draw(vr.q);
+            float[] dist = {0.0f, 1.0f};
+            Color[] colors = {vr.c, Color.BLACK};
+            RadialGradientPaint grad = new RadialGradientPaint(new Point2D.Float((float) vr.el1.getCenterX(), (float)vr.el1.getCenterY()), (float)Math.abs(vr.el1.getWidth())+10f,dist,colors);
+            g2d.setPaint(grad);
             g2d.fill(vr.el1);
+            grad = new RadialGradientPaint(new Point2D.Float((float) vr.el2.getCenterX(), (float)vr.el2.getCenterY()), (float)Math.abs(vr.el2.getWidth())+10f,dist,colors);
+            g2d.setPaint(grad);
             g2d.fill(vr.el2);
+            g2d.setPaint(isDark ? Color.white : Color.BLACK);
+            g2d.setFont(f);
+            FontMetrics metrics = g2d.getFontMetrics(f);
+            if (vr.el2.getBounds().width >= vr.el1.getBounds().width)
+                g2d.drawString("  "+vr.getRoute().getName(),(float)(vr.el2.getMaxX()),(float)(vr.el2.getCenterY() - metrics.getHeight()/2 + metrics.getAscent()));
+            else
+                g2d.drawString("  "+vr.getRoute().getName(),(float)(vr.el1.getMaxX()),(float)(vr.el1.getCenterY() - metrics.getHeight()/2 + metrics.getAscent()));
+
+            //drawCenteredString(g2d, vr.getRoute().getName(),(float) (vr.el1.getCenterX()/4+vr.el2.getCenterX()/4+vr.q.getCtrlX()/2),(float) (vr.el1.getCenterY()/4+vr.el2.getCenterY()/4+vr.q.getCtrlY()/2), f);
         }
     }
 
@@ -180,24 +146,67 @@ public class MyComponent extends JComponent implements ActionListener {
         g.drawString(text, rx, ry);
     }
 
+    double rand() {
+        return Math.random()*2-1;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        boolean is = false;
-        for (Route r : map.keySet()) {
-            if (map.get(r).update()) {
-                is = true;
+        //MainClient.collection.map.values().forEach(list -> list.removeIf(route -> Math.random() >0.95));
+        for (User user : MainClient.collection.map.keySet()) {
+            for (int i = 0; i < MainClient.collection.map.get(user).size();i++) {
+                if (Math.random() > 0.99) {
+                    MainClient.collection.map.get(user).set(i, new Route(MainClient.collection.map.get(user).get(i).getId(), "name3", new Coordinates((int) (40*rand()), (long) (40*rand())), Math.random() > 0.5 ? new Location((long) (40*rand()), (long)(40*rand()), (long) (40*rand()), "1") : null, new Location((long) (40*rand()), (long) (40*rand()), (long) (40*rand()), "2"), (long) 10));
+                }
+            }
+        }//todo delete debug code
+        for (User user : MainClient.collection.map.keySet()) {
+            for (Route route : MainClient.collection.map.get(user)) {
+                if (visualRouteList.stream().map(VisualRoute::getRoute).map(Route::getId).noneMatch(integer -> integer.equals(route.getId())))
+                    visualRouteList.add(new VisualRoute(route,Color.getHSBColor(((float) Math.abs(Utils.sha1(user.login).hashCode())) / Integer.MAX_VALUE, 1.f, isDark ? 0.7f : 1.f)));
             }
         }
-        if (is)
+        boolean isNeedsToBeRepaint = false;
+        for (Iterator<VisualRoute> iterator = visualRouteList.iterator(); iterator.hasNext(); ) {
+            VisualRoute vr = iterator.next();
+            if (!vr.dying) {
+                boolean contains = false;
+                myLabel:
+                for (User user : MainClient.collection.map.keySet()) {
+                    if (MainClient.collection.map.get(user).contains(vr.getRoute())) {
+                        contains = true;
+                        break;
+                    } else {
+                        for (Route route : MainClient.collection.map.get(user)) {
+                            if (route.getId().equals(vr.getRoute().getId())) {
+                                contains = true;
+                                vr.setDesired(route);
+                                break myLabel;
+                            }
+                        }
+                    }
+                }
+                if (!contains) {
+                    vr.kill();
+                }
+            }
+            boolean updated = vr.update();
+            if (!updated && vr.dying) {
+                iterator.remove();
+                isNeedsToBeRepaint = true;
+            } else if (updated)
+                isNeedsToBeRepaint = true;
+        }
+        if (isNeedsToBeRepaint)
             repaint();
     }
 
     class ResizeListener extends ComponentAdapter {
         public void componentResized(ComponentEvent e) {
+            setX += (double)e.getComponent().getWidth()/2 - (double) WIDTH/2;
+            setY += (double)e.getComponent().getHeight()/2 - (double) HEIGHT/2;
             HEIGHT = e.getComponent().getHeight();
             WIDTH = e.getComponent().getWidth();
-            setX = WIDTH / 2;
-            setY = HEIGHT / 2;
             dX = setX;
             dY = setY;
             repaint();
@@ -211,6 +220,10 @@ public class MyComponent extends JComponent implements ActionListener {
         public void mousePressed(MouseEvent e) {
             oldX = e.getX();
             oldY = e.getY();
+            VisualRoute vr = visualRouteList.stream().filter(visualRoute -> visualRoute.isTouching((e.getX()-dX)/scale*scaleCount/GRID_SIZE,-(e.getY()-dY)/scale*scaleCount/GRID_SIZE)).reduce((first, second) -> second).orElse(null);
+            if (vr != null) {
+                vr.c = Color.getHSBColor((float) Math.random(),1.0f,1.0f); //todo сохдание окна
+            }
         }
 
         public void mouseDragged(MouseEvent e) {
@@ -233,9 +246,17 @@ public class MyComponent extends JComponent implements ActionListener {
             setY = dY;
             scale += -e.getPreciseWheelRotation() * scale / 50;
             if (scale < 1.0) {
+                dX -= e.getPreciseWheelRotation() * (e.getX() - setX) / 100;
+                dY -= e.getPreciseWheelRotation() * (e.getY() - setY) / 100;
+                setX = dX;
+                setY = dY;
                 scale = 2.0;
                 scaleCount *= 2;
             } else if (scale > 2.0) {
+                dX -= e.getPreciseWheelRotation() * (e.getX() - setX) / 50;
+                dY -= e.getPreciseWheelRotation() * (e.getY() - setY) / 50;
+                setX = dX;
+                setY = dY;
                 scale = 1;
                 scaleCount /= 2;
             }

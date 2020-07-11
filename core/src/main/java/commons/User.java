@@ -14,6 +14,10 @@ public class User implements Serializable {
         hashPassword = Utils.sha1(password);
     }
 
+    public User secret() {
+        return new User(this.login,"password");
+    }
+
     public static User userFromHashPassword(String login, String hashPassword) {
         User user = new User(login, "password");
         user.hashPassword = hashPassword;
@@ -42,12 +46,6 @@ public class User implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(login, hashPassword);
-    }
-    /**
-     * Конвертирование элемента списка в удобный для сохранения формат
-     */
-    public String toCSVfile() {
-        return login + "," + hashPassword;
+        return Objects.hash(Utils.sha1(login));
     }
 }

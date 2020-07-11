@@ -22,6 +22,7 @@ public class ServerWithProperThreads {
 
     private static final Logger logger = LogManager.getLogger(ServerWithProperThreads.class);
     private static final ExecutorService pool = Executors.newCachedThreadPool();
+    public static CopyOnWriteArrayList<ConcurrentLinkedQueue<ByteBuffer>> messList = new CopyOnWriteArrayList<>();
     private static Collection collection;
     private static final AtomicBoolean globalKillFlag = new AtomicBoolean(false);
     private static PostgreSQL sqlRun;
@@ -62,6 +63,7 @@ public class ServerWithProperThreads {
                     System.out.println("Соединение с " + s);
                     s.configureBlocking(false);
                     ConcurrentLinkedQueue<ByteBuffer> messages = new ConcurrentLinkedQueue<>();
+                    messList.add(messages);
                     final AtomicBoolean killFlag = new AtomicBoolean(false);
                     //открыть поток для чтения
                     pool.submit(() -> read(s, messages, killFlag));
@@ -119,6 +121,7 @@ public class ServerWithProperThreads {
         }
         System.out.println("Закрылся read");
         killFlag.set(true);
+        messList.remove(messages);
     }
 
     private static void process(ByteBuffer buf, ConcurrentLinkedQueue<ByteBuffer> messages) throws IOException, ClassNotFoundException {
@@ -139,6 +142,15 @@ public class ServerWithProperThreads {
         buf = ByteBuffer.wrap(byteArrayOutputStream.toByteArray());
         messages.add(buf);
         objectOutputStream.close();
+    }
+
+    public static ByteBuffer addCommand(Command com) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(com);
+        ByteBuffer buf = ByteBuffer.wrap(byteArrayOutputStream.toByteArray());
+        objectOutputStream.close();
+        return buf;
     }
 
     private static void answer(SocketChannel s, ConcurrentLinkedQueue<ByteBuffer> messages, AtomicBoolean killFlag) {

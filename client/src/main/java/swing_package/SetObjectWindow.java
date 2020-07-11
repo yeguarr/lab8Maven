@@ -1,10 +1,16 @@
 package swing_package;
 
+import command.Command;
+import command.CommandWithObj;
+import command.Commands;
 import commons.*;
+import program.Client;
+import program.MainClient;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.LinkedList;
 
 public class SetObjectWindow {
@@ -21,6 +27,14 @@ public class SetObjectWindow {
         JPanel panel = new JPanel();
         frame.add(panel);
         panel.setLayout(null);
+
+        JLabel id = new JLabel("id");
+        id.setBounds(10,0,90,25);
+        panel.add(id);
+
+        JTextField idText = new JTextField(20);
+        idText.setBounds(130,0,165,25);
+        panel.add(id);
 
         JLabel name = new JLabel("name");
         name.setBounds(10,20,90,25);
@@ -163,18 +177,25 @@ public class SetObjectWindow {
         cancelButton.addActionListener(actionEvent -> frame.dispose());
 
         createButton.addActionListener(actionEvent -> {
-            Route r = new Route();
-            r.setId(0);
-            r.setName(nameText.getText());
-            r.setCoordinates(new Coordinates(Integer.parseInt( coordinatesXText.getText()), Long.parseLong(coordinatesXText.getText())));
-            if (buttonLocationTo.getText().equals("From is null")){
-                r.setFrom(new Location( Long.parseLong(LocationFromXText.getText()), Long.parseLong(LocationFromYText.getText()), Long.parseLong(LocationFromZText.getText()),LocationFromNameText.getText()));
-            } else {
-                r.setFrom(null);
+            try {
+                Route r = new Route();
+                r.setName(nameText.getText());
+                r.setCoordinates(new Coordinates(Integer.parseInt(coordinatesXText.getText()), Long.parseLong(coordinatesXText.getText())));
+                if (buttonLocationTo.getText().equals("From is null")) {
+                    r.setFrom(new Location(Long.parseLong(LocationFromXText.getText()), Long.parseLong(LocationFromYText.getText()), Long.parseLong(LocationFromZText.getText()), LocationFromNameText.getText()));
+                } else {
+                    r.setFrom(null);
+                }
+                r.setTo(new Location(Long.parseLong(LocationToXText.getText()), Long.parseLong(LocationToYText.getText()), Long.parseLong(LocationToZText.getText()), LocationToNameText.getText()));
+                if (buttonDistance.getText().equals("distance is null")) {
+                    r.setDistance(Long.parseLong(distanceText.getText()));
+                } else {
+                    r.setDistance(null);
+                }
+                Client.SendCommand(new CommandWithObj(MainClient.user, Commands.ADD, r));
+            } catch (IOException e) {
+                new AlarmWindow().display("ERROR", e.getMessage());
             }
-            r.setTo(new Location( Long.parseLong(LocationToXText.getText()), Long.parseLong(LocationToYText.getText()), Long.parseLong(LocationToZText.getText()),LocationToNameText.getText()));
-            r.setDistance(Long.parseLong(distanceText.getText()));
-            /////todo
             frame.dispose();
         });
 

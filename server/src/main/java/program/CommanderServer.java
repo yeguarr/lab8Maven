@@ -2,8 +2,13 @@ package program;
 
 import command.*;
 import commons.*;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -56,20 +61,32 @@ public class CommanderServer {
         else {
             return new ErrorCommand(com.getUser(),"register.invalid.user");
         }
-        return new Show(com.getUser(),c);
+        Collection newC = new Collection(c.ids);
+        for (User user : c.map.keySet()) {
+            newC.map.put(user.secret(), c.map.get(user));
+        }
+        return new Show(com.getUser(),newC);
     }
 
     private static Command login(Collection c, Command com) {
         if (!c.isUserInMap(com.getUser())) {
             return new ErrorCommand(com.getUser(),"login.invalid.user");
         }
-        return new Show(com.getUser(),c);
+        Collection newC = new Collection(c.ids);
+        for (User user : c.map.keySet()) {
+            newC.map.put(user.secret(), c.map.get(user));
+        }
+        return new Show(com.getUser(),newC);
     }
 
     public static Command show(Collection c, Command com) {
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
-            return new Show(com.getUser(),c);
+            Collection newC = new Collection(c.ids);
+            for (User user : c.map.keySet()) {
+                newC.map.put(user.secret(), c.map.get(user));
+            }
+            return new Show(com.getUser(),newC);
         }
         return new ErrorCommand(com.getUser(),"invalid.user");
     }
@@ -79,12 +96,12 @@ public class CommanderServer {
     public static Command printFieldAscendingDistance(Collection c, Command com) {
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
-            final String[] s = {""};
+            StringBuilder sb = new StringBuilder();
             if (list.size() > 0)
-                list.stream().filter(r -> r.getDistance() != null).map(Route::getDistance).sorted().forEach(dis -> s[0] +=(dis+"\n"));
+                list.stream().filter(r -> r.getDistance() != null).map(Route::getDistance).sorted().forEach(dis -> sb.append(dis).append("\n"));
             else
                 return new Info(com.getUser(),"empty");
-            return new Info(com.getUser(),s[0]);
+            return new Info(com.getUser(),sb.toString());
         }
         return new ErrorCommand(com.getUser(),"invalid.user");
     }
@@ -130,6 +147,13 @@ public class CommanderServer {
                     sqlRun.add(new RemoveById(com.getUser(), newRoute.getId()));
                 return bool;
             });
+            for (int i = 0; i < ServerWithProperThreads.messList.size(); i++) {
+                try {
+                    ServerWithProperThreads.messList.get(i).add(ServerWithProperThreads.addCommand(new CommandWithObj(com.getUser().secret(), Commands.REMOVE_LOWER, newRoute)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             return new Info(com.getUser(),"success");
         }
         return new ErrorCommand(com.getUser(),"invalid.user");
@@ -148,6 +172,13 @@ public class CommanderServer {
                     sqlRun.add(new RemoveById(com.getUser(), newRoute.getId()));
                 return bool;
             });
+            for (int i = 0; i < ServerWithProperThreads.messList.size(); i++) {
+                try {
+                    ServerWithProperThreads.messList.get(i).add(ServerWithProperThreads.addCommand(new CommandWithObj(com.getUser().secret(), Commands.REMOVE_GREATER, newRoute)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             return new Info(com.getUser(),"success");
         }
         return new ErrorCommand(com.getUser(),"invalid.user");
@@ -164,6 +195,13 @@ public class CommanderServer {
             if (newRoute.compareTo(list.stream().sorted().findFirst().orElse(newRoute)) < 0) {
                 list.add(newRoute);
                 sqlRun.add(new CommandWithObj(com.getUser(), Commands.ADD, newRoute));
+                for (int i = 0; i < ServerWithProperThreads.messList.size(); i++) {
+                    try {
+                        ServerWithProperThreads.messList.get(i).add(ServerWithProperThreads.addCommand(new CommandWithObj(com.getUser().secret(), Commands.ADD_IF_MIN, newRoute)));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 return new Info(com.getUser(),"success");
             } else return new Info(com.getUser(),"failure");
         }
@@ -178,6 +216,13 @@ public class CommanderServer {
         if (list != null) {
             list.clear();
             sqlRun.add(com);
+            for (int i = 0; i < ServerWithProperThreads.messList.size(); i++) {
+                try {
+                    ServerWithProperThreads.messList.get(i).add(ServerWithProperThreads.addCommand(new Command(com.getUser().secret(), Commands.UPDATE)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             return new Info(com.getUser(),"success");
         }
         return new ErrorCommand(com.getUser(),"invalid.user");
@@ -200,6 +245,13 @@ public class CommanderServer {
             }
             list.remove(route);
             sqlRun.add(com);
+            for (int i = 0; i < ServerWithProperThreads.messList.size(); i++) {
+                try {
+                    ServerWithProperThreads.messList.get(i).add(ServerWithProperThreads.addCommand(new RemoveById(com.getUser().secret(), id)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             return new Info(com.getUser(),"success");
         }
         return new ErrorCommand(com.getUser(),"invalid.user");
@@ -223,6 +275,13 @@ public class CommanderServer {
             }
             list.set(list.indexOf(route), (Route) com.returnObj());
             sqlRun.add(com);
+            for (int i = 0; i < ServerWithProperThreads.messList.size(); i++) {
+                try {
+                    ServerWithProperThreads.messList.get(i).add(ServerWithProperThreads.addCommand(new CommandWithObj(com.getUser().secret(), Commands.UPDATE, (Route) com.returnObj())));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             return new Info(com.getUser(),"success");
         }
         return new ErrorCommand(com.getUser(),"invalid.user");
@@ -237,7 +296,13 @@ public class CommanderServer {
             int id = c.getNextId();
             list.add(routeWithId((Route) com.returnObj(), id));
             sqlRun.add(com);
-
+            for (int i = 0; i < ServerWithProperThreads.messList.size(); i++) {
+                try {
+                    ServerWithProperThreads.messList.get(i).add(ServerWithProperThreads.addCommand(new CommandWithObj(com.getUser().secret(), Commands.ADD, (Route) com.returnObj())));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             return new Info(com.getUser(),"success");
         }
         return new ErrorCommand(com.getUser(),"invalid.user");
