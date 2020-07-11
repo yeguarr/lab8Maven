@@ -12,7 +12,7 @@ public class ProgramWindow {
     JPanel coordinates = new JPanel();
     public MyComponent component = new MyComponent();
     JButton add = new JButton("add");
-    JButton update = new JButton("update");
+    //JButton update = new JButton("update");
     JButton remove_by_id = new JButton("remove by id");
     JButton clear = new JButton("clear");
     JButton add_if_min = new JButton("add if min");
@@ -35,8 +35,8 @@ public class ProgramWindow {
         panelLeft.setLayout(new GridLayout(15, 1, 10, 0));
         add.setPreferredSize(print_field_ascending_distance.getPreferredSize());
         panelLeft.add(add);
-        update.setPreferredSize(print_field_ascending_distance.getPreferredSize());
-        panelLeft.add(update);
+        //update.setPreferredSize(print_field_ascending_distance.getPreferredSize());
+        //panelLeft.add(update);
         remove_by_id.setPreferredSize(print_field_ascending_distance.getPreferredSize());
         panelLeft.add(remove_by_id);
         clear.setPreferredSize(print_field_ascending_distance.getPreferredSize());
@@ -109,7 +109,7 @@ public class ProgramWindow {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 //do something
-                SetObjectWindow o = new SetObjectWindow();
+                AddObjectWindow o = new AddObjectWindow();
                 o.display();
             }
         });

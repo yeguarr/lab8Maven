@@ -1,6 +1,5 @@
 package swing_package;
 
-import command.Command;
 import command.CommandWithObj;
 import command.Commands;
 import commons.*;
@@ -8,18 +7,18 @@ import program.Client;
 import program.MainClient;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 import java.io.IOException;
-import java.util.LinkedList;
 
-public class SetObjectWindow {
+public class AddObjectWindow {
     JFrame frame;
     JButton buttonLocationTo = new JButton();
     JButton buttonDistance = new JButton();
 
     public void display(){
-        frame = new JFrame("setObject");
+        frame = new JFrame("Add new object");
         frame.setSize(350, 530);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -27,14 +26,6 @@ public class SetObjectWindow {
         JPanel panel = new JPanel();
         frame.add(panel);
         panel.setLayout(null);
-
-        JLabel id = new JLabel("id");
-        id.setBounds(10,0,90,25);
-        panel.add(id);
-
-        JTextField idText = new JTextField(20);
-        idText.setBounds(130,0,165,25);
-        panel.add(id);
 
         JLabel name = new JLabel("name");
         name.setBounds(10,20,90,25);
@@ -66,22 +57,27 @@ public class SetObjectWindow {
 
         JTextField coordinatesXText = new JTextField(20);
         coordinatesXText.setBounds(130,50,165,25);
+        coordinatesXText.setDocument(new Tester());
         panel.add(coordinatesXText);
 
         JTextField coordinatesYText = new JTextField(20);
         coordinatesYText.setBounds(130,80,165,25);
+        coordinatesYText.setDocument(new Tester());
         panel.add(coordinatesYText);
 
         JTextField LocationToXText = new JTextField(20);
         LocationToXText.setBounds(130,110,165,25);
+        LocationToXText.setDocument(new Tester());
         panel.add(LocationToXText);
 
         JTextField LocationToYText = new JTextField(20);
         LocationToYText.setBounds(130,140,165,25);
+        LocationToYText.setDocument(new Tester());
         panel.add(LocationToYText);
 
         JTextField LocationToZText = new JTextField(20);
         LocationToZText.setBounds(130,170,165,25);
+        LocationToZText.setDocument(new Tester());
         panel.add(LocationToZText);
 
         JLabel LocationToName = new JLabel("LocationTo.name");
@@ -110,14 +106,17 @@ public class SetObjectWindow {
 
         JTextField LocationFromXText = new JTextField(20);
         LocationFromXText.setBounds(130,260,165,25);
+        LocationFromXText.setDocument(new Tester());
         panel.add(LocationFromXText);
 
         JTextField LocationFromYText = new JTextField(20);
         LocationFromYText.setBounds(130,290,165,25);
+        LocationFromYText.setDocument(new Tester());
         panel.add(LocationFromYText);
 
         JTextField LocationFromZText = new JTextField(20);
         LocationFromZText.setBounds(130,320,165,25);
+        LocationFromZText.setDocument(new Tester());
         panel.add(LocationFromZText);
 
         JLabel LocationFromName = new JLabel("LocationFrom.name");
@@ -138,6 +137,7 @@ public class SetObjectWindow {
 
         JTextField distanceText = new JTextField(20);
         distanceText.setBounds(130,410,165,25);
+        distanceText.setDocument(new Tester());
         panel.add(distanceText);
 
         JButton cancelButton = new JButton("cancel");
@@ -193,7 +193,7 @@ public class SetObjectWindow {
                     r.setDistance(null);
                 }
                 Client.SendCommand(new CommandWithObj(MainClient.user, Commands.ADD, r));
-            } catch (IOException e) {
+            } catch (IOException | NumberFormatException e) {
                 new AlarmWindow().display("ERROR", e.getMessage());
             }
             frame.dispose();
@@ -203,7 +203,21 @@ public class SetObjectWindow {
     }
 
     public static void main(String[] args) {
-        SetObjectWindow o = new SetObjectWindow();
+        AddObjectWindow o = new AddObjectWindow();
         o.display();
+    }
+}
+
+class Tester extends PlainDocument {
+    String chars = "-0123456789";
+    @Override
+    public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+        if (str == null)
+            return;
+
+        if(chars.contains(str)){
+            super.insertString(offset, str, attr);
+        }
+
     }
 }

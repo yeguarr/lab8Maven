@@ -152,14 +152,6 @@ public class MyComponent extends JComponent implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //MainClient.collection.map.values().forEach(list -> list.removeIf(route -> Math.random() >0.95));
-        for (User user : MainClient.collection.map.keySet()) {
-            for (int i = 0; i < MainClient.collection.map.get(user).size();i++) {
-                if (Math.random() > 0.99) {
-                    MainClient.collection.map.get(user).set(i, new Route(MainClient.collection.map.get(user).get(i).getId(), "name3", new Coordinates((int) (40*rand()), (long) (40*rand())), Math.random() > 0.5 ? new Location((long) (40*rand()), (long)(40*rand()), (long) (40*rand()), "1") : null, new Location((long) (40*rand()), (long) (40*rand()), (long) (40*rand()), "2"), (long) 10));
-                }
-            }
-        }//todo delete debug code
         for (User user : MainClient.collection.map.keySet()) {
             for (Route route : MainClient.collection.map.get(user)) {
                 if (visualRouteList.stream().map(VisualRoute::getRoute).map(Route::getId).noneMatch(integer -> integer.equals(route.getId())))
@@ -222,7 +214,8 @@ public class MyComponent extends JComponent implements ActionListener {
             oldY = e.getY();
             VisualRoute vr = visualRouteList.stream().filter(visualRoute -> visualRoute.isTouching((e.getX()-dX)/scale*scaleCount/GRID_SIZE,-(e.getY()-dY)/scale*scaleCount/GRID_SIZE)).reduce((first, second) -> second).orElse(null);
             if (vr != null) {
-                vr.c = Color.getHSBColor((float) Math.random(),1.0f,1.0f); //todo сохдание окна
+                UpdateWindow o = new UpdateWindow();
+                o.display(vr.route);
             }
         }
 
