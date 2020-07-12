@@ -13,25 +13,25 @@ import java.util.List;
 public class CommanderClient {
     public static void switcher(Command com, Collection c) {
         switch (com.getCurrent()) {
-            case ADD://да
+            case ADD:
                  add(c, com);
                  return;
-            case UPDATE://да
+            case UPDATE:
                  update(c, com);
                  return;
-            case REMOVE_BY_ID://да
+            case REMOVE_BY_ID:
                  removeById(c, com);
                  return;
-            case CLEAR://да
+            case CLEAR:
                  clear(c, com);
                  return;
-            case ADD_IF_MIN://да
+            case ADD_IF_MIN:
                  addIfMin(c, com);
                  return;
-            case REMOVE_GREATER://да
+            case REMOVE_GREATER:
                  removeGreater(c, com);
                  return;
-            case REMOVE_LOWER://да
+            case REMOVE_LOWER:
                  removeLower(c, com);
                  return;
             case INFO: {
@@ -83,7 +83,7 @@ public class CommanderClient {
         Route newRoute = routeWithId((Route) com.returnObj(), id);
         List<Route> list = properUser( com.getUser(), c);
         if (list != null) {
-            if (newRoute.compareTo(list.stream().sorted().findFirst().orElse(newRoute)) < 0) {
+            if (newRoute.compareTo(list.stream().sorted().findFirst().orElse(newRoute)) <= 0) {
                 list.add(newRoute);
             }
         }

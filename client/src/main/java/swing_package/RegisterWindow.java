@@ -1,8 +1,17 @@
 package swing_package;
 
+import command.Command;
+import command.Commands;
+import commons.User;
+import program.MainClient;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.Arrays;
+
+import static program.Client.SendCommand;
 
 public class RegisterWindow {
     JFrame frame;
@@ -49,7 +58,23 @@ public class RegisterWindow {
         JButton registerButton = new JButton("create account");
         registerButton.setBounds(100, 130, 120, 25);
         panel.add(registerButton);
+        registerButton.addActionListener(actionListener -> {
+            if (usernameText.getText().length()!=0&&Arrays.equals(passwordText.getPassword(), passwordText2.getPassword())) {
+                try {
+                    MainClient.user = new User(usernameText.getText(), new String(passwordText.getPassword()));
+                    Command command = new Command(MainClient.user, Commands.REGISTER);
 
+                    SendCommand(command);
+
+                    LoginWindow obj = new LoginWindow();
+                    obj.display();
+                    frame.dispose();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        frame.setResizable(false);
         frame.setVisible(true);
     }
 

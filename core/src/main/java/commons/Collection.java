@@ -27,6 +27,19 @@ public class Collection implements Serializable {
      */
     private Date date = new Date();
 
+    public User userFromRoute(Route route) {
+        User user = null;
+        myLabel:
+        for (User u : map.keySet()) {
+            for (Route r : map.get(u))
+                if (r.equals(route)) {
+                    user = u;
+                    break myLabel;
+                }
+        }
+        return user;
+    }
+
     public boolean isUserInMap(User user) {
         if (user.login.equals("login")) return false;
         return map.containsKey(user);

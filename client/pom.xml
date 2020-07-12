@@ -27,7 +27,7 @@
                     <finalName>ClientMaven</finalName>
                     <archive>
                         <manifest>
-                            <mainClass>program.Client</mainClass>
+                            <mainClass>program.MainClient</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -62,7 +62,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>program.Client</mainClass>
+                            <mainClass>program.MainClient</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -78,6 +78,21 @@
             <artifactId>core</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>0.38</version>
+        </dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>0.38</version>
+        </dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>0.38</version>
         </dependency>
     </dependencies>
 

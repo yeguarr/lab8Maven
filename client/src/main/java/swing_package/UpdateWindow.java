@@ -2,6 +2,7 @@ package swing_package;
 
 import command.CommandWithObj;
 import command.Commands;
+import command.RemoveById;
 import commons.Coordinates;
 import commons.Location;
 import commons.Route;
@@ -13,10 +14,10 @@ import java.io.IOException;
 
 public class UpdateWindow {
     JFrame frame;
-    JButton buttonLocationTo = new JButton();
+    JButton buttonLocationFrom = new JButton();
     JButton buttonDistance = new JButton();
 
-    public void display(Route route){
+    public void display(Route route, boolean editable){
         frame = new JFrame("Update object");
         frame.setSize(350, 530);
         frame.setLocationRelativeTo(null);
@@ -33,6 +34,7 @@ public class UpdateWindow {
         JTextField nameText = new JTextField(20);
         nameText.setBounds(130,20,165,25);
         nameText.setText(route.getName());
+        nameText.setEditable(editable);
         panel.add(nameText);
 
         JLabel coordinatesX = new JLabel("coordinates.x");
@@ -59,30 +61,35 @@ public class UpdateWindow {
         coordinatesXText.setBounds(130,50,165,25);
         //coordinatesXText.setDocument(new Tester());
         coordinatesXText.setText(String.valueOf(route.getCoordinates().getX()));
+        coordinatesXText.setEditable(editable);
         panel.add(coordinatesXText);
 
         JTextField coordinatesYText = new JTextField(20);
         coordinatesYText.setBounds(130,80,165,25);
         //coordinatesYText.setDocument(new Tester());
         coordinatesYText.setText(String.valueOf(route.getCoordinates().getY()));
+        coordinatesYText.setEditable(editable);
         panel.add(coordinatesYText);
 
         JTextField LocationToXText = new JTextField(20);
         LocationToXText.setBounds(130,110,165,25);
         //LocationToXText.setDocument(new Tester());
         LocationToXText.setText(String.valueOf(route.getTo().getX()));
+        LocationToXText.setEditable(editable);
         panel.add(LocationToXText);
 
         JTextField LocationToYText = new JTextField(20);
         LocationToYText.setBounds(130,140,165,25);
         //LocationToYText.setDocument(new Tester());
         LocationToYText.setText(String.valueOf(route.getTo().getY()));
+        LocationToYText.setEditable(editable);
         panel.add(LocationToYText);
 
         JTextField LocationToZText = new JTextField(20);
         LocationToZText.setBounds(130,170,165,25);
         //LocationToZText.setDocument(new Tester());
         LocationToZText.setText(String.valueOf(route.getTo().getZ()));
+        LocationToZText.setEditable(editable);
         panel.add(LocationToZText);
 
         JLabel LocationToName = new JLabel("LocationTo.name");
@@ -92,11 +99,13 @@ public class UpdateWindow {
         JTextField LocationToNameText = new JTextField(20);
         LocationToNameText.setBounds(130,200,165,25);
         LocationToNameText.setText(String.valueOf(route.getTo().getName()));
+        LocationToNameText.setEditable(editable);
         panel.add(LocationToNameText);
 
-        buttonLocationTo.setText(route.getFrom() == null? "From is not null" :  "From is null");
-        buttonLocationTo.setBounds(80 ,230, 160, 20);
-        panel.add(buttonLocationTo);
+        buttonLocationFrom.setText(route.getFrom() == null? "From is not null" :  "From is null");
+        buttonLocationFrom.setBounds(80 ,232, 160, 20);
+        buttonLocationFrom.setEnabled(editable);
+        panel.add(buttonLocationFrom);
 
         JLabel LocationFromX = new JLabel("LocationFrom.x");
         LocationFromX.setBounds(10,260,90,25);
@@ -113,22 +122,25 @@ public class UpdateWindow {
         JTextField LocationFromXText = new JTextField(20);
         LocationFromXText.setBounds(130,260,165,25);
         //LocationFromXText.setDocument(new Tester());
-        if (buttonLocationTo.getText().equals("From is null"))
+        if (buttonLocationFrom.getText().equals("From is null"))
             LocationFromXText.setText(String.valueOf(route.getFrom().getX()));
+        LocationFromXText.setEditable(editable);
         panel.add(LocationFromXText);
 
         JTextField LocationFromYText = new JTextField(20);
         LocationFromYText.setBounds(130,290,165,25);
         //LocationFromYText.setDocument(new Tester());
-        if (buttonLocationTo.getText().equals("From is null"))
+        if (buttonLocationFrom.getText().equals("From is null"))
             LocationFromYText.setText(String.valueOf(route.getFrom().getY()));
+        LocationFromYText.setEditable(editable);
         panel.add(LocationFromYText);
 
         JTextField LocationFromZText = new JTextField(20);
         LocationFromZText.setBounds(130,320,165,25);
         //LocationFromZText.setDocument(new Tester());
-        if (buttonLocationTo.getText().equals("From is null"))
+        if (buttonLocationFrom.getText().equals("From is null"))
             LocationFromZText.setText(String.valueOf(route.getFrom().getZ()));
+        LocationFromZText.setEditable(editable);
         panel.add(LocationFromZText);
 
         JLabel LocationFromName = new JLabel("LocationFrom.name");
@@ -137,12 +149,14 @@ public class UpdateWindow {
 
         JTextField LocationFromNameText = new JTextField(20);
         LocationFromNameText.setBounds(130,350,165,25);
-        if (buttonLocationTo.getText().equals("From is null"))
+        if (buttonLocationFrom.getText().equals("From is null"))
             LocationFromNameText.setText(String.valueOf(route.getFrom().getName()));
+        LocationFromNameText.setEditable(editable);
         panel.add(LocationFromNameText);
 
         buttonDistance.setText(route.getDistance() == null ? "distance is not null" : "distance is null");
-        buttonDistance.setBounds(80 ,380, 160, 20);
+        buttonDistance.setBounds(80 ,382, 160, 20);
+        buttonDistance.setEnabled(editable);
         panel.add(buttonDistance);
 
         JLabel distance = new JLabel("Distance");
@@ -154,15 +168,22 @@ public class UpdateWindow {
         //distanceText.setDocument(new Tester());
         if (buttonDistance.getText().equals("distance is null"))
             distanceText.setText(route.getDistance().toString());
+        distanceText.setEditable(editable);
         panel.add(distanceText);
 
         JButton cancelButton = new JButton("cancel");
         cancelButton.setBounds(10, 440, 80, 25);
         panel.add(cancelButton);
 
-        JButton createButton = new JButton("update object");
-        createButton.setBounds(130, 440, 120, 25);
-        panel.add(createButton);
+        JButton updateObjectButton = new JButton("update object");
+        updateObjectButton.setBounds(90, 440, 120, 25);
+        updateObjectButton.setEnabled(editable);
+        panel.add(updateObjectButton);
+
+        JButton removeButton = new JButton("remove object");
+        removeButton.setBounds(210, 440, 120, 25);
+        removeButton.setEnabled(editable);
+        panel.add(removeButton);
 
         if (buttonDistance.getText().equals("distance is not null")){
             distanceText.setEditable(false);
@@ -178,22 +199,22 @@ public class UpdateWindow {
             }
         });
 
-        if (buttonLocationTo.getText().equals("From is not null")){
+        if (buttonLocationFrom.getText().equals("From is not null")){
             LocationFromNameText.setEditable(false);
             LocationFromXText.setEditable(false);
             LocationFromYText.setEditable(false);
             LocationFromZText.setEditable(false);
         }
 
-        buttonLocationTo.addActionListener(actionEvent -> {
-            if (buttonLocationTo.getText().equals("From is null")){
-                buttonLocationTo.setText("From is not null");
+        buttonLocationFrom.addActionListener(actionEvent -> {
+            if (buttonLocationFrom.getText().equals("From is null")){
+                buttonLocationFrom.setText("From is not null");
                 LocationFromNameText.setEditable(false);
                 LocationFromXText.setEditable(false);
                 LocationFromYText.setEditable(false);
                 LocationFromZText.setEditable(false);
             } else {
-                buttonLocationTo.setText("From is null");
+                buttonLocationFrom.setText("From is null");
                 LocationFromNameText.setEditable(true);
                 LocationFromXText.setEditable(true);
                 LocationFromYText.setEditable(true);
@@ -203,13 +224,22 @@ public class UpdateWindow {
 
         cancelButton.addActionListener(actionEvent -> frame.dispose());
 
-        createButton.addActionListener(actionEvent -> {
+        removeButton.addActionListener(actionEvent -> {
+            try {
+                Client.SendCommand(new RemoveById(MainClient.user, route.getId()));
+            } catch (IOException e) {
+                new AlarmWindow().display("ERROR", e.getMessage());
+            }
+            frame.dispose();
+        });
+
+        updateObjectButton.addActionListener(actionEvent -> {
             try {
                 Route r = new Route();
                 r.setId(route.getId());
                 r.setName(nameText.getText());
-                r.setCoordinates(new Coordinates(Integer.parseInt(coordinatesXText.getText()), Long.parseLong(coordinatesXText.getText())));
-                if (buttonLocationTo.getText().equals("From is null")) {
+                r.setCoordinates(new Coordinates(Integer.parseInt(coordinatesXText.getText()), Long.parseLong(coordinatesYText.getText())));
+                if (buttonLocationFrom.getText().equals("From is null")) {
                     r.setFrom(new Location(Long.parseLong(LocationFromXText.getText()), Long.parseLong(LocationFromYText.getText()), Long.parseLong(LocationFromZText.getText()), LocationFromNameText.getText()));
                 } else {
                     r.setFrom(null);
@@ -226,12 +256,7 @@ public class UpdateWindow {
             }
             frame.dispose();
         });
-
+        frame.setResizable(false);
         frame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        AddObjectWindow o = new AddObjectWindow();
-        o.display();
     }
 }

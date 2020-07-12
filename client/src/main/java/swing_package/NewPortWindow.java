@@ -36,7 +36,8 @@ public class NewPortWindow {
 
         JTextField portText = new JTextField(20);
         portText.setBounds(90,70,165,25);
-        PlainDocument doc = new PlainDocument(){
+        portText.setText("4329");
+        /*PlainDocument doc = new PlainDocument(){
             String chars = "0123456789";
             @Override
             public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
@@ -49,7 +50,7 @@ public class NewPortWindow {
                 }
             }
         };
-        portText.setDocument(doc);
+        portText.setDocument(doc);*/
         panel.add(portText);
 
         JButton exitButton = new JButton("Exit");
@@ -66,8 +67,9 @@ public class NewPortWindow {
         setButton.addActionListener(actionEvent -> {
             if (!portText.getText().equals("")) {
                 try {
-                    frame.dispose();
+                    MainClient.globalKillFlag.set(false);
                     Client.run(Integer.parseInt(portText.getText()));
+                    frame.dispose();
                     LoginWindow o = new LoginWindow();
                     o.display();
                 } catch (IOException e) {
@@ -78,7 +80,7 @@ public class NewPortWindow {
                 }
             }
         });
-
+        frame.setResizable(false);
         frame.setVisible(true);
     }
 

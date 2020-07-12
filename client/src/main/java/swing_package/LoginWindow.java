@@ -74,7 +74,7 @@ public class LoginWindow {
         registerButton.setBounds(100, 100, 120, 25);
         panel.add(registerButton);
         registerButton.addActionListener(new RegisterButton());
-
+        frame.setResizable(false);
         frame.setVisible(true);
     }
 

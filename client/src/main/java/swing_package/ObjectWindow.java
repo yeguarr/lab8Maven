@@ -12,13 +12,13 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import java.io.IOException;
 
-public class AddObjectWindow {
+public class ObjectWindow {
     JFrame frame;
-    JButton buttonLocationTo = new JButton();
+    JButton buttonLocationFrom = new JButton();
     JButton buttonDistance = new JButton();
 
-    public void display(){
-        frame = new JFrame("Add new object");
+    public void display(Commands com, String title, String buttonStr){
+        frame = new JFrame(title);
         frame.setSize(350, 530);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -88,9 +88,9 @@ public class AddObjectWindow {
         LocationToNameText.setBounds(130,200,165,25);
         panel.add(LocationToNameText);
 
-        buttonLocationTo.setText("From is null");
-        buttonLocationTo.setBounds(80 ,230, 160, 20);
-        panel.add(buttonLocationTo);
+        buttonLocationFrom.setText("From is null");
+        buttonLocationFrom.setBounds(80 ,232, 160, 20);
+        panel.add(buttonLocationFrom);
 
         JLabel LocationFromX = new JLabel("LocationFrom.x");
         LocationFromX.setBounds(10,260,90,25);
@@ -128,7 +128,7 @@ public class AddObjectWindow {
         panel.add(LocationFromNameText);
 
         buttonDistance.setText("distance is null");
-        buttonDistance.setBounds(80 ,380, 160, 20);
+        buttonDistance.setBounds(80 ,382, 160, 20);
         panel.add(buttonDistance);
 
         JLabel distance = new JLabel("Distance");
@@ -144,7 +144,7 @@ public class AddObjectWindow {
         cancelButton.setBounds(10, 440, 80, 25);
         panel.add(cancelButton);
 
-        JButton createButton = new JButton("create object");
+        JButton createButton = new JButton(buttonStr);
         createButton.setBounds(130, 440, 120, 25);
         panel.add(createButton);
 
@@ -158,15 +158,15 @@ public class AddObjectWindow {
             }
         });
 
-        buttonLocationTo.addActionListener(actionEvent -> {
-            if (buttonLocationTo.getText().equals("From is null")){
-                buttonLocationTo.setText("From is not null");
+        buttonLocationFrom.addActionListener(actionEvent -> {
+            if (buttonLocationFrom.getText().equals("From is null")){
+                buttonLocationFrom.setText("From is not null");
                 LocationFromNameText.setEditable(false);
                 LocationFromXText.setEditable(false);
                 LocationFromYText.setEditable(false);
                 LocationFromZText.setEditable(false);
             } else {
-                buttonLocationTo.setText("From is null");
+                buttonLocationFrom.setText("From is null");
                 LocationFromNameText.setEditable(true);
                 LocationFromXText.setEditable(true);
                 LocationFromYText.setEditable(true);
@@ -180,8 +180,8 @@ public class AddObjectWindow {
             try {
                 Route r = new Route();
                 r.setName(nameText.getText());
-                r.setCoordinates(new Coordinates(Integer.parseInt(coordinatesXText.getText()), Long.parseLong(coordinatesXText.getText())));
-                if (buttonLocationTo.getText().equals("From is null")) {
+                r.setCoordinates(new Coordinates(Integer.parseInt(coordinatesXText.getText()), Long.parseLong(coordinatesYText.getText())));
+                if (buttonLocationFrom.getText().equals("From is null")) {
                     r.setFrom(new Location(Long.parseLong(LocationFromXText.getText()), Long.parseLong(LocationFromYText.getText()), Long.parseLong(LocationFromZText.getText()), LocationFromNameText.getText()));
                 } else {
                     r.setFrom(null);
@@ -192,19 +192,14 @@ public class AddObjectWindow {
                 } else {
                     r.setDistance(null);
                 }
-                Client.SendCommand(new CommandWithObj(MainClient.user, Commands.ADD, r));
+                Client.SendCommand(new CommandWithObj(MainClient.user, com, r));
             } catch (IOException | NumberFormatException e) {
                 new AlarmWindow().display("ERROR", e.getMessage());
             }
             frame.dispose();
         });
-
+        frame.setResizable(false);
         frame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        AddObjectWindow o = new AddObjectWindow();
-        o.display();
     }
 }
 

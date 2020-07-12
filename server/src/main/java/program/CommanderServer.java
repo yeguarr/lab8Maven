@@ -61,11 +61,12 @@ public class CommanderServer {
         else {
             return new ErrorCommand(com.getUser(),"register.invalid.user");
         }
-        Collection newC = new Collection(c.ids);
+        /*Collection newC = new Collection(c.ids);
         for (User user : c.map.keySet()) {
             newC.map.put(user.secret(), c.map.get(user));
         }
-        return new Show(com.getUser(),newC);
+        return new Show(com.getUser(),newC);*/
+        return new Info(com.getUser(),"success");
     }
 
     private static Command login(Collection c, Command com) {
@@ -192,7 +193,7 @@ public class CommanderServer {
         Route newRoute = routeWithId((Route) com.returnObj(), id);
         List<Route> list = properUser( com.getUser(), c);
         if (list != null) {
-            if (newRoute.compareTo(list.stream().sorted().findFirst().orElse(newRoute)) < 0) {
+            if (newRoute.compareTo(list.stream().sorted().findFirst().orElse(newRoute)) <= 0) {
                 list.add(newRoute);
                 sqlRun.add(new CommandWithObj(com.getUser(), Commands.ADD, newRoute));
                 for (int i = 0; i < ServerWithProperThreads.messList.size(); i++) {
@@ -218,7 +219,7 @@ public class CommanderServer {
             sqlRun.add(com);
             for (int i = 0; i < ServerWithProperThreads.messList.size(); i++) {
                 try {
-                    ServerWithProperThreads.messList.get(i).add(ServerWithProperThreads.addCommand(new Command(com.getUser().secret(), Commands.UPDATE)));
+                    ServerWithProperThreads.messList.get(i).add(ServerWithProperThreads.addCommand(new Command(com.getUser().secret(), Commands.CLEAR)));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
