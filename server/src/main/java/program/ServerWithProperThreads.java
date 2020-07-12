@@ -80,7 +80,7 @@ public class ServerWithProperThreads {
             Writer.writeln("Пренудительное закрытие сервера.");
             logger.error("Пренудительное закрытие сервера.");
             logger.error(e.getLocalizedMessage());
-        } catch (exceptions.IncorrectFileNameException e) {
+        } catch (exceptions.IncorrectFileNameException | EndOfFileException e) {
             Writer.writeln( "\u001B[31m" + "Неверное имя файла" + "\u001B[0m");
         }
         pool.shutdownNow();

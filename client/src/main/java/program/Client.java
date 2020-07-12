@@ -16,8 +16,8 @@ public class Client {
     public static ConcurrentLinkedQueue<ByteBuffer> messages = new ConcurrentLinkedQueue<>();
     private static final ExecutorService pool = Executors.newCachedThreadPool();
 
-    public static void run(int port) throws IOException {
-        InetSocketAddress addr = new InetSocketAddress(InetAddress.getByName("localhost"), port);
+    public static void run(String ip, int port) throws IOException {
+        InetSocketAddress addr = new InetSocketAddress(InetAddress.getByName(ip), port);
         SocketChannel sc = SocketChannel.open();
         sc.configureBlocking(false);
         sc.connect(addr);

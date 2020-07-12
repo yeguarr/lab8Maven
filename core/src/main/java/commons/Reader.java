@@ -2,6 +2,7 @@ package commons;
 
 import commons.AbstractReader;
 import commons.Writer;
+import exceptions.EndOfFileException;
 import exceptions.IncorrectFileNameException;
 
 import java.io.File;
@@ -32,10 +33,10 @@ public class Reader extends AbstractReader {
         w.addToList(false, "Конец файла." + "\n");
         return null;
     }
-    public String read() {
+    public String read() throws EndOfFileException {
         if (scan.hasNextLine()) {
             return scan.nextLine();
         }
-        return null;
+        throw new EndOfFileException("Преждевременный конец файла");
     }
 }

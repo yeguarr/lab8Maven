@@ -5,7 +5,6 @@ import com.formdev.flatlaf.FlatIntelliJLaf;
 import command.Command;
 import command.Commands;
 import commons.Utils;
-import commons.Writer;
 import program.Client;
 import program.MainClient;
 
@@ -128,7 +127,7 @@ public class ProgramWindow {
             MainClient.globalKillFlag.set(true);
             MainClient.collection.map.clear();
             MainClient.rtm.update();
-            NewPortWindow o = new NewPortWindow();
+            IpPortWindow o = new IpPortWindow();
             o.display();
         });
 
@@ -215,9 +214,10 @@ public class ProgramWindow {
                 try {
                     FileWriter fileWriter = new FileWriter("client.txt");
                     fileWriter.write(MainClient.user.login + '\n');
-                    fileWriter.write(MainClient.user.hashPassword+ '\n');
-                    fileWriter.write(MainClient.port+ '\n');
-                    fileWriter.write(String.valueOf(MainClient.isDark)+ '\n');
+                    fileWriter.write(MainClient.user.hashPassword + '\n');
+                    fileWriter.write(MainClient.ip + '\n');
+                    fileWriter.write(MainClient.port + '\n');
+                    fileWriter.write(String.valueOf(MainClient.isDark) + '\n');
                     fileWriter.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
