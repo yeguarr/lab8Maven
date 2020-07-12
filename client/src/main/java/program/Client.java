@@ -1,11 +1,7 @@
 package program;
 
 import command.Command;
-import command.ErrorCommand;
-import command.Info;
-import command.Show;
 import commons.Writer;
-import swing_package.AlarmWindow;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -79,6 +75,7 @@ public class Client {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+        Writer.writeln("reader умер");
         MainClient.globalKillFlag.set(true);
     }
 

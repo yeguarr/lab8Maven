@@ -5,7 +5,6 @@ import com.formdev.flatlaf.FlatIntelliJLaf;
 import commons.Collection;
 import commons.Reader;
 import commons.User;
-import commons.Utils;
 import exceptions.IncorrectFileNameException;
 import swing_package.NewPortWindow;
 import swing_package.RoutesTableModel;
@@ -28,9 +27,7 @@ public class MainClient {
             user = User.userFromHashPassword(reader.read(),reader.read());
             port = reader.read();
             isDark = Boolean.parseBoolean(reader.read());
-        } catch (FileNotFoundException | IncorrectFileNameException e) {
-            e.printStackTrace();
-        }
+        } catch (FileNotFoundException | IncorrectFileNameException ignored) { }
         try {
             UIManager.setLookAndFeel( MainClient.isDark ? new FlatDarculaLaf() : new FlatIntelliJLaf());
         } catch ( UnsupportedLookAndFeelException e) {

@@ -22,6 +22,7 @@ public class MyComponent extends JComponent implements ActionListener {
     double scale = 2.0;
     int GRID_SIZE = 60;
     int GRID_NUMBER = GRID_SIZE / 4;
+    Timer t;
     private java.util.List<VisualRoute> visualRouteList = new LinkedList<>();
 
     MyComponent() {
@@ -31,7 +32,7 @@ public class MyComponent extends JComponent implements ActionListener {
         addMouseWheelListener(listener);
         addComponentListener(new ResizeListener());
 
-        Timer t = new Timer(50, this);
+        t = new Timer(50, this);
         t.start();
     }
 
@@ -128,7 +129,7 @@ public class MyComponent extends JComponent implements ActionListener {
             g2d.setPaint(MainClient.isDark ? Color.white : Color.BLACK);
             g2d.setFont(f);
             FontMetrics metrics = g2d.getFontMetrics(f);
-            if (vr.el2.getBounds().width + 3 >= vr.el1.getBounds().width)
+            if (vr.el2.getBounds().width*1.1 >= vr.el1.getBounds().width)
                 g2d.drawString("  "+vr.getRoute().getName(),(float)(vr.el2.getMaxX()),(float)(vr.el2.getCenterY() - metrics.getHeight()/2 + metrics.getAscent()));
             else
                 g2d.drawString("  "+vr.getRoute().getName(),(float)(vr.el1.getMaxX()),(float)(vr.el1.getCenterY() - metrics.getHeight()/2 + metrics.getAscent()));
@@ -154,7 +155,7 @@ public class MyComponent extends JComponent implements ActionListener {
         for (User user : MainClient.collection.map.keySet()) {
             for (Route route : MainClient.collection.map.get(user)) {
                 if (visualRouteList.stream().map(VisualRoute::getRoute).map(Route::getId).noneMatch(integer -> integer.equals(route.getId())))
-                    visualRouteList.add(new VisualRoute(route,Color.getHSBColor(((float) Math.abs(Utils.sha1(user.login).hashCode())) / Integer.MAX_VALUE, 1.f, MainClient.isDark ? 0.7f : 1.f)));
+                    visualRouteList.add(new VisualRoute(route,Color.getHSBColor(((float) Math.abs(Utils.sha1(user.login).hashCode())) / Integer.MAX_VALUE, 1.f,  1.f)));
             }
         }
         boolean isNeedsToBeRepaint = false;
@@ -190,6 +191,8 @@ public class MyComponent extends JComponent implements ActionListener {
         }
         if (isNeedsToBeRepaint)
             repaint();
+        if (MainClient.globalKillFlag.get())
+            t.stop();
     }
 
     class ResizeListener extends ComponentAdapter {

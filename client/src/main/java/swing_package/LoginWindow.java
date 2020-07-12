@@ -61,7 +61,7 @@ public class LoginWindow {
         panel.add(loginButton);
         loginButton.addActionListener(actionEvent -> {
             try {
-                if (!MainClient.user.login.equals(usernameText.getText()))
+                if (!MainClient.user.login.equals(usernameText.getText())||!(new String(passwordText.getPassword()).equals("password")))
                     MainClient.user = new User(usernameText.getText(), new String(passwordText.getPassword()));
                 Command command = new Command(MainClient.user, Commands.LOGIN);
 

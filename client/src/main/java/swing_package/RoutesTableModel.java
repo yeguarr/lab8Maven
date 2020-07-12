@@ -83,10 +83,4 @@ public class RoutesTableModel extends AbstractTableModel{
         String[] rows = dataLinkedList.get(rowIndex);
         return rows[columnIndex];
     }
-
-    public void addDate(String[] row){
-        //String []rawTable = new String[getColumnCount()];
-        //rawTable = row;
-        dataLinkedList.add(row);
-    }
 }

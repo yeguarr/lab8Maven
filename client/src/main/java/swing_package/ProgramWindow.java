@@ -4,17 +4,16 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import command.Command;
 import command.Commands;
-import commons.User;
+import commons.Utils;
+import commons.Writer;
 import program.Client;
 import program.MainClient;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
+import java.awt.event.*;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -33,6 +32,8 @@ public class ProgramWindow {
     JButton min_by_creation_date = new JButton("min by creation_date");
     JButton print_field_ascending_distance = new JButton("print field ascending distance");
     RoutesTable routesTable = new RoutesTable();
+    JTextField filterText = new JTextField(20);
+    GhostText ghostText = new GhostText(filterText, "filter...");
 
     public void display(){
         frame = new JFrame("program");
@@ -42,7 +43,7 @@ public class ProgramWindow {
         frame.setLayout(new BorderLayout());
         frame.setIconImage(MainClient.img.getImage());
 
-        panelLeft.setLayout(new GridLayout(15, 1, 10, 0));
+        panelLeft.setLayout(new GridLayout(10, 1, 10, 0));
         add.setPreferredSize(print_field_ascending_distance.getPreferredSize());
         panelLeft.add(add);
         clear.setPreferredSize(print_field_ascending_distance.getPreferredSize());
@@ -58,71 +59,85 @@ public class ProgramWindow {
         min_by_creation_date.setPreferredSize(print_field_ascending_distance.getPreferredSize());
         panelLeft.add(min_by_creation_date);
         panelLeft.add(print_field_ascending_distance);
-        routesTable.panel.setPreferredSize(new Dimension( 700,150));
+
+        filterText.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                newFilter();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                newFilter();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                newFilter();
+            }
+
+            private void newFilter() {
+                if (!(filterText.getText().equals("")||filterText.getText().equals("filter...")))
+                    try {
+                        routesTable.sorter.setRowFilter(RowFilter.regexFilter(filterText.getText()));
+                    } catch (java.util.regex.PatternSyntaxException ignored) { }
+                else
+                    routesTable.sorter.setRowFilter(null);
+            }
+        });
+        panelLeft.add(new JPanel());
+        panelLeft.add(filterText);
 
         coordinates.setLayout(new BorderLayout());
 
         JMenuBar jMenuBar = new JMenuBar();
-        JMenu file = new JMenu("FILE");
-        JMenu language = new JMenu("language");
-        JMenuItem help = new JMenuItem("HELP");
-        JMenuItem show = new JMenuItem("routes");
+        JMenu file = new JMenu("Program");
+        JMenu language = new JMenu("Language");
+        JMenuItem appearance = new JMenuItem(MainClient.isDark ?  "Сhange to the light side" : "Сhange to the dark side");
+        JMenuItem show = new JMenuItem("<html>Username: <b>" + MainClient.user.login + "</b>. &emsp; Your color is: <font color=#"+ Integer.toHexString(Color.getHSBColor(((float) Math.abs(Utils.sha1(MainClient.user.login).hashCode())) / Integer.MAX_VALUE, 1.f,  1.f).getRGB()).substring(2) +">⬛</font> </html>");
         jMenuBar.add(file);
         jMenuBar.add(language);
         jMenuBar.add(show);
-        jMenuBar.add(help);
+        jMenuBar.add(appearance);
         JMenuItem exit = new JMenuItem("Exit");
-        JMenuItem langRus = new JMenuItem("Русский");
-        JMenuItem LangEng = new JMenuItem("English");
+        JMenuItem langRus = new JMenuItem("Русский (Russian)");
+        JMenuItem LangEng = new JMenuItem("English (India)");
+        JMenuItem langHun = new JMenuItem("Magyar (Hungarian)");
+        JMenuItem LangDut = new JMenuItem("Nederlandse (Dutch)");
         JMenuItem logout = new JMenuItem("log Out");
         file.add(logout);
         file.addSeparator();
         file.add(exit);
         language.add(langRus);
         language.add(LangEng);
+        language.add(langHun);
+        language.add(LangDut);
 
-
-        show.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                MainClient.rtm.update();
-                MainClient.rtm.fireTableDataChanged();
-            }
-        });
-
-        help.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
+        appearance.addActionListener(actionEvent -> {
+            try {
                 MainClient.isDark = !MainClient.isDark;
-                try {
-                    UIManager.setLookAndFeel( MainClient.isDark ? new FlatDarculaLaf() : new FlatIntelliJLaf());
-                    panelLeft.setBackground(MainClient.isDark ? new Color(60,63,65) : new Color(230,230,230));
-                    SwingUtilities.updateComponentTreeUI(frame);
-                } catch ( UnsupportedLookAndFeelException e) {
-                    e.printStackTrace();
-                }
+                appearance.setText(MainClient.isDark ? "Сhange to the light side" : "Сhange to the dark side" );
+                ghostText.setGhostColor(MainClient.isDark ? Color.GRAY : Color.LIGHT_GRAY);
+                ghostText.focusLost();
+                coordinates.requestFocus();
+                UIManager.setLookAndFeel( MainClient.isDark ? new FlatDarculaLaf() : new FlatIntelliJLaf());
+                panelLeft.setBackground(MainClient.isDark ? new Color(60,63,65) : new Color(230,230,230));
+                SwingUtilities.updateComponentTreeUI(frame);
+            } catch ( UnsupportedLookAndFeelException e) {
+                e.printStackTrace();
             }
         });
 
-        exit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                frame.dispose();
-                MainClient.globalKillFlag.set(true);
-                MainClient.collection.map.clear();
-                NewPortWindow o = new NewPortWindow();
-                o.display();
-            }
+        exit.addActionListener(actionEvent -> {
+            frame.dispose();
+            MainClient.globalKillFlag.set(true);
+            MainClient.collection.map.clear();
+            MainClient.rtm.update();
+            NewPortWindow o = new NewPortWindow();
+            o.display();
         });
 
-        logout.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                frame.dispose();
-                MainClient.collection.map.clear();
-                LoginWindow o = new LoginWindow();
-                o.display();
-            }
+        logout.addActionListener(actionEvent -> {
+            frame.dispose();
+            MainClient.collection.map.clear();
+            MainClient.rtm.update();
+            LoginWindow o = new LoginWindow();
+            o.display();
         });
 
         panelLeft.setBackground(MainClient.isDark ? new Color(60,63,65) : new Color(230,230,230));
@@ -182,8 +197,18 @@ public class ProgramWindow {
         topPanel.add(panelLeft, BorderLayout.LINE_START);
         topPanel.add(coordinates, BorderLayout.CENTER);
         JSplitPane jSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, routesTable.panel);
+        jSplitPane.setDividerLocation(frame.getHeight() - 250);
         frame.add(jSplitPane);
         frame.setMinimumSize(frame.getSize());
+
+
+        frame.addComponentListener(new ComponentAdapter() {
+            int old = frame.getHeight();
+            public void componentResized(ComponentEvent e) {
+                jSplitPane.setDividerLocation((int)(jSplitPane.getDividerLocation()*((float) frame.getHeight()/old)));
+                old = frame.getHeight();
+            }
+        });
 
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {

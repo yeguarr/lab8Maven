@@ -19,6 +19,7 @@ public class RoutesTable {
 
     JTable routes = new JTable(MainClient.rtm);
     JScrollPane routesScrollPane = new JScrollPane(routes);
+    public TableRowSorter<TableModel> sorter;
 
     public RoutesTable(){
         routes.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -32,7 +33,7 @@ public class RoutesTable {
                 return this;
             }
         });
-        TableRowSorter<TableModel> sorter = new TableRowSorter<>(routes.getModel());
+        sorter = new TableRowSorter<>(routes.getModel());
         routes.setRowSorter(sorter);
 
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
@@ -61,8 +62,16 @@ public class RoutesTable {
                 int row = table.rowAtPoint(point);
                 if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
                     UpdateWindow o = new UpdateWindow();
-                    Route r = MainClient.collection.getRouteById(Integer.parseInt(String.valueOf(table.getValueAt(row,1))));
-                    String login = String.valueOf(table.getValueAt(row,0));
+                    int id = 0;
+                    int user_name = 0;
+                    for (int i =0; i < table.getColumnCount(); i++) {
+                        if (table.getColumnName(i).equals("id"))
+                            id = i;
+                         else if (table.getColumnName(i).equals("user_name"))
+                             user_name = i;
+                    }
+                    Route r = MainClient.collection.getRouteById(Integer.parseInt(String.valueOf(table.getValueAt(row, id))));
+                    String login = String.valueOf(table.getValueAt(row, user_name));
                     o.display(r, MainClient.user.login.equals(login));
                 }
             }
