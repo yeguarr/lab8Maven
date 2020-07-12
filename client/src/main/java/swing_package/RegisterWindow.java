@@ -21,6 +21,7 @@ public class RegisterWindow {
         frame.setSize(350, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
+        frame.setIconImage(MainClient.img.getImage());
 
         JPanel panel = new JPanel();
         frame.add(panel);

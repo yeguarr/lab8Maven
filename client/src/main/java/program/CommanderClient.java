@@ -15,24 +15,31 @@ public class CommanderClient {
         switch (com.getCurrent()) {
             case ADD:
                  add(c, com);
+                 MainClient.rtm.update();
                  return;
             case UPDATE:
                  update(c, com);
+                 MainClient.rtm.update();
                  return;
             case REMOVE_BY_ID:
                  removeById(c, com);
+                 MainClient.rtm.update();
                  return;
             case CLEAR:
                  clear(c, com);
+                 MainClient.rtm.update();
                  return;
             case ADD_IF_MIN:
                  addIfMin(c, com);
+                 MainClient.rtm.update();
                  return;
             case REMOVE_GREATER:
                  removeGreater(c, com);
+                 MainClient.rtm.update();
                  return;
             case REMOVE_LOWER:
                  removeLower(c, com);
+                 MainClient.rtm.update();
                  return;
             case INFO: {
                 AlarmWindow obj = new AlarmWindow();
@@ -46,6 +53,7 @@ public class CommanderClient {
             }
             case SHOW: {
                 MainClient.collection = ((Show) com).returnObj();
+                MainClient.rtm.update();
                 break;
             }
             default:

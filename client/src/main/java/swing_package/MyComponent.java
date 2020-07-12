@@ -47,7 +47,7 @@ public class MyComponent extends JComponent implements ActionListener {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        Color background = ProgramWindow.isDark ? Color.BLACK : Color.WHITE;
+        Color background = MainClient.isDark ? Color.BLACK : Color.WHITE;
         g2d.setPaint(background);
         Rectangle2D rect = new Rectangle2D.Float();
         rect.setFrame(0, 0, WIDTH, HEIGHT);
@@ -55,7 +55,7 @@ public class MyComponent extends JComponent implements ActionListener {
 
         BasicStroke b1 = new BasicStroke(1);
         BasicStroke b2 = new BasicStroke(2);
-        Color gray = ProgramWindow.isDark ? new Color(60, 60, 60) : new Color(192, 192, 192);
+        Color gray = MainClient.isDark ? new Color(60, 60, 60) : new Color(192, 192, 192);
 
         for (int i = -GRID_NUMBER * ((int) (dY / scale) / GRID_NUMBER); i * scale <= (HEIGHT - GRID_NUMBER * (dY / GRID_NUMBER)); i += GRID_NUMBER) {
             if (i % GRID_SIZE == 0) {
@@ -85,7 +85,7 @@ public class MyComponent extends JComponent implements ActionListener {
         }
         g2d.setStroke(b2);
         drawShapes(g2d);
-        g2d.setPaint(ProgramWindow.isDark ? Color.GRAY : Color.BLACK);
+        g2d.setPaint(MainClient.isDark ? Color.GRAY : Color.BLACK);
         Font f = new Font("Arial", Font.BOLD, 15);
         g2d.setFont(f);
         g2d.drawString("0", (float) (dX + 5), (float) (dY - 5));
@@ -125,7 +125,7 @@ public class MyComponent extends JComponent implements ActionListener {
             grad = new RadialGradientPaint(new Point2D.Float((float) vr.el2.getCenterX(), (float)vr.el2.getCenterY()), (float)Math.abs(vr.el2.getWidth())+10f,dist,colors);
             g2d.setPaint(grad);
             g2d.fill(vr.el2);
-            g2d.setPaint(ProgramWindow.isDark ? Color.white : Color.BLACK);
+            g2d.setPaint(MainClient.isDark ? Color.white : Color.BLACK);
             g2d.setFont(f);
             FontMetrics metrics = g2d.getFontMetrics(f);
             if (vr.el2.getBounds().width + 3 >= vr.el1.getBounds().width)
@@ -154,7 +154,7 @@ public class MyComponent extends JComponent implements ActionListener {
         for (User user : MainClient.collection.map.keySet()) {
             for (Route route : MainClient.collection.map.get(user)) {
                 if (visualRouteList.stream().map(VisualRoute::getRoute).map(Route::getId).noneMatch(integer -> integer.equals(route.getId())))
-                    visualRouteList.add(new VisualRoute(route,Color.getHSBColor(((float) Math.abs(Utils.sha1(user.login).hashCode())) / Integer.MAX_VALUE, 1.f, ProgramWindow.isDark ? 0.7f : 1.f)));
+                    visualRouteList.add(new VisualRoute(route,Color.getHSBColor(((float) Math.abs(Utils.sha1(user.login).hashCode())) / Integer.MAX_VALUE, 1.f, MainClient.isDark ? 0.7f : 1.f)));
             }
         }
         boolean isNeedsToBeRepaint = false;
@@ -211,13 +211,13 @@ public class MyComponent extends JComponent implements ActionListener {
         public void mousePressed(MouseEvent e) {
             oldX = e.getX();
             oldY = e.getY();
-            //if (e.isShiftDown()) {
+            if (e.getClickCount() == 2) {
                 VisualRoute vr = visualRouteList.stream().filter(visualRoute -> visualRoute.isTouching((e.getX() - dX) / scale * scaleCount / GRID_SIZE, -(e.getY() - dY) / scale * scaleCount / GRID_SIZE)).reduce((first, second) -> second).orElse(null);
                 if (vr != null) {
                     UpdateWindow o = new UpdateWindow();
                     o.display(vr.route, MainClient.user.login.equals(MainClient.collection.userFromRoute(vr.route).login) );
                 }
-            //}
+            }
         }
 
         public void mouseDragged(MouseEvent e) {

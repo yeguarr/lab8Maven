@@ -1,20 +1,21 @@
 package swing_package;
 
-import commons.Collection;
 import commons.Route;
 import commons.User;
 import program.MainClient;
 
 import javax.swing.table.AbstractTableModel;
-import java.net.NoRouteToHostException;
 import java.util.LinkedList;
 
 public class RoutesTableModel extends AbstractTableModel{
 
-    private LinkedList<String []> dataLinkedList;
+    private LinkedList<String []> dataLinkedList = new LinkedList<>();
 
     public RoutesTableModel(){
-        dataLinkedList = new LinkedList<>();
+    }
+
+    public void update() {
+        dataLinkedList.clear();
         for (User u : MainClient.collection.map.keySet())
             for (Route r : MainClient.collection.map.get(u)) {
                 String[] s = new String[getColumnCount()];
@@ -42,6 +43,7 @@ public class RoutesTableModel extends AbstractTableModel{
                 s[14] = String.valueOf(r.getDistance());
                 dataLinkedList.add(s);
             }
+        MainClient.rtm.fireTableDataChanged();
     }
 
     @Override

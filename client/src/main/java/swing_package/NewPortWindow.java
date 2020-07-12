@@ -24,6 +24,7 @@ public class NewPortWindow {
         frame.setSize(350, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
+        frame.setIconImage(MainClient.img.getImage());
 
         JPanel panel = new JPanel();
         frame.add(panel);
@@ -36,7 +37,7 @@ public class NewPortWindow {
 
         JTextField portText = new JTextField(20);
         portText.setBounds(90,70,165,25);
-        portText.setText("4329");
+        portText.setText(MainClient.port);
         /*PlainDocument doc = new PlainDocument(){
             String chars = "0123456789";
             @Override
@@ -67,6 +68,7 @@ public class NewPortWindow {
         setButton.addActionListener(actionEvent -> {
             if (!portText.getText().equals("")) {
                 try {
+                    MainClient.port = portText.getText();
                     MainClient.globalKillFlag.set(false);
                     Client.run(Integer.parseInt(portText.getText()));
                     frame.dispose();
@@ -82,10 +84,5 @@ public class NewPortWindow {
         });
         frame.setResizable(false);
         frame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        NewPortWindow o = new NewPortWindow();
-        o.display();
     }
 }

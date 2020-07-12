@@ -3,6 +3,7 @@ package program;
 import command.Command;
 import commons.Collection;
 import commons.Console;
+import commons.Reader;
 import commons.Utils;
 import commons.Writer;
 import exceptions.EndOfFileException;
@@ -29,7 +30,7 @@ public class ServerWithProperThreads {
 
     public static void main(String[] args) {
 
-        try (Reader reader = new Reader("properties.txt")){
+        try (commons.Reader reader = new Reader("properties.txt")){
             ServerSocketChannel ssc = ServerSocketChannel.open();
             try {
                 ssc.bind(new InetSocketAddress(args[0], Utils.portCheck.checker(Integer.parseInt(args[1]))));

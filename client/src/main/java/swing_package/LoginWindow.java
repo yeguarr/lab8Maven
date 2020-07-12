@@ -26,6 +26,7 @@ public class LoginWindow {
         frame.setSize(350, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
+        frame.setIconImage(MainClient.img.getImage());
 
         JPanel panel = new JPanel();
         frame.add(panel);
@@ -41,6 +42,8 @@ public class LoginWindow {
 
         JTextField usernameText = new JTextField(20);
         usernameText.setBounds(100,40,165,25);
+        if (!MainClient.user.login.equals("login"))
+            usernameText.setText(MainClient.user.login);
         panel.add(usernameText);
 
         JLabel password = new JLabel("Password");
@@ -49,6 +52,8 @@ public class LoginWindow {
 
         JPasswordField passwordText = new JPasswordField(20);
         passwordText.setBounds(100,70,165,25);
+        if (!MainClient.user.login.equals("login"))
+            passwordText.setText("password");
         panel.add(passwordText);
 
         JButton loginButton = new JButton("login");
@@ -56,7 +61,8 @@ public class LoginWindow {
         panel.add(loginButton);
         loginButton.addActionListener(actionEvent -> {
             try {
-                MainClient.user = new User(usernameText.getText(), new String(passwordText.getPassword()));
+                if (!MainClient.user.login.equals(usernameText.getText()))
+                    MainClient.user = new User(usernameText.getText(), new String(passwordText.getPassword()));
                 Command command = new Command(MainClient.user, Commands.LOGIN);
 
                 SendCommand(command);

@@ -4,6 +4,7 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import command.Command;
 import command.Commands;
+import commons.User;
 import program.Client;
 import program.MainClient;
 
@@ -11,18 +12,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class ProgramWindow {
-    public static boolean isDark = false;
     JFrame frame;
     JPanel panelLeft = new JPanel();
-    JPanel panelBottom = new JPanel();
     JPanel coordinates = new JPanel();
-    public MyComponent component = new MyComponent();
+    JPanel topPanel = new JPanel(new BorderLayout());
+    MyComponent component = new MyComponent();
     JButton add = new JButton("add");
-    //JButton update = new JButton("update");
-    //JButton remove_by_id = new JButton("remove by id");
     JButton clear = new JButton("clear");
     JButton add_if_min = new JButton("add if min");
     JButton remove_greater = new JButton("remove greater");
@@ -30,23 +32,19 @@ public class ProgramWindow {
     JButton average_of_distance = new JButton("average of distance");
     JButton min_by_creation_date = new JButton("min by creation_date");
     JButton print_field_ascending_distance = new JButton("print field ascending distance");
-
-    JTable Routes = new JTable();
+    RoutesTable routesTable = new RoutesTable();
 
     public void display(){
         frame = new JFrame("program");
-        frame.setSize(700, 550);
+        frame.setSize(1000, 700);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout());
+        frame.setIconImage(MainClient.img.getImage());
 
         panelLeft.setLayout(new GridLayout(15, 1, 10, 0));
         add.setPreferredSize(print_field_ascending_distance.getPreferredSize());
         panelLeft.add(add);
-        //update.setPreferredSize(print_field_ascending_distance.getPreferredSize());
-        //panelLeft.add(update);
-        //remove_by_id.setPreferredSize(print_field_ascending_distance.getPreferredSize());
-        //panelLeft.add(remove_by_id);
         clear.setPreferredSize(print_field_ascending_distance.getPreferredSize());
         panelLeft.add(clear);
         add_if_min.setPreferredSize(print_field_ascending_distance.getPreferredSize());
@@ -60,6 +58,7 @@ public class ProgramWindow {
         min_by_creation_date.setPreferredSize(print_field_ascending_distance.getPreferredSize());
         panelLeft.add(min_by_creation_date);
         panelLeft.add(print_field_ascending_distance);
+        routesTable.panel.setPreferredSize(new Dimension( 700,150));
 
         coordinates.setLayout(new BorderLayout());
 
@@ -86,17 +85,18 @@ public class ProgramWindow {
         show.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                RoutesTable o = new RoutesTable();
-                o.display();
+                MainClient.rtm.update();
+                MainClient.rtm.fireTableDataChanged();
             }
         });
 
         help.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                isDark = !isDark;
+                MainClient.isDark = !MainClient.isDark;
                 try {
-                    UIManager.setLookAndFeel( isDark ? new FlatDarculaLaf() : new FlatIntelliJLaf());
+                    UIManager.setLookAndFeel( MainClient.isDark ? new FlatDarculaLaf() : new FlatIntelliJLaf());
+                    panelLeft.setBackground(MainClient.isDark ? new Color(60,63,65) : new Color(230,230,230));
                     SwingUtilities.updateComponentTreeUI(frame);
                 } catch ( UnsupportedLookAndFeelException e) {
                     e.printStackTrace();
@@ -108,6 +108,8 @@ public class ProgramWindow {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 frame.dispose();
+                MainClient.globalKillFlag.set(true);
+                MainClient.collection.map.clear();
                 NewPortWindow o = new NewPortWindow();
                 o.display();
             }
@@ -117,13 +119,13 @@ public class ProgramWindow {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 frame.dispose();
+                MainClient.collection.map.clear();
                 LoginWindow o = new LoginWindow();
                 o.display();
             }
         });
 
-        panelLeft.setBackground(Color.GRAY);
-        panelBottom.setBackground(Color.DARK_GRAY);
+        panelLeft.setBackground(MainClient.isDark ? new Color(60,63,65) : new Color(230,230,230));
         coordinates.add(component);
 
         add.addActionListener(actionEvent -> {
@@ -177,16 +179,28 @@ public class ProgramWindow {
         });
 
         frame.getContentPane().add(BorderLayout.PAGE_START, jMenuBar);
-        frame.add(panelLeft, BorderLayout.LINE_START);
-        frame.add(coordinates, BorderLayout.CENTER);
+        topPanel.add(panelLeft, BorderLayout.LINE_START);
+        topPanel.add(coordinates, BorderLayout.CENTER);
+        JSplitPane jSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, routesTable.panel);
+        frame.add(jSplitPane);
         frame.setMinimumSize(frame.getSize());
+
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                try {
+                    FileWriter fileWriter = new FileWriter("client.txt");
+                    fileWriter.write(MainClient.user.login + '\n');
+                    fileWriter.write(MainClient.user.hashPassword+ '\n');
+                    fileWriter.write(MainClient.port+ '\n');
+                    fileWriter.write(String.valueOf(MainClient.isDark)+ '\n');
+                    fileWriter.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 
         frame.setVisible(true);
 
-    }
-
-    public static void main(String[] args) {
-        ProgramWindow o = new ProgramWindow();
-        o.display();
     }
 }

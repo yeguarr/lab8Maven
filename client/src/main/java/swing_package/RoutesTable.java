@@ -1,6 +1,5 @@
 package swing_package;
 
-import command.Command;
 import commons.Route;
 import program.MainClient;
 
@@ -16,15 +15,12 @@ import java.util.Comparator;
 import java.util.List;
 
 public class RoutesTable {
-    JFrame frame = new JFrame();
-
     JPanel panel = new JPanel();
 
-    RoutesTableModel rtm = new RoutesTableModel();
-    JTable routes = new JTable(rtm);
+    JTable routes = new JTable(MainClient.rtm);
     JScrollPane routesScrollPane = new JScrollPane(routes);
 
-    public void display(){
+    public RoutesTable(){
         routes.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -32,7 +28,7 @@ public class RoutesTable {
                 if (isSelected)
                     c.setBackground(column % 2 == 1 ? new Color(61,97,133) :  new Color(73,117,160));
                 else
-                    c.setBackground(column % 2 == 1 ? (ProgramWindow.isDark ? new Color(60,63,65) : Color.LIGHT_GRAY) : (ProgramWindow.isDark ?  new Color(69,73,74) : Color.WHITE));
+                    c.setBackground(column % 2 == 1 ? (MainClient.isDark ? new Color(60,63,65) : new Color(230,230,230)) : (MainClient.isDark ?  new Color(69,73,74) : Color.WHITE));
                 return this;
             }
         });
@@ -72,20 +68,8 @@ public class RoutesTable {
             }
         });
 
-        frame = new JFrame("program");
-        frame.setSize(700, 400);
-        frame.setLocationRelativeTo(null);
         panel.setLayout(new BorderLayout());
-
-        panel.add(routesScrollPane );
-        frame.add(panel);
-
-        frame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        RoutesTable o = new RoutesTable();
-        o.display();
+        panel.add(routesScrollPane);
     }
 }
 

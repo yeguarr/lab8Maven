@@ -1,5 +1,7 @@
 package swing_package;
 
+import program.MainClient;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,6 +17,7 @@ public class AlarmWindow {
     public void display(String title, String message){
         label = new JMultilineLabel(message);
         frame = new JFrame(title);
+        frame.setIconImage(MainClient.img.getImage());
         //label.setText(message);
         frame.setSize(350, 200);
         frame.setLocationRelativeTo(null);

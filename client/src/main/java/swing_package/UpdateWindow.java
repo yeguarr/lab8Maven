@@ -22,6 +22,7 @@ public class UpdateWindow {
         frame.setSize(350, 530);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setIconImage(MainClient.img.getImage());
 
         JPanel panel = new JPanel();
         frame.add(panel);
