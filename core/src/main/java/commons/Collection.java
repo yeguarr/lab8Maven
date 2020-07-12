@@ -45,6 +45,19 @@ public class Collection implements Serializable {
         return map.containsKey(user);
     }
 
+    public Route getRouteById(int id) {
+        Route route = null;
+        myLabel:
+        for (User u : map.keySet()) {
+            for (Route r : map.get(u))
+                if (r.getId().equals(id)) {
+                    route = r;
+                    break myLabel;
+                }
+        }
+        return route;
+    }
+
     public boolean isLoginUsed(String login) {
         if (login.equals("login")) return true;
         for (User user : map.keySet()) {
