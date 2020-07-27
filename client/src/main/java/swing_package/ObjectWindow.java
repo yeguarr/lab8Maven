@@ -195,7 +195,8 @@ public class ObjectWindow {
                 }
                 Client.SendCommand(new CommandWithObj(MainClient.user, com, r));
             } catch (IOException | NumberFormatException e) {
-                new AlarmWindow().display("ERROR", e.getMessage());
+                JOptionPane.showMessageDialog(frame, e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+                //new AlarmWindow().display("ERROR", e.getMessage());
             }
             frame.dispose();
         });

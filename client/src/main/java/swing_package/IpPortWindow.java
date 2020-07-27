@@ -66,8 +66,9 @@ public class IpPortWindow {
                     LoginWindow o = new LoginWindow();
                     o.display();
                 } catch (IOException e) {
-                    AlarmWindow alarmWindow = new AlarmWindow();
-                    alarmWindow.display("ERROR", e.getMessage());
+                    JOptionPane.showMessageDialog(frame, e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+                    //AlarmWindow alarmWindow = new AlarmWindow();
+                    //alarmWindow.display("ERROR", e.getMessage());
                     e.printStackTrace();
                     MainClient.globalKillFlag.set(true);
                 }

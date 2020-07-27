@@ -218,7 +218,7 @@ public class MyComponent extends JComponent implements ActionListener {
                 VisualRoute vr = visualRouteList.stream().filter(visualRoute -> visualRoute.isTouching((e.getX() - dX) / scale * scaleCount / GRID_SIZE, -(e.getY() - dY) / scale * scaleCount / GRID_SIZE)).reduce((first, second) -> second).orElse(null);
                 if (vr != null) {
                     UpdateWindow o = new UpdateWindow();
-                    o.display(vr.route, MainClient.user.login.equals(MainClient.collection.userFromRoute(vr.route).login) );
+                    o.display(vr.route, MainClient.user.login.equals(MainClient.collection.userFromRoute(vr.route).login));
                 }
             }
         }

@@ -91,7 +91,6 @@ public class GhostText implements FocusListener, DocumentListener, PropertyChang
             try {
                 textfield.setText(ghostText);
                 textfield.setForeground(ghostColor);
-                foregroundColor = MainClient.isDark ? Color.LIGHT_GRAY : Color.BLACK;
             } finally {
                 registerListeners();
             }

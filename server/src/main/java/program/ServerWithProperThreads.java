@@ -134,7 +134,7 @@ public class ServerWithProperThreads {
         buf.clear();
         Command com = CommanderServer.switcher(command, collection, sqlRun);
 
-        Writer.writeln("Вызвана команада: " + command.getCurrent().toString());
+        Writer.writeln("Вызвана команада: " + command.getCurrent().toString() + " Пользователем: " + command.getUser().login);
         logger.info("Вызвана команада: " + command.toString());
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

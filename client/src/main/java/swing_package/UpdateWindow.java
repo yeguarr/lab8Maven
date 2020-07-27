@@ -229,7 +229,8 @@ public class UpdateWindow {
             try {
                 Client.SendCommand(new RemoveById(MainClient.user, route.getId()));
             } catch (IOException e) {
-                new AlarmWindow().display("ERROR", e.getMessage());
+                JOptionPane.showMessageDialog(frame, e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+                //new AlarmWindow().display("ERROR", e.getMessage());
             }
             frame.dispose();
         });
@@ -253,7 +254,8 @@ public class UpdateWindow {
                 }
                 Client.SendCommand(new CommandWithObj(MainClient.user, Commands.UPDATE, r));
             } catch (IOException | NumberFormatException e) {
-                new AlarmWindow().display("ERROR", e.getMessage());
+                JOptionPane.showMessageDialog(frame, e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+                //new AlarmWindow().display("ERROR", e.getMessage());
             }
             frame.dispose();
         });

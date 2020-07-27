@@ -166,14 +166,16 @@ public class ProgramWindow {
             try {
                 Client.SendCommand(new Command(MainClient.user,Commands.PRINT_FIELD_ASCENDING_DISTANCE));
             } catch (IOException e) {
-                new AlarmWindow().display("ERROR", e.getMessage());
+                JOptionPane.showMessageDialog(frame, e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+                //new AlarmWindow().display("ERROR", e.getMessage());
             }
         });
         min_by_creation_date.addActionListener(actionEvent -> {
             try {
                 Client.SendCommand(new Command(MainClient.user,Commands.MIN_BY_CREATION_DATE));
             } catch (IOException e) {
-                new AlarmWindow().display("ERROR", e.getMessage());
+                JOptionPane.showMessageDialog(frame, e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+                //new AlarmWindow().display("ERROR", e.getMessage());
             }
         });
 
@@ -181,14 +183,16 @@ public class ProgramWindow {
             try {
                 Client.SendCommand(new Command(MainClient.user,Commands.AVERAGE_OF_DISTANCE));
             } catch (IOException e) {
-                new AlarmWindow().display("ERROR", e.getMessage());
+                JOptionPane.showMessageDialog(frame, e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+                //new AlarmWindow().display("ERROR", e.getMessage());
             }
         });
         clear.addActionListener(actionEvent -> {
             try {
                 Client.SendCommand(new Command(MainClient.user, Commands.CLEAR));
             } catch (IOException e) {
-                new AlarmWindow().display("ERROR", e.getMessage());
+                JOptionPane.showMessageDialog(frame, e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+                //new AlarmWindow().display("ERROR", e.getMessage());
             }
         });
 

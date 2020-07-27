@@ -8,6 +8,7 @@ import commons.User;
 import exceptions.EndOfFileException;
 import exceptions.IncorrectFileNameException;
 import swing_package.IpPortWindow;
+import swing_package.ProgramWindow;
 import swing_package.RoutesTableModel;
 
 import javax.swing.*;
@@ -36,8 +37,13 @@ public class MainClient {
         } catch ( UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        IpPortWindow o = new IpPortWindow();
         collection = new Collection(0);
-        o.display();
+        if (user.login.equals("demo")) {
+            ProgramWindow demo = new ProgramWindow();
+            demo.display();
+        } else {
+            IpPortWindow o = new IpPortWindow();
+            o.display();
+        }
     }
 }

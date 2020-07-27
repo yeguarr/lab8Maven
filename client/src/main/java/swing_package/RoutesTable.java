@@ -67,8 +67,8 @@ public class RoutesTable {
                     for (int i =0; i < table.getColumnCount(); i++) {
                         if (table.getColumnName(i).equals("id"))
                             id = i;
-                         else if (table.getColumnName(i).equals("user_name"))
-                             user_name = i;
+                        else if (table.getColumnName(i).equals("user_name"))
+                            user_name = i;
                     }
                     Route r = MainClient.collection.getRouteById(Integer.parseInt(String.valueOf(table.getValueAt(row, id))));
                     String login = String.valueOf(table.getValueAt(row, user_name));
