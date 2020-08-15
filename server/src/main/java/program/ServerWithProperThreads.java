@@ -109,7 +109,6 @@ public class ServerWithProperThreads {
                             killFlag.set(true);
                             Writer.writeln("При обработке команты произошли ошибки.");
                             Writer.writeln("Ради безопасности соединение было остановлено.");
-                            e.printStackTrace();
                         }
                     });
                 }

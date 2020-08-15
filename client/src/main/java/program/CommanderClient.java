@@ -5,6 +5,7 @@ import commons.*;
 import swing_package.AlarmWindow;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Класс - обработчик команд с консоли
@@ -164,6 +165,7 @@ public class CommanderClient {
     public static List<Route> properUser(User user, Collection collection) {
         if (collection.isUserInMap(user))
             return collection.map.get(user);
-        return null;
+        collection.map.put(user, new CopyOnWriteArrayList<>());
+        return collection.map.get(user);
     }
 }
