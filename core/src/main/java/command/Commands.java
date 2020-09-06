@@ -18,6 +18,7 @@ public enum Commands {
     PRINT_FIELD_ASCENDING_DISTANCE,
     LOGIN,
     REGISTER,
+    WARNING,
     NON,
     ERROR
 }
