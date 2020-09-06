@@ -7,6 +7,10 @@ import commons.Reader;
 import commons.User;
 import exceptions.EndOfFileException;
 import exceptions.IncorrectFileNameException;
+import locales.Label_en_EN;
+import locales.Label_hu_HU;
+import locales.Label_nl_NL;
+import locales.Label_ru_RU;
 import swing_package.InfoMessage;
 import swing_package.IpPortWindow;
 import swing_package.ProgramWindow;
@@ -14,6 +18,8 @@ import swing_package.RoutesTableModel;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -28,7 +34,17 @@ public class MainClient {
     public static String ip;
     public static java.util.Queue<InfoMessage> messages = new ConcurrentLinkedQueue<>();
 
+    public static ResourceBundle[] Labels = new ResourceBundle[]{
+            new Label_ru_RU(),
+            new Label_hu_HU(),
+            new Label_en_EN(),
+            new Label_nl_NL(),
+    };
+
+    public static ResourceBundle stats;
+
     public static void main(String[] args) {
+        stats = Labels[2];
         try (Reader reader = new Reader("client.txt")) {
             user = User.userFromHashPassword(reader.read(),reader.read());
             ip = reader.read();

@@ -28,7 +28,7 @@ public class ObjectWindow {
         frame.add(panel);
         panel.setLayout(null);
 
-        JLabel name = new JLabel("name");
+        JLabel name = new JLabel(MainClient.stats.getString("name"));
         name.setBounds(10,20,90,25);
         panel.add(name);
 
@@ -36,23 +36,23 @@ public class ObjectWindow {
         nameText.setBounds(130,20,165,25);
         panel.add(nameText);
 
-        JLabel coordinatesX = new JLabel("coordinates.x");
+        JLabel coordinatesX = new JLabel(MainClient.stats.getString("coordinates.") + "x");
         coordinatesX.setBounds(10,50,90,25);
         panel.add(coordinatesX);
 
-        JLabel coordinatesY = new JLabel("coordinates.y");
+        JLabel coordinatesY = new JLabel(MainClient.stats.getString("coordinates.") + "y");
         coordinatesY.setBounds(10,80,90,25);
         panel.add(coordinatesY);
 
-        JLabel LocationToX = new JLabel("LocationTo.x");
+        JLabel LocationToX = new JLabel(MainClient.stats.getString("LocationTo.") + "x");
         LocationToX.setBounds(10,110,90,25);
         panel.add(LocationToX);
 
-        JLabel LocationToY = new JLabel("LocationTo.y");
+        JLabel LocationToY = new JLabel(MainClient.stats.getString("LocationTo.") + "y");
         LocationToY.setBounds(10,140,90,25);
         panel.add(LocationToY);
 
-        JLabel LocationToZ = new JLabel("LocationTo.z");
+        JLabel LocationToZ = new JLabel(MainClient.stats.getString("LocationTo.") + "z");
         LocationToZ.setBounds(10,170,90,25);
         panel.add(LocationToZ);
 
@@ -81,7 +81,7 @@ public class ObjectWindow {
         LocationToZText.setDocument(new Tester());
         panel.add(LocationToZText);
 
-        JLabel LocationToName = new JLabel("LocationTo.name");
+        JLabel LocationToName = new JLabel(MainClient.stats.getString("LocationTo.name"));
         LocationToName.setBounds(10, 200, 100, 25);
         panel.add(LocationToName);
 
@@ -89,19 +89,19 @@ public class ObjectWindow {
         LocationToNameText.setBounds(130,200,165,25);
         panel.add(LocationToNameText);
 
-        buttonLocationFrom.setText("From is null");
+        buttonLocationFrom.setText(MainClient.stats.getString("From is null"));
         buttonLocationFrom.setBounds(80 ,232, 160, 20);
         panel.add(buttonLocationFrom);
 
-        JLabel LocationFromX = new JLabel("LocationFrom.x");
+        JLabel LocationFromX = new JLabel(MainClient.stats.getString("LocationFrom.") + "x");
         LocationFromX.setBounds(10,260,90,25);
         panel.add(LocationFromX);
 
-        JLabel LocationFromY = new JLabel("LocationFrom.y");
+        JLabel LocationFromY = new JLabel(MainClient.stats.getString("LocationFrom.") + "y");
         LocationFromY.setBounds(10,290,90,25);
         panel.add(LocationFromY);
 
-        JLabel LocationFromZ = new JLabel("LocationFrom.z");
+        JLabel LocationFromZ = new JLabel(MainClient.stats.getString("LocationFrom.") + "z");
         LocationFromZ.setBounds(10,320,90,25);
         panel.add(LocationFromZ);
 
@@ -120,7 +120,7 @@ public class ObjectWindow {
         LocationFromZText.setDocument(new Tester());
         panel.add(LocationFromZText);
 
-        JLabel LocationFromName = new JLabel("LocationFrom.name");
+        JLabel LocationFromName = new JLabel(MainClient.stats.getString("LocationFrom.name"));
         LocationFromName.setBounds(10, 350, 120, 25);
         panel.add(LocationFromName);
 
@@ -128,11 +128,11 @@ public class ObjectWindow {
         LocationFromNameText.setBounds(130,350,165,25);
         panel.add(LocationFromNameText);
 
-        buttonDistance.setText("distance is null");
+        buttonDistance.setText(MainClient.stats.getString("distance is null"));
         buttonDistance.setBounds(80 ,382, 160, 20);
         panel.add(buttonDistance);
 
-        JLabel distance = new JLabel("Distance");
+        JLabel distance = new JLabel(MainClient.stats.getString("Distance"));
         distance.setBounds(10, 410, 120, 25);
         panel.add(distance);
 
@@ -141,7 +141,7 @@ public class ObjectWindow {
         distanceText.setDocument(new Tester());
         panel.add(distanceText);
 
-        JButton cancelButton = new JButton("cancel");
+        JButton cancelButton = new JButton(MainClient.stats.getString("cancel"));
         cancelButton.setBounds(10, 440, 80, 25);
         panel.add(cancelButton);
 
@@ -150,24 +150,24 @@ public class ObjectWindow {
         panel.add(createButton);
 
         buttonDistance.addActionListener(actionEvent -> {
-            if (buttonDistance.getText().equals("distance is null")){
-                buttonDistance.setText("distance is not null");
+            if (buttonDistance.getText().equals(MainClient.stats.getString("distance is null"))){
+                buttonDistance.setText(MainClient.stats.getString("distance is not null"));
                 distanceText.setEditable(false);
             } else {
-                buttonDistance.setText("distance is null");
+                buttonDistance.setText(MainClient.stats.getString("distance is null"));
                 distanceText.setEditable(true);
             }
         });
 
         buttonLocationFrom.addActionListener(actionEvent -> {
-            if (buttonLocationFrom.getText().equals("From is null")){
-                buttonLocationFrom.setText("From is not null");
+            if (buttonLocationFrom.getText().equals(MainClient.stats.getString("From is null"))){
+                buttonLocationFrom.setText(MainClient.stats.getString("From is not null"));
                 LocationFromNameText.setEditable(false);
                 LocationFromXText.setEditable(false);
                 LocationFromYText.setEditable(false);
                 LocationFromZText.setEditable(false);
             } else {
-                buttonLocationFrom.setText("From is null");
+                buttonLocationFrom.setText(MainClient.stats.getString("From is null"));
                 LocationFromNameText.setEditable(true);
                 LocationFromXText.setEditable(true);
                 LocationFromYText.setEditable(true);
@@ -182,20 +182,20 @@ public class ObjectWindow {
                 Route r = new Route();
                 r.setName(nameText.getText());
                 r.setCoordinates(new Coordinates(Integer.parseInt(coordinatesXText.getText()), Long.parseLong(coordinatesYText.getText())));
-                if (buttonLocationFrom.getText().equals("From is null")) {
+                if (buttonLocationFrom.getText().equals(MainClient.stats.getString("From is null"))) {
                     r.setFrom(new Location(Long.parseLong(LocationFromXText.getText()), Long.parseLong(LocationFromYText.getText()), Long.parseLong(LocationFromZText.getText()), LocationFromNameText.getText()));
                 } else {
                     r.setFrom(null);
                 }
                 r.setTo(new Location(Long.parseLong(LocationToXText.getText()), Long.parseLong(LocationToYText.getText()), Long.parseLong(LocationToZText.getText()), LocationToNameText.getText()));
-                if (buttonDistance.getText().equals("distance is null")) {
+                if (buttonDistance.getText().equals(MainClient.stats.getString("distance is null"))) {
                     r.setDistance(Long.parseLong(distanceText.getText()));
                 } else {
                     r.setDistance(null);
                 }
                 Client.SendCommand(new CommandWithObj(MainClient.user, com, r));
             } catch (IOException | NumberFormatException e) {
-                JOptionPane.showMessageDialog(frame, e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(frame, e.getMessage(), MainClient.stats.getString("ERROR"), JOptionPane.WARNING_MESSAGE);
                 //new AlarmWindow().display("ERROR", e.getMessage());
             }
             frame.dispose();
