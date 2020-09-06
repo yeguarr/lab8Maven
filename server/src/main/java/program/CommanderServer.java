@@ -2,6 +2,7 @@ package program;
 
 import command.*;
 import commons.*;
+import exceptions.FailedCheckException;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -10,6 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import static commons.Utils.*;
 
 /**
  * Класс - обработчик команд с консоли
@@ -139,6 +142,8 @@ public class CommanderServer {
      * Удаляет все элементы коллекции, которые меньше чем заданный
      */
     public static Command removeLower(Collection c, Command com, PostgreSQL sqlRun) {
+        if (testRoute((Route) com.returnObj()))
+            return new Warning(com.getUser(),"warning.route");
         Route newRoute = (Route) com.returnObj();
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
@@ -164,6 +169,8 @@ public class CommanderServer {
      * Удаляет все элементы коллекции, которые больше чем заданный
      */
     public static Command removeGreater(Collection c, Command com, PostgreSQL sqlRun) {
+        if (testRoute((Route) com.returnObj()))
+            return new Warning(com.getUser(),"warning.route");
         Route newRoute = (Route) com.returnObj();
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
@@ -189,6 +196,8 @@ public class CommanderServer {
      * Добавляет новый элемент в коллекцию, если его значение меньше, чем у наименьшего элемента этой коллекции
      */
     public static Command addIfMin(Collection c, Command com, PostgreSQL sqlRun) {
+        if (testRoute((Route) com.returnObj()))
+            return new Warning(com.getUser(),"warning.route");
         int id = c.getNextId();
         Route newRoute = routeWithId((Route) com.returnObj(), id);
         List<Route> list = properUser( com.getUser(), c);
@@ -262,6 +271,8 @@ public class CommanderServer {
      * Перезаписывает элемент списка с указанным id
      */
     public static Command update(Collection c, Command com, PostgreSQL sqlRun) {
+        if (testRoute((Route) com.returnObj()))
+            return new Warning(com.getUser(),"warning.route");
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
             int id = ((Route) com.returnObj()).getId();
@@ -292,6 +303,8 @@ public class CommanderServer {
      * Добавляет элемент в список
      */
     public static Command add(Collection c, Command com, PostgreSQL sqlRun) {
+        if (testRoute((Route) com.returnObj()))
+            return new Warning(com.getUser(),"warning.route");
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
             int id = c.getNextId();
@@ -312,6 +325,25 @@ public class CommanderServer {
     public static Route routeWithId(Route r, int id) {
         r.setId(id);
         return r;
+    }
+
+    public static boolean testRoute(Route route) {
+        try {
+            routeDistanceCheck.checker(route.getDistance());
+            routeNameCheck.checker(route.getName());
+            locationXYZCheck.checker(route.getFrom().getX());
+            locationXYZCheck.checker(route.getFrom().getY());
+            locationXYZCheck.checker(route.getFrom().getZ());
+            locationNameCheck.checker(route.getFrom().getName());
+            locationXYZCheck.checker(route.getTo().getX());
+            locationXYZCheck.checker(route.getTo().getY());
+            locationXYZCheck.checker(route.getTo().getZ());
+            locationNameCheck.checker(route.getTo().getName());
+            coordinatesXCheck.checker(route.getCoordinates().getX());
+            coordinatesYCheck.checker(route.getCoordinates().getY());
+            return false;
+        } catch (Exception ignored) { }
+        return true;
     }
 
     public static List<Route> properUser(User user, Collection collection) {

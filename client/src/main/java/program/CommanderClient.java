@@ -51,6 +51,10 @@ public class CommanderClient {
                 MainClient.messages.add(InfoMessage.error("Server Error Response", ((ErrorCommand) com).returnObj()));
                 break;
             }
+            case WARNING: {
+                MainClient.messages.add(InfoMessage.warning("Server Warning Response", ((Warning) com).returnObj()));
+                break;
+            }
             case SHOW: {
                 MainClient.collection = ((Show) com).returnObj();
                 MainClient.rtm.update();

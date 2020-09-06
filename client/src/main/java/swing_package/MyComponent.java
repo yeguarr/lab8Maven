@@ -278,7 +278,7 @@ public class MyComponent extends JComponent implements ActionListener {
             oldX = e.getX();
             oldY = e.getY();
             //WIDTH - 260 + 260 * cool, 30, 60, 60
-            if (e.getX() > WIDTH - 260 && e.getY() > 30 && e.getY() < 90 && messageTime <= 0 && messageTime > -2)
+            if (e.getX() > WIDTH - 260 && e.getY() > 30 && e.getY() < 90 && messageTime <= 0 && messageTime > -3)
                 messageTime = -3;
             if (e.getClickCount() == 2) {
                 VisualRoute vr = visualRouteList.stream().filter(visualRoute -> visualRoute.isTouching((e.getX() - dX) / scale * scaleCount / GRID_SIZE, -(e.getY() - dY) / scale * scaleCount / GRID_SIZE)).reduce((first, second) -> second).orElse(null);

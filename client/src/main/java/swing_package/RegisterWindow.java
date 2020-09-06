@@ -3,6 +3,8 @@ package swing_package;
 import command.Command;
 import command.Commands;
 import commons.User;
+import commons.Utils;
+import exceptions.FailedCheckException;
 import program.MainClient;
 
 import javax.swing.*;
@@ -62,6 +64,7 @@ public class RegisterWindow {
         registerButton.addActionListener(actionListener -> {
             if (usernameText.getText().length()!=0&&Arrays.equals(passwordText.getPassword(), passwordText2.getPassword())) {
                 try {
+                    Utils.loginCheck.checker(usernameText.getText());
                     MainClient.user = new User(usernameText.getText(), new String(passwordText.getPassword()));
                     Command command = new Command(MainClient.user, Commands.REGISTER);
 
@@ -72,6 +75,8 @@ public class RegisterWindow {
                     frame.dispose();
                 } catch (IOException e) {
                     e.printStackTrace();
+                } catch (FailedCheckException e) {
+                    JOptionPane.showMessageDialog(frame, "Login should be less than 40 characters");
                 }
             }
         });

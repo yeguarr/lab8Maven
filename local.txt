@@ -5,3 +5,4 @@ invalid.user
 empty
 success
 failure
+warning.route
