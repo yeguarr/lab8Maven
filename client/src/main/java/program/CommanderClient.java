@@ -44,7 +44,7 @@ public class CommanderClient {
                  MainClient.rtm.update();
                  return;
             case INFO: {
-                MainClient.messages.add(InfoMessage.info("Server Response", ((Info) com).returnObj()));
+                MainClient.messages.add(InfoMessage.info(MainClient.stats.getString("Server Response"), ((Info) com).returnObj()));
                 break;
             }
             case ERROR: {

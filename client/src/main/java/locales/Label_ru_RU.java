@@ -59,7 +59,8 @@ public class Label_ru_RU extends ListResourceBundle{
             {"name","имя"},
             {"Update object","Обновить объект"},
             {"Your color is","Ваш цвет"},
-            {"Server Response","Ответ сервера"}
+            {"Server Response","Ответ сервера"},
+            {"remove object", "удалить объект"}
     };
 
     @Override

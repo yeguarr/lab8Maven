@@ -7,7 +7,7 @@ public class Label_nl_NL extends ListResourceBundle{
             {"Add", " Toevoegen"},
             {"connection", " verbinding"},
             {"Client configuration", " Client configuratie"},
-            {"Server' s ip:", "Server' s ip:"},
+            {"Server's ip:", "Server's ip:"},
             {"Port:", " Poort:"},
             {"Set", " Set"},
             {"ERROR", " FOUT"},
@@ -22,10 +22,10 @@ public class Label_nl_NL extends ListResourceBundle{
             {"create account", " account aanmaken"},
             {"name", " naam"},
             {"coordinates.","coördineren."},
-            {"LocationTo.", "LocationTo."},
-            {"LocationTo.name","LocationTo.name"},
-            {"LocationFrom.", "LocationFrom."},
-            {"LocationFrom.name","LocationFrom.name"},
+            {"LocationTo.", "LocatieTo."},
+            {"LocationTo.name","LocatieTo.naam"},
+            {"LocationFrom.", "LocatieFrom."},
+            {"LocationFrom.name","LocatieFrom.naam"},
             {"From is null", " From Is null"},
             {"From is not null", " From is niet null"},
             {"distance is null", " afstand is null"},
@@ -59,7 +59,8 @@ public class Label_nl_NL extends ListResourceBundle{
             {"name", " naam"},
             {"Update object", "Object Bijwerken"},
             {"Your color is", " je kleur is"},
-            {"Server Response","Kiszolgáló Válasza"}
+            {"Server Response","Serverrespons"},
+            {"remove object", "object verwijderen"}
     };
 
     @Override

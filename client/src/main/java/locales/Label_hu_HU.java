@@ -26,7 +26,7 @@ public class Label_hu_HU extends ListResourceBundle{
             {"LocationTo.name","LocatonTo.név"},
             {"LocationFrom.", "LocatonFrom."},
             {"LocationFrom.name","LocatonFrom.név"},
-            {"From Is null", " From Is null"},
+            {"From is null", " From Is null"},
             {"From is not null", " From is not null"},
             {"distance is null", " távolság null"},
             {"distance is not null", " a távolság Nem null"},
@@ -59,7 +59,8 @@ public class Label_hu_HU extends ListResourceBundle{
             {"name", " név"},
             {"Update object", " objektum frissítése"},
             {"Your color is", " A színe"},
-            {"Server Response","Kiszolgáló Válasza"}
+            {"Server Response","Kiszolgáló Válasza"},
+            {"remove object", "objektum eltávolítása"}
     };
 
     @Override

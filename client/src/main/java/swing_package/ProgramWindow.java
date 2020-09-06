@@ -54,6 +54,7 @@ public class ProgramWindow {
         exit.setText(MainClient.stats.getString("Exit"));
         logout.setText(MainClient.stats.getString("log Out"));
         show.setText("<html>" + MainClient.stats.getString("Username") + ": <b>" + MainClient.user.login +"</b>. &emsp;" + MainClient.stats.getString("Your color is") + ": <font color=#"+ Integer.toHexString(Color.getHSBColor(((float) Math.abs(Utils.sha1(MainClient.user.login).hashCode())) / Integer.MAX_VALUE, 1.f,  1.f).getRGB()).substring(2) +">⬛</font> </html>");
+        appearance.setText(MainClient.isDark ?  MainClient.stats.getString("Сhange to the light side") : MainClient.stats.getString("Сhange to the dark side"));
     }
 
     public void display(){

@@ -59,7 +59,8 @@ public class Label_en_EN extends ListResourceBundle{
             {"name","name"},
             {"Update object","Update object"},
             {"Your color is","Your color is"},
-            {"Server Response","Server Response"}
+            {"Server Response","Server Response"},
+            {"remove object", "remove object"}
     };
 
     @Override

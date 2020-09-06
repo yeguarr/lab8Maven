@@ -38,23 +38,23 @@ public class UpdateWindow {
         nameText.setEditable(editable);
         panel.add(nameText);
 
-        JLabel coordinatesX = new JLabel(MainClient.stats.getString("coordinates.x"));
+        JLabel coordinatesX = new JLabel(MainClient.stats.getString("coordinates.")+ "x");
         coordinatesX.setBounds(10,50,90,25);
         panel.add(coordinatesX);
 
-        JLabel coordinatesY = new JLabel(MainClient.stats.getString("coordinates.y"));
+        JLabel coordinatesY = new JLabel(MainClient.stats.getString("coordinates.")+ "y");
         coordinatesY.setBounds(10,80,90,25);
         panel.add(coordinatesY);
 
-        JLabel LocationToX = new JLabel(MainClient.stats.getString("LocationTo.x"));
+        JLabel LocationToX = new JLabel(MainClient.stats.getString("LocationTo.")+ "x");
         LocationToX.setBounds(10,110,90,25);
         panel.add(LocationToX);
 
-        JLabel LocationToY = new JLabel(MainClient.stats.getString("LocationTo.y"));
+        JLabel LocationToY = new JLabel(MainClient.stats.getString("LocationTo.")+ "y");
         LocationToY.setBounds(10,140,90,25);
         panel.add(LocationToY);
 
-        JLabel LocationToZ = new JLabel(MainClient.stats.getString("LocationTo.z"));
+        JLabel LocationToZ = new JLabel(MainClient.stats.getString("LocationTo.")+ "z");
         LocationToZ.setBounds(10,170,90,25);
         panel.add(LocationToZ);
 
@@ -108,15 +108,15 @@ public class UpdateWindow {
         buttonLocationFrom.setEnabled(editable);
         panel.add(buttonLocationFrom);
 
-        JLabel LocationFromX = new JLabel(MainClient.stats.getString("LocationFrom.x"));
+        JLabel LocationFromX = new JLabel(MainClient.stats.getString("LocationFrom.") + "x");
         LocationFromX.setBounds(10,260,90,25);
         panel.add(LocationFromX);
 
-        JLabel LocationFromY = new JLabel(MainClient.stats.getString("LocationFrom.y"));
+        JLabel LocationFromY = new JLabel(MainClient.stats.getString("LocationFrom.")+ "y");
         LocationFromY.setBounds(10,290,90,25);
         panel.add(LocationFromY);
 
-        JLabel LocationFromZ = new JLabel(MainClient.stats.getString("LocationFrom.z"));
+        JLabel LocationFromZ = new JLabel(MainClient.stats.getString("LocationFrom.")+ "z");
         LocationFromZ.setBounds(10,320,90,25);
         panel.add(LocationFromZ);
 
@@ -176,7 +176,7 @@ public class UpdateWindow {
         cancelButton.setBounds(10, 440, 80, 25);
         panel.add(cancelButton);
 
-        JButton updateObjectButton = new JButton(MainClient.stats.getString("update object"));
+        JButton updateObjectButton = new JButton(MainClient.stats.getString("Update object"));
         updateObjectButton.setBounds(90, 440, 120, 25);
         updateObjectButton.setEnabled(editable);
         panel.add(updateObjectButton);
