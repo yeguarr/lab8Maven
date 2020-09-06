@@ -27,7 +27,7 @@ public class Label_hu_HU extends ListResourceBundle{
             {"LocationFrom.", "LocatonFrom."},
             {"LocationFrom.name","LocatonFrom.név"},
             {"From is null", " From Is null"},
-            {"From is not null", " From is not null"},
+            {"From is not null", " From is niet null"},
             {"distance is null", " távolság null"},
             {"distance is not null", " a távolság Nem null"},
             {"Distance", " Távolság"},
@@ -61,7 +61,7 @@ public class Label_hu_HU extends ListResourceBundle{
             {"Your color is", " A színe"},
             {"Server Response","Kiszolgáló Válasza"},
             {"Server Error Response","Kiszolgálói Hibaválasz"},
-            {"Server Warning Response","A Kiszolgáló Figyelmeztető Válasza"},
+            {"Server Warning Response","Figyelmeztet"},
             {"remove object", "objektum eltávolítása"}
     };
 
