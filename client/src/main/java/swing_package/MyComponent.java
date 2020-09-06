@@ -6,7 +6,6 @@ import program.MainClient;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.font.TextLayout;
 import java.awt.geom.*;
 import java.util.Iterator;
 import java.util.LinkedList;
