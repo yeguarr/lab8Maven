@@ -60,6 +60,8 @@ public class Label_ru_RU extends ListResourceBundle{
             {"Update object","Обновить объект"},
             {"Your color is","Ваш цвет"},
             {"Server Response","Ответ сервера"},
+            {"Server Error Response","Отчет сервера об ошибке"},
+            {"Server Warning Response","Предупреждение от сервера "},
             {"remove object", "удалить объект"}
     };
 

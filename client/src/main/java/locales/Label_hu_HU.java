@@ -60,6 +60,8 @@ public class Label_hu_HU extends ListResourceBundle{
             {"Update object", " objektum frissítése"},
             {"Your color is", " A színe"},
             {"Server Response","Kiszolgáló Válasza"},
+            {"Server Error Response","Kiszolgálói Hibaválasz"},
+            {"Server Warning Response","A Kiszolgáló Figyelmeztető Válasza"},
             {"remove object", "objektum eltávolítása"}
     };
 

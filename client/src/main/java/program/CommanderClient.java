@@ -48,11 +48,11 @@ public class CommanderClient {
                 break;
             }
             case ERROR: {
-                MainClient.messages.add(InfoMessage.error("Server Error Response", ((ErrorCommand) com).returnObj()));
+                MainClient.messages.add(InfoMessage.error(MainClient.stats.getString("Server Error Response"), ((ErrorCommand) com).returnObj()));
                 break;
             }
             case WARNING: {
-                MainClient.messages.add(InfoMessage.warning("Server Warning Response", ((Warning) com).returnObj()));
+                MainClient.messages.add(InfoMessage.warning(MainClient.stats.getString("Server Warning Response"), ((Warning) com).returnObj()));
                 break;
             }
             case SHOW: {

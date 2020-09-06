@@ -60,6 +60,8 @@ public class Label_nl_NL extends ListResourceBundle{
             {"Update object", "Object Bijwerken"},
             {"Your color is", " je kleur is"},
             {"Server Response","Serverrespons"},
+            {"Server Error Response","Serverfout Antwoord"},
+            {"Server Warning Response","Server Waarschuwing Reactie"},
             {"remove object", "object verwijderen"}
     };
 

@@ -60,6 +60,8 @@ public class Label_en_EN extends ListResourceBundle{
             {"Update object","Update object"},
             {"Your color is","Your color is"},
             {"Server Response","Server Response"},
+            {"Server Error Response","Server Error Response"},
+            {"Server Warning Response","Server Warning Response"},
             {"remove object", "remove object"}
     };
 
