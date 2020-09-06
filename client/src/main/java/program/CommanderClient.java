@@ -3,6 +3,7 @@ package program;
 import command.*;
 import commons.*;
 import swing_package.AlarmWindow;
+import swing_package.InfoMessage;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -43,13 +44,11 @@ public class CommanderClient {
                  MainClient.rtm.update();
                  return;
             case INFO: {
-                AlarmWindow obj = new AlarmWindow();
-                obj.display("INFO", ((Info) com).returnObj());
+                MainClient.messages.add(InfoMessage.info("Server Response", ((Info) com).returnObj()));
                 break;
             }
             case ERROR: {
-                AlarmWindow obj = new AlarmWindow();
-                obj.display("ERROR", ((ErrorCommand) com).returnObj());
+                MainClient.messages.add(InfoMessage.error("Server Error Response", ((ErrorCommand) com).returnObj()));
                 break;
             }
             case SHOW: {

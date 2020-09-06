@@ -7,12 +7,14 @@ import commons.Reader;
 import commons.User;
 import exceptions.EndOfFileException;
 import exceptions.IncorrectFileNameException;
+import swing_package.InfoMessage;
 import swing_package.IpPortWindow;
 import swing_package.ProgramWindow;
 import swing_package.RoutesTableModel;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainClient {
@@ -24,6 +26,7 @@ public class MainClient {
     public static boolean isDark = false;
     public static String port;
     public static String ip;
+    public static java.util.Queue<InfoMessage> messages = new ConcurrentLinkedQueue<>();
 
     public static void main(String[] args) {
         try (Reader reader = new Reader("client.txt")) {

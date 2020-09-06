@@ -6,6 +6,7 @@ import program.MainClient;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.font.TextLayout;
 import java.awt.geom.*;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -24,6 +25,9 @@ public class MyComponent extends JComponent implements ActionListener {
     int GRID_NUMBER = GRID_SIZE / 4;
     Timer t;
     private java.util.List<VisualRoute> visualRouteList = new LinkedList<>();
+    private InfoMessage currentMessage = null;
+    private float messageTime = 1.0f;
+    private float scrolling = 0.0f;
 
     MyComponent() {
         MyMouseListener listener = new MyMouseListener();
@@ -110,6 +114,55 @@ public class MyComponent extends JComponent implements ActionListener {
                 drawCenteredString(g2d, fmt(i * scaleCount / GRID_SIZE), (float) (i * scale + dX), (float) Math.max(Math.min((dY - 10), HEIGHT - 15), 15), f);
             }
         }
+        drawMessage(g2d);
+    }
+
+    private void drawMessage(Graphics2D g2d) {
+        if (currentMessage != null) {
+            float cool = (float) ((Math.tanh(6 * (Math.abs(messageTime+1.5)-2)) + 0.999055) / 1.99811);
+
+            g2d.setPaint(currentMessage.first);
+            Rectangle2D messageUpper = new Rectangle2D.Float();
+            messageUpper.setFrame(WIDTH - 230 + 260 * cool, 30, 230, 25);
+            g2d.fill(messageUpper);
+
+            g2d.setPaint(currentMessage.second);
+            Rectangle2D messageDown = new Rectangle2D.Float();
+            messageDown.setFrame(WIDTH - 230 + 260 * cool, 55, 230, 35);
+            g2d.fill(messageDown);
+
+            g2d.setPaint(MainClient.isDark ? new Color(60, 63, 65) : new Color(230, 230, 230));
+            Ellipse2D ellBack = new Ellipse2D.Float();
+            ellBack.setFrame(WIDTH - 260 + 260 * cool, 30, 60, 60);
+            g2d.fill(ellBack);
+
+            g2d.setPaint(MainClient.isDark ? new Color(69, 73, 74) : Color.WHITE);
+            Ellipse2D ellFront = new Ellipse2D.Float();
+            ellFront.setFrame(WIDTH - 254 + 260 * cool, 36, 48, 48);
+            g2d.fill(ellFront);
+
+            currentMessage.icon.paintIcon(this, g2d, (int) (WIDTH - 245 + 260 * cool), 44);
+
+            g2d.setPaint(Color.WHITE);
+            Font f = new Font("Arial", Font.BOLD, 14);
+            g2d.setFont(f);
+            FontMetrics metrics = g2d.getFontMetrics(f);
+
+            g2d.drawString(currentMessage.name, WIDTH - 195 + 260 * cool, (30.0f + 55.0f) / 2 - metrics.getHeight() / 2.0f + metrics.getAscent());
+
+            g2d.setPaint(new Color(230, 230, 230));
+            f = new Font("Arial", Font.PLAIN, 14);
+            metrics = g2d.getFontMetrics(f);
+
+            if (scrolling == 0 && messageTime <= -1 && metrics.getStringBounds(currentMessage.description, g2d).getBounds2D().getWidth() > 180 && messageTime > -2)
+                scrolling = (float) 1.5;
+            if (metrics.getStringBounds(currentMessage.description, g2d).getBounds2D().getWidth() - scrolling <= 180 && messageTime > -2 && metrics.getStringBounds(currentMessage.description, g2d).getBounds2D().getWidth() > 180)
+                messageTime -= 1;
+
+            g2d.setFont(f);
+            g2d.setClip((int) (WIDTH - 195 + 260 * cool), (int) ((55.0f + 90.0f) / 2 + metrics.getHeight() / 2.0f - metrics.getAscent()-1), 180,  ( metrics.getHeight() ));
+            g2d.drawString(currentMessage.description, WIDTH - 195 + 260 * cool - scrolling, (55.0f + 90.0f) / 2 - metrics.getHeight() / 2.0f + metrics.getAscent());
+        }
     }
 
     private void drawShapes(Graphics2D g2d) {
@@ -146,10 +199,6 @@ public class MyComponent extends JComponent implements ActionListener {
         g.drawString(text, rx, ry);
     }
 
-    double rand() {
-        return Math.random()*2-1;
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         for (User user : MainClient.collection.map.keySet()) {
@@ -158,7 +207,22 @@ public class MyComponent extends JComponent implements ActionListener {
                     visualRouteList.add(new VisualRoute(route,Color.getHSBColor(((float) Math.abs(Utils.sha1(user.login).hashCode())) / Integer.MAX_VALUE, 1.f,  1.f)));
             }
         }
+        if (!MainClient.messages.isEmpty() && (currentMessage == null))
+            currentMessage = MainClient.messages.poll();
         boolean isNeedsToBeRepaint = false;
+        if (currentMessage != null) {
+            isNeedsToBeRepaint = true;
+            messageTime -= 0.05;
+            if (scrolling > 0 && messageTime <= -1 && messageTime > -2) {
+                messageTime = -1;
+                scrolling += 1.5;
+            }
+            if (messageTime < -4) {
+                messageTime = 1;
+                currentMessage = null;
+                scrolling = 0;
+            }
+        }
         for (Iterator<VisualRoute> iterator = visualRouteList.iterator(); iterator.hasNext(); ) {
             VisualRoute vr = iterator.next();
             if (!vr.dying) {
@@ -214,6 +278,9 @@ public class MyComponent extends JComponent implements ActionListener {
         public void mousePressed(MouseEvent e) {
             oldX = e.getX();
             oldY = e.getY();
+            //WIDTH - 260 + 260 * cool, 30, 60, 60
+            if (e.getX() > WIDTH - 260 && e.getY() > 30 && e.getY() < 90 && messageTime <= 0 && messageTime > -2)
+                messageTime = -3;
             if (e.getClickCount() == 2) {
                 VisualRoute vr = visualRouteList.stream().filter(visualRoute -> visualRoute.isTouching((e.getX() - dX) / scale * scaleCount / GRID_SIZE, -(e.getY() - dY) / scale * scaleCount / GRID_SIZE)).reduce((first, second) -> second).orElse(null);
                 if (vr != null) {
