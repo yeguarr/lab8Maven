@@ -33,6 +33,7 @@ public class MainClient {
     public static String port;
     public static String ip;
     public static java.util.Queue<InfoMessage> messages = new ConcurrentLinkedQueue<>();
+    public static int i = 2;
 
     public static ResourceBundle[] Labels = new ResourceBundle[]{
             new Label_ru_RU(),

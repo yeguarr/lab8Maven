@@ -128,6 +128,7 @@ public class ProgramWindow {
         langRus.addActionListener(actionEvent->{
             try{
                 MainClient.stats = MainClient.Labels[0];
+                MainClient.i = 0;
                 changeLanguage();
             } catch (Exception e){
                 e.printStackTrace();
@@ -137,6 +138,7 @@ public class ProgramWindow {
         LangEng.addActionListener(actionEvent->{
             try{
                 MainClient.stats = MainClient.Labels[2];
+                MainClient.i = 2;
                 changeLanguage();
             } catch (Exception e){
                 e.printStackTrace();
@@ -146,6 +148,7 @@ public class ProgramWindow {
         langHun.addActionListener(actionEvent->{
             try{
                 MainClient.stats = MainClient.Labels[1];
+                MainClient.i = 1;
                 changeLanguage();
             } catch (Exception e){
                 e.printStackTrace();
@@ -155,6 +158,7 @@ public class ProgramWindow {
         LangDut.addActionListener(actionEvent->{
             try{
                 MainClient.stats = MainClient.Labels[3];
+                MainClient.i = 3;
                 changeLanguage();
             } catch (Exception e){
                 e.printStackTrace();

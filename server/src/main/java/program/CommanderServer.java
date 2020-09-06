@@ -213,7 +213,7 @@ public class CommanderServer {
                     }
                 }
                 return new Info(com.getUser(),"success");
-            } else return new Info(com.getUser(),"failure");
+            } else return new Warning(com.getUser(),"failure");
         }
         return new ErrorCommand(com.getUser(),"invalid.user");
     }

@@ -44,15 +44,15 @@ public class CommanderClient {
                  MainClient.rtm.update();
                  return;
             case INFO: {
-                MainClient.messages.add(InfoMessage.info(MainClient.stats.getString("Server Response"), ((Info) com).returnObj()));
+                MainClient.messages.add(InfoMessage.info(MainClient.stats.getString("Server Response"), translateAnswer(((Info) com).returnObj())));
                 break;
             }
             case ERROR: {
-                MainClient.messages.add(InfoMessage.error(MainClient.stats.getString("Server Error Response"), ((ErrorCommand) com).returnObj()));
+                MainClient.messages.add(InfoMessage.error(MainClient.stats.getString("Server Error Response"), translateAnswer(((ErrorCommand) com).returnObj())));
                 break;
             }
             case WARNING: {
-                MainClient.messages.add(InfoMessage.warning(MainClient.stats.getString("Server Warning Response"), ((Warning) com).returnObj()));
+                MainClient.messages.add(InfoMessage.warning(MainClient.stats.getString("Server Warning Response"), translateAnswer(((Warning) com).returnObj())));
                 break;
             }
             case SHOW: {
@@ -85,6 +85,76 @@ public class CommanderClient {
         if (list != null) {
             list.removeIf(route -> route.compareTo(newRoute) > 0);
         }
+    }
+
+    public static String translateAnswer(String string){
+        switch (string){
+            case "switcher.noCommand":{
+                switch(MainClient.i){
+                    case 0:  return "Команда не существует";
+                    case 1:  return "A parancs nem létezik"; //hun
+                    case 2:  return "command is not exist";
+                    case 3:  return "Het commando bestaat niet";
+                }
+            }
+            case "register.invalid.user":{
+                switch(MainClient.i){
+                    case 0:  return "Ошибка регитрации";
+                    case 1:  return "Regisztrációs hiba";
+                    case 2:  return "Registration error";
+                    case 3:  return "Registratiefout";
+                }
+            }
+            case "login.invalid.user":{
+                switch(MainClient.i){
+                    case 0:  return "Ошибка входа";
+                    case 1:  return "Bejelentkezési hiba";
+                    case 2:  return "Login error";
+                    case 3:  return "Aanmeldfout";
+                }
+            }
+            case "invalid.user":{
+                switch(MainClient.i){
+                    case 0:  return "Ошибка работы";
+                    case 1:  return "Működési hiba";
+                    case 2:  return "Operation error";
+                    case 3:  return "Operatiefout";
+                }
+            }
+            case "empty":{
+                switch(MainClient.i){
+                    case 0:  return "Пусто";
+                    case 1:  return "Üres";
+                    case 2:  return "empty";
+                    case 3:  return "Leeg";
+                }
+            }
+            case "success":{
+                switch(MainClient.i){
+                    case 0:  return "Удачно";
+                    case 1:  return "Sikeresen";
+                    case 2:  return "success";
+                    case 3:  return "Succesvol";
+                }
+            }
+            case "failure":{
+                switch (MainClient.i){
+                    case 0:  return "Неудачно";
+                    case 1:  return "Sikertelenül";
+                    case 2:  return "failure";
+                    case 3:  return "Tevergeefs";
+                }
+            }
+            case "warning.route":{
+                switch (MainClient.i){
+                    case 0:  return "ошибка ввода";
+                    case 1:  return "bemeneti hiba";
+                    case 2:  return "input error";
+                    case 3:  return "invoerfout";
+                }
+            }
+        }
+        return "no";
     }
 
     /**
