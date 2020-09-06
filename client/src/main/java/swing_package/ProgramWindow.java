@@ -22,20 +22,42 @@ public class ProgramWindow {
     JPanel coordinates = new JPanel();
     JPanel topPanel = new JPanel(new BorderLayout());
     MyComponent component = new MyComponent();
-    JButton add = new JButton("add");
-    JButton clear = new JButton("clear");
-    JButton add_if_min = new JButton("add if min");
-    JButton remove_greater = new JButton("remove greater");
-    JButton remove_lower = new JButton("remove lower");
-    JButton average_of_distance = new JButton("average of distance");
-    JButton min_by_creation_date = new JButton("min by creation_date");
-    JButton print_field_ascending_distance = new JButton("print field ascending distance");
+    JButton add = new JButton(MainClient.stats.getString("Add"));
+    JButton clear = new JButton(MainClient.stats.getString("clear"));
+    JButton add_if_min = new JButton(MainClient.stats.getString("add if min"));
+    JButton remove_greater = new JButton(MainClient.stats.getString("remove greater"));
+    JButton remove_lower = new JButton(MainClient.stats.getString("remove lower"));
+    JButton average_of_distance = new JButton(MainClient.stats.getString("average of distance"));
+    JButton min_by_creation_date = new JButton(MainClient.stats.getString("min by creation_date"));
+    JButton print_field_ascending_distance = new JButton(MainClient.stats.getString("print field ascending distance"));
     RoutesTable routesTable = new RoutesTable();
     JTextField filterText = new JTextField(20);
-    GhostText ghostText = new GhostText(filterText, "filter...");
+    GhostText ghostText = new GhostText(filterText, MainClient.stats.getString("filter..."));
+    JMenu file = new JMenu(MainClient.stats.getString("Program"));
+    JMenu language = new JMenu(MainClient.stats.getString("Language"));
+    JMenuItem exit = new JMenuItem(MainClient.stats.getString("Exit"));
+    JMenuItem logout = new JMenuItem(MainClient.stats.getString("log Out"));
+    JMenuItem appearance = new JMenuItem(MainClient.isDark ?  MainClient.stats.getString("Сhange to the light side") : MainClient.stats.getString("Сhange to the dark side"));
+    JMenuItem show = new JMenuItem("<html>" + MainClient.stats.getString("Username") + ": <b>" + MainClient.user.login +"</b>. &emsp;" + MainClient.stats.getString("Your color is") + ": <font color=#"+ Integer.toHexString(Color.getHSBColor(((float) Math.abs(Utils.sha1(MainClient.user.login).hashCode())) / Integer.MAX_VALUE, 1.f,  1.f).getRGB()).substring(2) +">⬛</font> </html>");
+
+    private void changeLanguage() {
+        add.setText(MainClient.stats.getString("Add"));
+        clear.setText(MainClient.stats.getString("clear"));
+        add_if_min.setText(MainClient.stats.getString("add if min"));
+        remove_greater.setText(MainClient.stats.getString("remove greater"));
+        remove_lower.setText(MainClient.stats.getString("remove lower"));
+        average_of_distance.setText(MainClient.stats.getString("average of distance"));
+        min_by_creation_date.setText(MainClient.stats.getString("min by creation_date"));
+        print_field_ascending_distance.setText(MainClient.stats.getString("print field ascending distance"));
+        file.setText(MainClient.stats.getString("Program"));
+        language.setText(MainClient.stats.getString("Language"));
+        exit.setText(MainClient.stats.getString("Exit"));
+        logout.setText(MainClient.stats.getString("log Out"));
+        show.setText("<html>" + MainClient.stats.getString("Username") + ": <b>" + MainClient.user.login +"</b>. &emsp;" + MainClient.stats.getString("Your color is") + ": <font color=#"+ Integer.toHexString(Color.getHSBColor(((float) Math.abs(Utils.sha1(MainClient.user.login).hashCode())) / Integer.MAX_VALUE, 1.f,  1.f).getRGB()).substring(2) +">⬛</font> </html>");
+    }
 
     public void display(){
-        frame = new JFrame("program");
+        frame = new JFrame(MainClient.stats.getString("program"));
         frame.setSize(1000, 700);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -58,6 +80,7 @@ public class ProgramWindow {
         min_by_creation_date.setPreferredSize(print_field_ascending_distance.getPreferredSize());
         panelLeft.add(min_by_creation_date);
         panelLeft.add(print_field_ascending_distance);
+
 
         filterText.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
@@ -85,20 +108,14 @@ public class ProgramWindow {
         coordinates.setLayout(new BorderLayout());
 
         JMenuBar jMenuBar = new JMenuBar();
-        JMenu file = new JMenu("Program");
-        JMenu language = new JMenu("Language");
-        JMenuItem appearance = new JMenuItem(MainClient.isDark ?  "Сhange to the light side" : "Сhange to the dark side");
-        JMenuItem show = new JMenuItem("<html>Username: <b>" + MainClient.user.login + "</b>. &emsp; Your color is: <font color=#"+ Integer.toHexString(Color.getHSBColor(((float) Math.abs(Utils.sha1(MainClient.user.login).hashCode())) / Integer.MAX_VALUE, 1.f,  1.f).getRGB()).substring(2) +">⬛</font> </html>");
         jMenuBar.add(file);
         jMenuBar.add(language);
         jMenuBar.add(show);
         jMenuBar.add(appearance);
-        JMenuItem exit = new JMenuItem("Exit");
         JMenuItem langRus = new JMenuItem("Русский (Russian)");
         JMenuItem LangEng = new JMenuItem("English (India)");
         JMenuItem langHun = new JMenuItem("Magyar (Hungarian)");
         JMenuItem LangDut = new JMenuItem("Nederlandse (Dutch)");
-        JMenuItem logout = new JMenuItem("log Out");
         file.add(logout);
         file.addSeparator();
         file.add(exit);
@@ -107,10 +124,46 @@ public class ProgramWindow {
         language.add(langHun);
         language.add(LangDut);
 
+        langRus.addActionListener(actionEvent->{
+            try{
+                MainClient.stats = MainClient.Labels[0];
+                changeLanguage();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+
+        LangEng.addActionListener(actionEvent->{
+            try{
+                MainClient.stats = MainClient.Labels[2];
+                changeLanguage();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+
+        langHun.addActionListener(actionEvent->{
+            try{
+                MainClient.stats = MainClient.Labels[1];
+                changeLanguage();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+
+        LangDut.addActionListener(actionEvent->{
+            try{
+                MainClient.stats = MainClient.Labels[3];
+                changeLanguage();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+
         appearance.addActionListener(actionEvent -> {
             try {
                 MainClient.isDark = !MainClient.isDark;
-                appearance.setText(MainClient.isDark ? "Сhange to the light side" : "Сhange to the dark side" );
+                appearance.setText(MainClient.isDark ? MainClient.stats.getString("Сhange to the light side") : MainClient.stats.getString("Сhange to the dark side") );
                 ghostText.setGhostColor(MainClient.isDark ? Color.GRAY : Color.LIGHT_GRAY);
                 ghostText.focusLost();
                 coordinates.requestFocus();
@@ -144,29 +197,29 @@ public class ProgramWindow {
 
         add.addActionListener(actionEvent -> {
             ObjectWindow o = new ObjectWindow();
-            o.display(Commands.ADD, "Add new Route", "add");
+            o.display(Commands.ADD, MainClient.stats.getString("Add new Route"), MainClient.stats.getString("add"));
         });
 
         add_if_min.addActionListener(actionEvent -> {
             ObjectWindow o = new ObjectWindow();
-            o.display(Commands.ADD_IF_MIN, "Add new Route", "add");
+            o.display(Commands.ADD_IF_MIN, MainClient.stats.getString("Add new Route"), MainClient.stats.getString("add"));
         });
 
         remove_greater.addActionListener(actionEvent -> {
             ObjectWindow o = new ObjectWindow();
-            o.display(Commands.REMOVE_GREATER, "Remove greater Routes", "remove");
+            o.display(Commands.REMOVE_GREATER, MainClient.stats.getString("Remove greater Routes"), MainClient.stats.getString("remove"));
         });
 
         remove_lower.addActionListener(actionEvent -> {
             ObjectWindow o = new ObjectWindow();
-            o.display(Commands.REMOVE_LOWER, "Remove lower Routes", "remove");
+            o.display(Commands.REMOVE_LOWER, MainClient.stats.getString("Remove lower Routes"), MainClient.stats.getString("remove"));
         });
 
         print_field_ascending_distance.addActionListener(actionEvent -> {
             try {
                 Client.SendCommand(new Command(MainClient.user,Commands.PRINT_FIELD_ASCENDING_DISTANCE));
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(frame, e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(frame, e.getMessage(), MainClient.stats.getString("ERROR"), JOptionPane.WARNING_MESSAGE);
                 //new AlarmWindow().display("ERROR", e.getMessage());
             }
         });
@@ -174,7 +227,7 @@ public class ProgramWindow {
             try {
                 Client.SendCommand(new Command(MainClient.user,Commands.MIN_BY_CREATION_DATE));
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(frame, e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(frame, e.getMessage(), MainClient.stats.getString("ERROR"), JOptionPane.WARNING_MESSAGE);
                 //new AlarmWindow().display("ERROR", e.getMessage());
             }
         });
@@ -183,7 +236,7 @@ public class ProgramWindow {
             try {
                 Client.SendCommand(new Command(MainClient.user,Commands.AVERAGE_OF_DISTANCE));
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(frame, e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(frame, e.getMessage(), MainClient.stats.getString("ERROR"), JOptionPane.WARNING_MESSAGE);
                 //new AlarmWindow().display("ERROR", e.getMessage());
             }
         });
@@ -191,7 +244,7 @@ public class ProgramWindow {
             try {
                 Client.SendCommand(new Command(MainClient.user, Commands.CLEAR));
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(frame, e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(frame, e.getMessage(), MainClient.stats.getString("ERROR"), JOptionPane.WARNING_MESSAGE);
                 //new AlarmWindow().display("ERROR", e.getMessage());
             }
         });
@@ -230,6 +283,5 @@ public class ProgramWindow {
         });
 
         frame.setVisible(true);
-
     }
 }

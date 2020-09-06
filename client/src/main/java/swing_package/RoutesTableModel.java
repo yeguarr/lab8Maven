@@ -54,7 +54,7 @@ public class RoutesTableModel extends AbstractTableModel{
     @Override
     public String getColumnName(int columnIndex){
         switch (columnIndex){
-            case 0: return "user_name";
+            case 0: return MainClient.stats.getString("user_name");
             case 1: return "id";
             case 2: return "name";
             case 3: return "coordinate_x";

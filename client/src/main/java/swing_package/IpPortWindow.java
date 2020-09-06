@@ -20,7 +20,7 @@ public class IpPortWindow {
     JFrame frame;
 
     public void display(){
-        frame = new JFrame("connection");
+        frame = new JFrame(MainClient.stats.getString("connection"));
         frame.setSize(350, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -30,11 +30,11 @@ public class IpPortWindow {
         frame.add(panel);
         panel.setLayout(null);
 
-        JLabel serverInfo = new JLabel("Client configuration");
+        JLabel serverInfo = new JLabel(MainClient.stats.getString("Client configuration"));
         serverInfo.setBounds(110, 10, 110, 25);
         panel.add(serverInfo);
 
-        JLabel username = new JLabel("Server's ip:");
+        JLabel username = new JLabel(MainClient.stats.getString("Server's ip:"));
         username.setBounds(20,40,80,25);
         panel.add(username);
 
@@ -43,7 +43,7 @@ public class IpPortWindow {
         ipText.setText(MainClient.ip);
         panel.add(ipText);
 
-        JLabel password = new JLabel("Port:");
+        JLabel password = new JLabel(MainClient.stats.getString("Port:"));
         password.setBounds(20,70,80,25);
         panel.add(password);
 
@@ -52,7 +52,7 @@ public class IpPortWindow {
         portText.setText(MainClient.port);
         panel.add(portText);
 
-        JButton setButton = new JButton("Set");
+        JButton setButton = new JButton(MainClient.stats.getString("Set"));
         setButton.setBounds(140, 100, 60, 25);
         panel.add(setButton);
         setButton.addActionListener(actionEvent -> {
@@ -66,7 +66,7 @@ public class IpPortWindow {
                     LoginWindow o = new LoginWindow();
                     o.display();
                 } catch (IOException e) {
-                    JOptionPane.showMessageDialog(frame, e.getMessage(), "ERROR", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, e.getMessage(), MainClient.stats.getString("ERROR"), JOptionPane.WARNING_MESSAGE);
                     //AlarmWindow alarmWindow = new AlarmWindow();
                     //alarmWindow.display("ERROR", e.getMessage());
                     e.printStackTrace();
