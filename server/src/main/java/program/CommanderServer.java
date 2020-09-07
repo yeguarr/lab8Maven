@@ -102,7 +102,7 @@ public class CommanderServer {
         if (list != null) {
             StringBuilder sb = new StringBuilder();
             if (list.size() > 0)
-                list.stream().filter(r -> r.getDistance() != null).map(Route::getDistance).sorted().forEach(dis -> sb.append(dis).append("\n"));
+                list.stream().filter(r -> r.getDistance() != null).map(Route::getDistance).sorted().forEach(dis -> sb.append(dis).append("; "));
             else
                 return new Info(com.getUser(),"empty");
             return new Info(com.getUser(),sb.toString());
@@ -117,7 +117,7 @@ public class CommanderServer {
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
             if (list.size() > 0)
-                return new Info(com.getUser(), String.valueOf(list.stream().min(Comparator.comparing(Route::getCreationDate)).get()));
+                return new Info(com.getUser(), "ID: " + list.stream().min(Comparator.comparing(Route::getCreationDate)).get().getId());
             else
                 return new Info(com.getUser(),"empty");
         }
@@ -251,7 +251,7 @@ public class CommanderServer {
                     route = r;
             }
             if (route == null) {
-                return new Info(com.getUser(),"failure");
+                return new Warning(com.getUser(),"failure");
             }
             list.remove(route);
             sqlRun.add(com);
@@ -283,7 +283,7 @@ public class CommanderServer {
                 }
             }
             if (route == null) {
-                return new Info(com.getUser(),"failure");
+                return new Warning(com.getUser(),"failure");
             }
             list.set(list.indexOf(route), (Route) com.returnObj());
             sqlRun.add(com);
@@ -329,12 +329,15 @@ public class CommanderServer {
 
     public static boolean testRoute(Route route) {
         try {
+
             routeDistanceCheck.checker(route.getDistance());
             routeNameCheck.checker(route.getName());
-            locationXYZCheck.checker(route.getFrom().getX());
-            locationXYZCheck.checker(route.getFrom().getY());
-            locationXYZCheck.checker(route.getFrom().getZ());
-            locationNameCheck.checker(route.getFrom().getName());
+            if(route.getFrom() != null) {
+                locationXYZCheck.checker(route.getFrom().getX());
+                locationXYZCheck.checker(route.getFrom().getY());
+                locationXYZCheck.checker(route.getFrom().getZ());
+                locationNameCheck.checker(route.getFrom().getName());
+            }
             locationXYZCheck.checker(route.getTo().getX());
             locationXYZCheck.checker(route.getTo().getY());
             locationXYZCheck.checker(route.getTo().getZ());

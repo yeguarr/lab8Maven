@@ -53,8 +53,14 @@ public class ProgramWindow {
         language.setText(MainClient.stats.getString("Language"));
         exit.setText(MainClient.stats.getString("Exit"));
         logout.setText(MainClient.stats.getString("log Out"));
+        ghostText.setGhostText(MainClient.stats.getString("filter..."));
+        if ((filterText.getText().equals("")||filterText.getText().equals("filter...")||filterText.getText().equals("szűrő...")||filterText.getText().equals("фильтровать...")))
+            ghostText.focusLost();
         show.setText("<html>" + MainClient.stats.getString("Username") + ": <b>" + MainClient.user.login +"</b>. &emsp;" + MainClient.stats.getString("Your color is") + ": <font color=#"+ Integer.toHexString(Color.getHSBColor(((float) Math.abs(Utils.sha1(MainClient.user.login).hashCode())) / Integer.MAX_VALUE, 1.f,  1.f).getRGB()).substring(2) +">⬛</font> </html>");
         appearance.setText(MainClient.isDark ?  MainClient.stats.getString("Сhange to the light side") : MainClient.stats.getString("Сhange to the dark side"));
+        routesTable.routes.createDefaultColumnsFromModel();
+        routesTable.routes.getColumnModel().getColumn(5).setCellRenderer(RoutesTable.tableCellRenderer);
+        SwingUtilities.updateComponentTreeUI(frame);
     }
 
     public void display(){
@@ -95,7 +101,7 @@ public class ProgramWindow {
             }
 
             private void newFilter() {
-                if (!(filterText.getText().equals("")||filterText.getText().equals("filter...")))
+                if (!(filterText.getText().equals("")||filterText.getText().equals("filter...")||filterText.getText().equals("szűrő...")||filterText.getText().equals("фильтровать...")))
                     try {
                         routesTable.sorter.setRowFilter(RowFilter.regexFilter(filterText.getText()));
                     } catch (java.util.regex.PatternSyntaxException ignored) { }
@@ -280,6 +286,7 @@ public class ProgramWindow {
                     fileWriter.write(MainClient.ip + '\n');
                     fileWriter.write(MainClient.port + '\n');
                     fileWriter.write(String.valueOf(MainClient.isDark) + '\n');
+                    fileWriter.write(String.valueOf(MainClient.i) + '\n');
                     fileWriter.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();

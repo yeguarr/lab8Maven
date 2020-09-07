@@ -5,6 +5,7 @@ import com.formdev.flatlaf.FlatIntelliJLaf;
 import commons.Collection;
 import commons.Reader;
 import commons.User;
+import commons.Writer;
 import exceptions.EndOfFileException;
 import exceptions.IncorrectFileNameException;
 import locales.Label_en_EN;
@@ -51,12 +52,15 @@ public class MainClient {
             ip = reader.read();
             port = reader.read();
             isDark = Boolean.parseBoolean(reader.read());
-        } catch (FileNotFoundException | IncorrectFileNameException | EndOfFileException ignored) { }
+            i = Integer.parseInt(reader.read());
+            stats = Labels[i];
+        } catch (FileNotFoundException | IncorrectFileNameException | NumberFormatException | EndOfFileException ignored) { }
         try {
             UIManager.setLookAndFeel( MainClient.isDark ? new FlatDarculaLaf() : new FlatIntelliJLaf());
         } catch ( UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
+
         collection = new Collection(0);
         if (user.login.equals("demo")) {
             ProgramWindow demo = new ProgramWindow();

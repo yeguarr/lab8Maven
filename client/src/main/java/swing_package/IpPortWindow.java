@@ -1,6 +1,7 @@
 package swing_package;
 
 import commons.Utils;
+import exceptions.FailedCheckException;
 import program.Client;
 import program.MainClient;
 
@@ -61,15 +62,12 @@ public class IpPortWindow {
                     MainClient.ip = ipText.getText();
                     MainClient.port = portText.getText();
                     MainClient.globalKillFlag.set(false);
-                    Client.run(MainClient.ip, Integer.parseInt(MainClient.port));
+                    Client.run(MainClient.ip, Utils.portCheck.checker(Integer.parseInt(MainClient.port)));
                     frame.dispose();
                     LoginWindow o = new LoginWindow();
                     o.display();
-                } catch (IOException e) {
-                    JOptionPane.showMessageDialog(frame, e.getMessage(), MainClient.stats.getString("ERROR"), JOptionPane.WARNING_MESSAGE);
-                    //AlarmWindow alarmWindow = new AlarmWindow();
-                    //alarmWindow.display("ERROR", e.getMessage());
-                    e.printStackTrace();
+                } catch (IOException | NumberFormatException | FailedCheckException e) {
+                    JOptionPane.showMessageDialog(frame, MainClient.stats.getString("Connection fail"), MainClient.stats.getString("ERROR"), JOptionPane.WARNING_MESSAGE);
                     MainClient.globalKillFlag.set(true);
                 }
             }

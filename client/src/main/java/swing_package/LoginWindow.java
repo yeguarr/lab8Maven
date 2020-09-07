@@ -57,7 +57,7 @@ public class LoginWindow {
         panel.add(passwordText);
 
         JButton loginButton = new JButton(MainClient.stats.getString("login"));
-        loginButton.setBounds(10, 100, 80, 25);
+        loginButton.setBounds(50, 100, 80, 25);
         panel.add(loginButton);
         loginButton.addActionListener(actionEvent -> {
             try {
@@ -77,7 +77,7 @@ public class LoginWindow {
         });
 
         registerButton = new JButton(MainClient.stats.getString("create account"));
-        registerButton.setBounds(100, 100, 120, 25);
+        registerButton.setBounds(140, 100, 140, 25);
         panel.add(registerButton);
         registerButton.addActionListener(new RegisterButton());
         frame.setResizable(false);

@@ -92,8 +92,8 @@ public class CommanderClient {
             case "switcher.noCommand":{
                 switch(MainClient.i){
                     case 0:  return "Команда не существует";
-                    case 1:  return "A parancs nem létezik"; //hun
-                    case 2:  return "command is not exist";
+                    case 1:  return "A parancs nem létezik";
+                    case 2:  return "Command is not exist";
                     case 3:  return "Het commando bestaat niet";
                 }
             }
@@ -125,13 +125,13 @@ public class CommanderClient {
                 switch(MainClient.i){
                     case 0:  return "Пусто";
                     case 1:  return "Üres";
-                    case 2:  return "empty";
+                    case 2:  return "Empty";
                     case 3:  return "Leeg";
                 }
             }
             case "success":{
                 switch(MainClient.i){
-                    case 0:  return "Удачно";
+                    case 0:  return "Успешно";
                     case 1:  return "Sikeresen";
                     case 2:  return "success";
                     case 3:  return "Succesvol";
@@ -154,7 +154,7 @@ public class CommanderClient {
                 }
             }
         }
-        return "no";
+        return string;
     }
 
     /**

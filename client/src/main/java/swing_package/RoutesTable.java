@@ -5,14 +5,20 @@ import program.MainClient;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class RoutesTable {
     JPanel panel = new JPanel();
@@ -20,6 +26,18 @@ public class RoutesTable {
     JTable routes = new JTable(MainClient.rtm);
     JScrollPane routesScrollPane = new JScrollPane(routes);
     public TableRowSorter<TableModel> sorter;
+
+    public static TableCellRenderer tableCellRenderer = new DefaultTableCellRenderer() {
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (isSelected)
+                c.setBackground(column % 2 == 1 ? new Color(61,97,133) :  new Color(73,117,160));
+            else
+                c.setBackground(column % 2 == 1 ? (MainClient.isDark ? new Color(60,63,65) : new Color(230,230,230)) : (MainClient.isDark ?  new Color(69,73,74) : Color.WHITE));
+            value = DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm z").format(ZonedDateTime.parse(value.toString()));
+            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        }
+    };
 
     public RoutesTable(){
         routes.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -33,6 +51,9 @@ public class RoutesTable {
                 return this;
             }
         });
+
+        routes.getColumnModel().getColumn(5).setCellRenderer(tableCellRenderer);
+
         sorter = new TableRowSorter<>(routes.getModel());
         routes.setRowSorter(sorter);
 
@@ -65,9 +86,9 @@ public class RoutesTable {
                     int id = 0;
                     int user_name = 0;
                     for (int i =0; i < table.getColumnCount(); i++) {
-                        if (table.getColumnName(i).equals("id"))
+                        if (table.getColumnName(i).equals("ID"))
                             id = i;
-                        else if (table.getColumnName(i).equals(MainClient.stats.getString("user_name")))
+                        else if (table.getColumnName(i).equals(MainClient.stats.getString("Username")))
                             user_name = i;
                     }
                     Route r = MainClient.collection.getRouteById(Integer.parseInt(String.valueOf(table.getValueAt(row, id))));

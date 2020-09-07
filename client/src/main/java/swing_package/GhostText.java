@@ -16,7 +16,7 @@ public class GhostText implements FocusListener, DocumentListener, PropertyChang
     private boolean isEmpty;
     private Color ghostColor;
     private Color foregroundColor;
-    private final String ghostText;
+    private String ghostText;
 
     protected GhostText(final JTextField textfield, String ghostText) {
         super();
@@ -29,6 +29,10 @@ public class GhostText implements FocusListener, DocumentListener, PropertyChang
         if (!this.textfield.hasFocus()) {
             focusLost(null);
         }
+    }
+
+    public void setGhostText(String text) {
+        ghostText = text;
     }
 
     public void delete() {

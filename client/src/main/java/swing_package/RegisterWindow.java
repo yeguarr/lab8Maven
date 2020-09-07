@@ -59,7 +59,7 @@ public class RegisterWindow {
         goBackButton.addActionListener(new GoBackButton());
 
         JButton registerButton = new JButton(MainClient.stats.getString("create account"));
-        registerButton.setBounds(100, 130, 120, 25);
+        registerButton.setBounds(100, 130, 165, 25);
         panel.add(registerButton);
         registerButton.addActionListener(actionListener -> {
             if (usernameText.getText().length()!=0&&Arrays.equals(passwordText.getPassword(), passwordText2.getPassword())) {
@@ -76,7 +76,7 @@ public class RegisterWindow {
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (FailedCheckException e) {
-                    JOptionPane.showMessageDialog(frame, "Login should be less than 40 characters");
+                    JOptionPane.showMessageDialog(frame, MainClient.stats.getString("login less"), MainClient.stats.getString("ERROR"), JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
