@@ -9,6 +9,7 @@ public class Warning extends Command {
         super(user, Commands.WARNING);
         this.warning = info;
     }
+
     @Override
     public String returnObj() {
         return warning;

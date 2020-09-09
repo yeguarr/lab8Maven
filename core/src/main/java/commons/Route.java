@@ -17,6 +17,20 @@ public class Route implements Comparable<Route>, Serializable {
     private Location to; //Поле не может быть null
     private Long distance; //Поле может быть null, Значение поля должно быть больше 1
 
+    public Route() {
+        this.creationDate = ZonedDateTime.now();
+    }
+
+    public Route(Integer id, String name, Coordinates coordinates, Location from, Location to, Long distance) {
+        this.id = id;
+        this.name = name;
+        this.coordinates = coordinates;
+        this.creationDate = ZonedDateTime.now();
+        this.from = from;
+        this.to = to;
+        this.distance = distance;
+    }
+
     public ZonedDateTime getCreationDate() {
         return creationDate;
     }
@@ -56,19 +70,6 @@ public class Route implements Comparable<Route>, Serializable {
                 ", distance=" + distance +
                 '\n';
     }
-    public Route() {
-        this.creationDate = ZonedDateTime.now();
-    }
-
-    public Route(Integer id, String name, Coordinates coordinates, Location from, Location to, Long distance) {
-        this.id = id;
-        this.name = name;
-        this.coordinates = coordinates;
-        this.creationDate = ZonedDateTime.now();
-        this.from = from;
-        this.to = to;
-        this.distance = distance;
-    }
 
     public Integer getId() {
         return id;
@@ -76,10 +77,6 @@ public class Route implements Comparable<Route>, Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public void setCoordinates(Coordinates coordinates) {
-        this.coordinates = coordinates;
     }
 
     public String getName() {
@@ -98,26 +95,29 @@ public class Route implements Comparable<Route>, Serializable {
         this.distance = distance;
     }
 
-    public void setFrom(Location from) {
-        this.from = from;
-    }
-
-    public void setTo(Location to) {
-        this.to = to;
-    }
-
     public Coordinates getCoordinates() {
         return coordinates;
+    }
+
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
     }
 
     public Location getFrom() {
         return from;
     }
 
+    public void setFrom(Location from) {
+        this.from = from;
+    }
+
     public Location getTo() {
         return to;
     }
 
+    public void setTo(Location to) {
+        this.to = to;
+    }
 
     /**
      * Сравнение объектов. Сравнение объектов идет в первую очередь по имени, потом по дистанции

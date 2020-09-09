@@ -11,21 +11,18 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Collection implements Serializable {
 
-    public Collection(int SEQUENCE)
-    {
-        ids = SEQUENCE;
-    }
-
     /**
      * Список, в котором хранятся элементы типа program.Route
      */
     public Map<User, List<Route>> map = new ConcurrentHashMap<>();
-
     public int ids;
     /**
      * Дата создания списка
      */
     private Date date = new Date();
+    public Collection(int SEQUENCE) {
+        ids = SEQUENCE;
+    }
 
     public User userFromRoute(Route route) {
         User user = null;
@@ -66,6 +63,7 @@ public class Collection implements Serializable {
         }
         return false;
     }
+
     public Date getDate() {
         return date;
     }

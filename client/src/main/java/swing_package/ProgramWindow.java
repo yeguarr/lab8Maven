@@ -12,9 +12,13 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 public class ProgramWindow {
     JFrame frame;
@@ -37,8 +41,8 @@ public class ProgramWindow {
     JMenu language = new JMenu(MainClient.stats.getString("Language"));
     JMenuItem exit = new JMenuItem(MainClient.stats.getString("Exit"));
     JMenuItem logout = new JMenuItem(MainClient.stats.getString("log Out"));
-    JMenuItem appearance = new JMenuItem(MainClient.isDark ?  MainClient.stats.getString("Сhange to the light side") : MainClient.stats.getString("Сhange to the dark side"));
-    JMenuItem show = new JMenuItem("<html>" + MainClient.stats.getString("Username") + ": <b>" + MainClient.user.login +"</b>. &emsp;" + MainClient.stats.getString("Your color is") + ": <font color=#"+ Integer.toHexString(Color.getHSBColor(((float) Math.abs(Utils.sha1(MainClient.user.login).hashCode())) / Integer.MAX_VALUE, 1.f,  1.f).getRGB()).substring(2) +">⬛</font> </html>");
+    JMenuItem appearance = new JMenuItem(MainClient.isDark ? MainClient.stats.getString("Сhange to the light side") : MainClient.stats.getString("Сhange to the dark side"));
+    JMenuItem show = new JMenuItem("<html>" + MainClient.stats.getString("Username") + ": <b>" + MainClient.user.login + "</b>. &emsp;" + MainClient.stats.getString("Your color is") + ": <font color=#" + Integer.toHexString(Color.getHSBColor(((float) Math.abs(Utils.sha1(MainClient.user.login).hashCode())) / Integer.MAX_VALUE, 1.f, 1.f).getRGB()).substring(2) + ">⬛</font> </html>");
 
     private void changeLanguage() {
         add.setText(MainClient.stats.getString("Add"));
@@ -53,18 +57,19 @@ public class ProgramWindow {
         language.setText(MainClient.stats.getString("Language"));
         exit.setText(MainClient.stats.getString("Exit"));
         logout.setText(MainClient.stats.getString("log Out"));
+        frame.setTitle(MainClient.stats.getString("Program"));
         ghostText.setGhostText(MainClient.stats.getString("filter..."));
-        if ((filterText.getText().equals("")||filterText.getText().equals("filter...")||filterText.getText().equals("szűrő...")||filterText.getText().equals("фильтровать...")))
-            ghostText.focusLost();
-        show.setText("<html>" + MainClient.stats.getString("Username") + ": <b>" + MainClient.user.login +"</b>. &emsp;" + MainClient.stats.getString("Your color is") + ": <font color=#"+ Integer.toHexString(Color.getHSBColor(((float) Math.abs(Utils.sha1(MainClient.user.login).hashCode())) / Integer.MAX_VALUE, 1.f,  1.f).getRGB()).substring(2) +">⬛</font> </html>");
-        appearance.setText(MainClient.isDark ?  MainClient.stats.getString("Сhange to the light side") : MainClient.stats.getString("Сhange to the dark side"));
+        //if ((filterText.getText().equals("")||filterText.getText().equals(MainClient.stats.getString("filter..."))))//filterText.getText().equals("filter...")||filterText.getText().equals("szűrő...")||filterText.getText().equals("фильтровать...")))
+        ghostText.focusLost();
+        show.setText("<html>" + MainClient.stats.getString("Username") + ": <b>" + MainClient.user.login + "</b>. &emsp;" + MainClient.stats.getString("Your color is") + ": <font color=#" + Integer.toHexString(Color.getHSBColor(((float) Math.abs(Utils.sha1(MainClient.user.login).hashCode())) / Integer.MAX_VALUE, 1.f, 1.f).getRGB()).substring(2) + ">⬛</font> </html>");
+        appearance.setText(MainClient.isDark ? MainClient.stats.getString("Сhange to the light side") : MainClient.stats.getString("Сhange to the dark side"));
         routesTable.routes.createDefaultColumnsFromModel();
         routesTable.routes.getColumnModel().getColumn(5).setCellRenderer(RoutesTable.tableCellRenderer);
         SwingUtilities.updateComponentTreeUI(frame);
     }
 
-    public void display(){
-        frame = new JFrame(MainClient.stats.getString("program"));
+    public void display() {
+        frame = new JFrame(MainClient.stats.getString("Program"));
         frame.setSize(1000, 700);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -93,18 +98,21 @@ public class ProgramWindow {
             public void changedUpdate(DocumentEvent e) {
                 newFilter();
             }
+
             public void removeUpdate(DocumentEvent e) {
                 newFilter();
             }
+
             public void insertUpdate(DocumentEvent e) {
                 newFilter();
             }
 
             private void newFilter() {
-                if (!(filterText.getText().equals("")||filterText.getText().equals("filter...")||filterText.getText().equals("szűrő...")||filterText.getText().equals("фильтровать...")))
+                if (!(filterText.getText().equals("") || filterText.getText().equals(MainClient.stats.getString("filter..."))))
                     try {
                         routesTable.sorter.setRowFilter(RowFilter.regexFilter(filterText.getText()));
-                    } catch (java.util.regex.PatternSyntaxException ignored) { }
+                    } catch (java.util.regex.PatternSyntaxException ignored) {
+                    }
                 else
                     routesTable.sorter.setRowFilter(null);
             }
@@ -131,42 +139,42 @@ public class ProgramWindow {
         language.add(langHun);
         language.add(LangDut);
 
-        langRus.addActionListener(actionEvent->{
-            try{
-                MainClient.stats = MainClient.Labels[0];
+        langRus.addActionListener(actionEvent -> {
+            try {
                 MainClient.i = 0;
+                MainClient.stats = ResourceBundle.getBundle("locales.Label", MainClient.locales[MainClient.i]);
                 changeLanguage();
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
 
-        LangEng.addActionListener(actionEvent->{
-            try{
-                MainClient.stats = MainClient.Labels[2];
+        LangEng.addActionListener(actionEvent -> {
+            try {
                 MainClient.i = 2;
+                MainClient.stats = ResourceBundle.getBundle("locales.Label", MainClient.locales[MainClient.i]);
                 changeLanguage();
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
 
-        langHun.addActionListener(actionEvent->{
-            try{
-                MainClient.stats = MainClient.Labels[1];
+        langHun.addActionListener(actionEvent -> {
+            try {
                 MainClient.i = 1;
+                MainClient.stats = ResourceBundle.getBundle("locales.Label", MainClient.locales[MainClient.i]);
                 changeLanguage();
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
 
-        LangDut.addActionListener(actionEvent->{
-            try{
-                MainClient.stats = MainClient.Labels[3];
+        LangDut.addActionListener(actionEvent -> {
+            try {
                 MainClient.i = 3;
+                MainClient.stats = ResourceBundle.getBundle("locales.Label", MainClient.locales[MainClient.i]);
                 changeLanguage();
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
@@ -174,14 +182,14 @@ public class ProgramWindow {
         appearance.addActionListener(actionEvent -> {
             try {
                 MainClient.isDark = !MainClient.isDark;
-                appearance.setText(MainClient.isDark ? MainClient.stats.getString("Сhange to the light side") : MainClient.stats.getString("Сhange to the dark side") );
+                appearance.setText(MainClient.isDark ? MainClient.stats.getString("Сhange to the light side") : MainClient.stats.getString("Сhange to the dark side"));
                 ghostText.setGhostColor(MainClient.isDark ? Color.GRAY : Color.LIGHT_GRAY);
                 ghostText.focusLost();
                 coordinates.requestFocus();
-                UIManager.setLookAndFeel( MainClient.isDark ? new FlatDarculaLaf() : new FlatIntelliJLaf());
-                panelLeft.setBackground(MainClient.isDark ? new Color(60,63,65) : new Color(230,230,230));
+                UIManager.setLookAndFeel(MainClient.isDark ? new FlatDarculaLaf() : new FlatIntelliJLaf());
+                panelLeft.setBackground(MainClient.isDark ? new Color(60, 63, 65) : new Color(230, 230, 230));
                 SwingUtilities.updateComponentTreeUI(frame);
-            } catch ( UnsupportedLookAndFeelException e) {
+            } catch (UnsupportedLookAndFeelException e) {
                 e.printStackTrace();
             }
         });
@@ -203,7 +211,7 @@ public class ProgramWindow {
             o.display();
         });
 
-        panelLeft.setBackground(MainClient.isDark ? new Color(60,63,65) : new Color(230,230,230));
+        panelLeft.setBackground(MainClient.isDark ? new Color(60, 63, 65) : new Color(230, 230, 230));
         coordinates.add(component);
 
         add.addActionListener(actionEvent -> {
@@ -228,7 +236,7 @@ public class ProgramWindow {
 
         print_field_ascending_distance.addActionListener(actionEvent -> {
             try {
-                Client.SendCommand(new Command(MainClient.user,Commands.PRINT_FIELD_ASCENDING_DISTANCE));
+                Client.SendCommand(new Command(MainClient.user, Commands.PRINT_FIELD_ASCENDING_DISTANCE));
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(frame, e.getMessage(), MainClient.stats.getString("ERROR"), JOptionPane.WARNING_MESSAGE);
                 //new AlarmWindow().display("ERROR", e.getMessage());
@@ -236,7 +244,7 @@ public class ProgramWindow {
         });
         min_by_creation_date.addActionListener(actionEvent -> {
             try {
-                Client.SendCommand(new Command(MainClient.user,Commands.MIN_BY_CREATION_DATE));
+                Client.SendCommand(new Command(MainClient.user, Commands.MIN_BY_CREATION_DATE));
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(frame, e.getMessage(), MainClient.stats.getString("ERROR"), JOptionPane.WARNING_MESSAGE);
                 //new AlarmWindow().display("ERROR", e.getMessage());
@@ -245,7 +253,7 @@ public class ProgramWindow {
 
         average_of_distance.addActionListener(actionEvent -> {
             try {
-                Client.SendCommand(new Command(MainClient.user,Commands.AVERAGE_OF_DISTANCE));
+                Client.SendCommand(new Command(MainClient.user, Commands.AVERAGE_OF_DISTANCE));
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(frame, e.getMessage(), MainClient.stats.getString("ERROR"), JOptionPane.WARNING_MESSAGE);
                 //new AlarmWindow().display("ERROR", e.getMessage());
@@ -271,8 +279,9 @@ public class ProgramWindow {
 
         frame.addComponentListener(new ComponentAdapter() {
             int old = frame.getHeight();
+
             public void componentResized(ComponentEvent e) {
-                jSplitPane.setDividerLocation((int)(jSplitPane.getDividerLocation()*((float) frame.getHeight()/old)));
+                jSplitPane.setDividerLocation((int) (jSplitPane.getDividerLocation() * ((float) frame.getHeight() / old)));
                 old = frame.getHeight();
             }
         });

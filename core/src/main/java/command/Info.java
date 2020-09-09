@@ -9,6 +9,7 @@ public class Info extends Command {
         super(user, Commands.INFO);
         this.info = info;
     }
+
     @Override
     public String returnObj() {
         return info;

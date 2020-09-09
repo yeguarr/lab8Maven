@@ -19,10 +19,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static commons.User.userFromHashPassword;
 
 public class PostgreSQL extends Thread {
-    AtomicBoolean killFlag;
     final String DB_URL;
     final String USER;
     final String PASS;
+    AtomicBoolean killFlag;
     ConcurrentLinkedQueue<Command> commands = new ConcurrentLinkedQueue<>();
 
     public PostgreSQL(String url, String user, String pass, AtomicBoolean killFlag) {
@@ -41,7 +41,8 @@ public class PostgreSQL extends Thread {
     public void add(Command com) {
         commands.add(com);
     }
-    public void run(){
+
+    public void run() {
         try {
             Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
 
@@ -81,7 +82,7 @@ public class PostgreSQL extends Thread {
     }
 
     public void setRoutes(Map<User, List<Route>> map) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)){
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)) {
             for (User user : map.keySet()) {
                 try (Statement statement = connection.createStatement()) {
                     ResultSet rs = statement.executeQuery("SELECT * FROM routes WHERE user_name = '" + user.login + "';");
@@ -141,13 +142,13 @@ public class PostgreSQL extends Thread {
 
     public Map<User, List<Route>> getMapOfUsers() {
         Map<User, List<Route>> map = new ConcurrentHashMap<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)){
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)) {
             try (Statement statement = connection.createStatement()) {
                 ResultSet rs = statement.executeQuery("SELECT * FROM users");
                 while (rs.next()) {
                     String login = rs.getString("login");
                     String hash = rs.getString("hash");
-                    map.put(userFromHashPassword(login,hash), new CopyOnWriteArrayList<>());
+                    map.put(userFromHashPassword(login, hash), new CopyOnWriteArrayList<>());
                 }
             } catch (SQLException e) {
                 System.out.println("Соединение прервано.");
@@ -163,7 +164,7 @@ public class PostgreSQL extends Thread {
     }
 
     public int getIds() {
-        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)){
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)) {
             try (Statement statement = connection.createStatement()) {
                 ResultSet rs = statement.executeQuery("SELECT nextval('ids');");
                 if (rs.next()) {
@@ -230,10 +231,10 @@ public class PostgreSQL extends Thread {
                 else
                     statement.setNull(9, Types.VARCHAR);
             } else {
-                statement.setNull(6,Types.BIGINT);
-                statement.setNull(7,Types.BIGINT);
-                statement.setNull(8,Types.BIGINT);
-                statement.setNull(9,Types.VARCHAR);
+                statement.setNull(6, Types.BIGINT);
+                statement.setNull(7, Types.BIGINT);
+                statement.setNull(8, Types.BIGINT);
+                statement.setNull(9, Types.VARCHAR);
             }
             statement.setLong(10, com.returnObj().getTo().getX());
             statement.setLong(11, com.returnObj().getTo().getY());
@@ -271,10 +272,10 @@ public class PostgreSQL extends Thread {
                 else
                     statement.setNull(9, Types.VARCHAR);
             } else {
-                statement.setNull(6,Types.BIGINT);
-                statement.setNull(7,Types.BIGINT);
-                statement.setNull(8,Types.BIGINT);
-                statement.setNull(9,Types.VARCHAR);
+                statement.setNull(6, Types.BIGINT);
+                statement.setNull(7, Types.BIGINT);
+                statement.setNull(8, Types.BIGINT);
+                statement.setNull(9, Types.VARCHAR);
             }
             statement.setLong(10, com.returnObj().getTo().getX());
             statement.setLong(11, com.returnObj().getTo().getY());

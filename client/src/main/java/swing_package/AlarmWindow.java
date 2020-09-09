@@ -3,17 +3,17 @@ package swing_package;
 import program.MainClient;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.border.EmptyBorder;
 
 
-public class AlarmWindow  {
+public class AlarmWindow {
     JFrame frame;
     JMultilineLabel label;
 
-    public void display(String title, String message){
+    public void display(String title, String message) {
         label = new JMultilineLabel(message);
         frame = new JFrame(title);
         frame.setIconImage(MainClient.img.getImage());
@@ -22,7 +22,7 @@ public class AlarmWindow  {
         frame.setLocationRelativeTo(null);
         JPanel panel = new JPanel();
 
-        Font font = new Font("Verdana", Font.PLAIN,20);
+        Font font = new Font("Verdana", Font.PLAIN, 20);
         label.setFont(font);
 
         //label.setBounds(60, 120, 130, 25);
@@ -34,7 +34,7 @@ public class AlarmWindow  {
         frame.setVisible(true);
     }
 
-    class  Okbutton implements ActionListener {
+    class Okbutton implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             frame.dispose();
@@ -42,9 +42,10 @@ public class AlarmWindow  {
     }
 }
 
-class JMultilineLabel extends JTextArea{
+class JMultilineLabel extends JTextArea {
     private static final long serialVersionUID = 1L;
-    public JMultilineLabel(String text){
+
+    public JMultilineLabel(String text) {
         super(text);
         setEditable(false);
         setCursor(null);

@@ -4,9 +4,6 @@ import command.Command;
 import commons.Writer;
 import swing_package.InfoMessage;
 
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -17,8 +14,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Client {
-    public static ConcurrentLinkedQueue<ByteBuffer> messages = new ConcurrentLinkedQueue<>();
     private static final ExecutorService pool = Executors.newCachedThreadPool();
+    public static ConcurrentLinkedQueue<ByteBuffer> messages = new ConcurrentLinkedQueue<>();
 
     public static void run(String ip, int port) throws IOException {
         InetSocketAddress addr = new InetSocketAddress(InetAddress.getByName(ip), port);
@@ -45,7 +42,7 @@ public class Client {
             }
         } catch (IOException | InterruptedException e) {
             Writer.writeln("Не удалось отправить все данные.");
-            MainClient.messages.add(InfoMessage.error("Client error in answer",e.getLocalizedMessage()));
+            MainClient.messages.add(InfoMessage.error("Client error in answer", e.getLocalizedMessage()));
         }
         System.out.println("Закрылся answer");
         MainClient.globalKillFlag.set(true);
@@ -59,7 +56,8 @@ public class Client {
                 if (MainClient.globalKillFlag.get()) {
                     sc.close();
                     break;
-                } if (read == -1) {
+                }
+                if (read == -1) {
                     sc.close();
                     throw new IOException();
                 } else if (read != 0) {
@@ -72,7 +70,7 @@ public class Client {
                             MainClient.globalKillFlag.set(true);
                             Writer.writeln("При обработке команты произошли ошибки.");
                             Writer.writeln("Ради безопасности соединение было остановлено.");
-                            MainClient.messages.add(InfoMessage.error("Client error in process",e.getLocalizedMessage()));
+                            MainClient.messages.add(InfoMessage.error("Client error in process", e.getLocalizedMessage()));
                         }
                     });
                 }
@@ -80,7 +78,7 @@ public class Client {
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            MainClient.messages.add(InfoMessage.error("Client error in read",e.getLocalizedMessage()));
+            MainClient.messages.add(InfoMessage.error("Client error in read", e.getLocalizedMessage()));
         }
         Writer.writeln("reader умер");
         MainClient.globalKillFlag.set(true);

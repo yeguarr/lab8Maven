@@ -1,15 +1,14 @@
 package program;
 
 import command.*;
-import commons.*;
-import exceptions.FailedCheckException;
+import commons.Collection;
+import commons.Route;
+import commons.User;
+import commons.Writer;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static commons.Utils.*;
@@ -60,27 +59,26 @@ public class CommanderServer {
         if (!c.isLoginUsed(com.getUser().login)) {
             c.map.put(com.getUser(), new CopyOnWriteArrayList<>());
             sqlRun.add(com);
-        }
-        else {
-            return new ErrorCommand(com.getUser(),"register.invalid.user");
+        } else {
+            return new ErrorCommand(com.getUser(), "register.invalid.user");
         }
         /*Collection newC = new Collection(c.ids);
         for (User user : c.map.keySet()) {
             newC.map.put(user.secret(), c.map.get(user));
         }
         return new Show(com.getUser(),newC);*/
-        return new Info(com.getUser(),"success");
+        return new Info(com.getUser(), "success");
     }
 
     private static Command login(Collection c, Command com) {
         if (!c.isUserInMap(com.getUser())) {
-            return new ErrorCommand(com.getUser(),"login.invalid.user");
+            return new ErrorCommand(com.getUser(), "login.invalid.user");
         }
         Collection newC = new Collection(c.ids);
         for (User user : c.map.keySet()) {
             newC.map.put(user.secret(), c.map.get(user));
         }
-        return new Show(com.getUser(),newC);
+        return new Show(com.getUser(), newC);
     }
 
     public static Command show(Collection c, Command com) {
@@ -90,24 +88,25 @@ public class CommanderServer {
             for (User user : c.map.keySet()) {
                 newC.map.put(user.secret(), c.map.get(user));
             }
-            return new Show(com.getUser(),newC);
+            return new Show(com.getUser(), newC);
         }
-        return new ErrorCommand(com.getUser(),"invalid.user");
+        return new ErrorCommand(com.getUser(), "invalid.user");
     }
+
     /**
      * Выводит значения поля distance в порядке возрастания
      */
     public static Command printFieldAscendingDistance(Collection c, Command com) {
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
-            StringBuilder sb = new StringBuilder();
-            if (list.size() > 0)
+            StringBuilder sb = new StringBuilder("server.distances/");
+            if (list.size() > 0 && list.stream().anyMatch(r -> r.getDistance() != null))
                 list.stream().filter(r -> r.getDistance() != null).map(Route::getDistance).sorted().forEach(dis -> sb.append(dis).append("; "));
             else
-                return new Info(com.getUser(),"empty");
-            return new Info(com.getUser(),sb.toString());
+                return new Info(com.getUser(), "empty");
+            return new Info(com.getUser(), sb.toString());
         }
-        return new ErrorCommand(com.getUser(),"invalid.user");
+        return new ErrorCommand(com.getUser(), "invalid.user");
     }
 
     /**
@@ -116,12 +115,13 @@ public class CommanderServer {
     public static Command minByCreationDate(Collection c, Command com) {
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
-            if (list.size() > 0)
-                return new Info(com.getUser(), "ID: " + list.stream().min(Comparator.comparing(Route::getCreationDate)).get().getId());
-            else
-                return new Info(com.getUser(),"empty");
+            if (list.size() > 0) {
+                Route route = list.stream().min(Comparator.comparing(Route::getCreationDate)).get();
+                return new Info(com.getUser(), "server.min/" + route.getId() + "/" + route.getName());
+            } else
+                return new Info(com.getUser(), "empty");
         }
-        return new ErrorCommand(com.getUser(),"invalid.user");
+        return new ErrorCommand(com.getUser(), "invalid.user");
     }
 
     /**
@@ -131,22 +131,22 @@ public class CommanderServer {
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
             if (list.size() > 0)
-                return new Info(com.getUser(), String.valueOf(list.stream().filter(r -> r.getDistance() != null).mapToDouble(Route::getDistance).average().orElse(Double.NaN)));
+                return new Info(com.getUser(), "server.average/" + list.stream().filter(r -> r.getDistance() != null).mapToDouble(Route::getDistance).average().orElse(Double.NaN));
             else
-                return new Info(com.getUser(),"empty");
+                return new Info(com.getUser(), "empty");
         }
-        return new ErrorCommand(com.getUser(),"invalid.user");
+        return new ErrorCommand(com.getUser(), "invalid.user");
     }
 
     /**
      * Удаляет все элементы коллекции, которые меньше чем заданный
      */
     public static Command removeLower(Collection c, Command com, PostgreSQL sqlRun) {
-        if (testRoute((Route) com.returnObj()))
-            return new Warning(com.getUser(),"warning.route");
         Route newRoute = (Route) com.returnObj();
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
+            if (testRoute((Route) com.returnObj()))
+                return new Warning(com.getUser(), "warning.route");
             list.removeIf(route -> {
                 boolean bool = route.compareTo(newRoute) < 0;
                 if (bool)
@@ -160,20 +160,20 @@ public class CommanderServer {
                     e.printStackTrace();
                 }
             }
-            return new Info(com.getUser(),"success");
+            return new Info(com.getUser(), "success");
         }
-        return new ErrorCommand(com.getUser(),"invalid.user");
+        return new ErrorCommand(com.getUser(), "invalid.user");
     }
 
     /**
      * Удаляет все элементы коллекции, которые больше чем заданный
      */
     public static Command removeGreater(Collection c, Command com, PostgreSQL sqlRun) {
-        if (testRoute((Route) com.returnObj()))
-            return new Warning(com.getUser(),"warning.route");
         Route newRoute = (Route) com.returnObj();
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
+            if (testRoute((Route) com.returnObj()))
+                return new Warning(com.getUser(), "warning.route");
             list.removeIf(route -> {
                 boolean bool = route.compareTo(newRoute) > 0;
                 if (bool)
@@ -187,21 +187,21 @@ public class CommanderServer {
                     e.printStackTrace();
                 }
             }
-            return new Info(com.getUser(),"success");
+            return new Info(com.getUser(), "success");
         }
-        return new ErrorCommand(com.getUser(),"invalid.user");
+        return new ErrorCommand(com.getUser(), "invalid.user");
     }
 
     /**
      * Добавляет новый элемент в коллекцию, если его значение меньше, чем у наименьшего элемента этой коллекции
      */
     public static Command addIfMin(Collection c, Command com, PostgreSQL sqlRun) {
-        if (testRoute((Route) com.returnObj()))
-            return new Warning(com.getUser(),"warning.route");
         int id = c.getNextId();
         Route newRoute = routeWithId((Route) com.returnObj(), id);
-        List<Route> list = properUser( com.getUser(), c);
+        List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
+            if (testRoute((Route) com.returnObj()))
+                return new Warning(com.getUser(), "warning.route");
             if (newRoute.compareTo(list.stream().sorted().findFirst().orElse(newRoute)) <= 0) {
                 list.add(newRoute);
                 sqlRun.add(new CommandWithObj(com.getUser(), Commands.ADD, newRoute));
@@ -212,10 +212,10 @@ public class CommanderServer {
                         e.printStackTrace();
                     }
                 }
-                return new Info(com.getUser(),"success");
-            } else return new Warning(com.getUser(),"failure");
+                return new Info(com.getUser(), "success");
+            } else return new Warning(com.getUser(), "failure");
         }
-        return new ErrorCommand(com.getUser(),"invalid.user");
+        return new ErrorCommand(com.getUser(), "invalid.user");
     }
 
     /**
@@ -233,9 +233,9 @@ public class CommanderServer {
                     e.printStackTrace();
                 }
             }
-            return new Info(com.getUser(),"success");
+            return new Info(com.getUser(), "success");
         }
-        return new ErrorCommand(com.getUser(),"invalid.user");
+        return new ErrorCommand(com.getUser(), "invalid.user");
     }
 
     /**
@@ -251,7 +251,7 @@ public class CommanderServer {
                     route = r;
             }
             if (route == null) {
-                return new Warning(com.getUser(),"failure");
+                return new Warning(com.getUser(), "failure");
             }
             list.remove(route);
             sqlRun.add(com);
@@ -262,19 +262,19 @@ public class CommanderServer {
                     e.printStackTrace();
                 }
             }
-            return new Info(com.getUser(),"success");
+            return new Info(com.getUser(), "success");
         }
-        return new ErrorCommand(com.getUser(),"invalid.user");
+        return new ErrorCommand(com.getUser(), "invalid.user");
     }
 
     /**
      * Перезаписывает элемент списка с указанным id
      */
     public static Command update(Collection c, Command com, PostgreSQL sqlRun) {
-        if (testRoute((Route) com.returnObj()))
-            return new Warning(com.getUser(),"warning.route");
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
+            if (testRoute((Route) com.returnObj()))
+                return new Warning(com.getUser(), "warning.route");
             int id = ((Route) com.returnObj()).getId();
             Route route = null;
             for (Route r : list) {
@@ -283,7 +283,7 @@ public class CommanderServer {
                 }
             }
             if (route == null) {
-                return new Warning(com.getUser(),"failure");
+                return new Warning(com.getUser(), "failure");
             }
             list.set(list.indexOf(route), (Route) com.returnObj());
             sqlRun.add(com);
@@ -294,19 +294,19 @@ public class CommanderServer {
                     e.printStackTrace();
                 }
             }
-            return new Info(com.getUser(),"success");
+            return new Info(com.getUser(), "success");
         }
-        return new ErrorCommand(com.getUser(),"invalid.user");
+        return new ErrorCommand(com.getUser(), "invalid.user");
     }
 
     /**
      * Добавляет элемент в список
      */
     public static Command add(Collection c, Command com, PostgreSQL sqlRun) {
-        if (testRoute((Route) com.returnObj()))
-            return new Warning(com.getUser(),"warning.route");
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
+            if (testRoute((Route) com.returnObj()))
+                return new Warning(com.getUser(), "warning.route");
             int id = c.getNextId();
             list.add(routeWithId((Route) com.returnObj(), id));
             sqlRun.add(com);
@@ -317,9 +317,9 @@ public class CommanderServer {
                     e.printStackTrace();
                 }
             }
-            return new Info(com.getUser(),"success");
+            return new Info(com.getUser(), "success");
         }
-        return new ErrorCommand(com.getUser(),"invalid.user");
+        return new ErrorCommand(com.getUser(), "invalid.user");
     }
 
     public static Route routeWithId(Route r, int id) {
@@ -332,7 +332,7 @@ public class CommanderServer {
 
             routeDistanceCheck.checker(route.getDistance());
             routeNameCheck.checker(route.getName());
-            if(route.getFrom() != null) {
+            if (route.getFrom() != null) {
                 locationXYZCheck.checker(route.getFrom().getX());
                 locationXYZCheck.checker(route.getFrom().getY());
                 locationXYZCheck.checker(route.getFrom().getZ());
@@ -345,7 +345,8 @@ public class CommanderServer {
             coordinatesXCheck.checker(route.getCoordinates().getX());
             coordinatesYCheck.checker(route.getCoordinates().getY());
             return false;
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+        }
         return true;
     }
 

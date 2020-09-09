@@ -1,11 +1,10 @@
 package program;
 
 import command.Command;
-import commons.Collection;
 import commons.Console;
 import commons.Reader;
-import commons.Utils;
 import commons.Writer;
+import commons.*;
 import exceptions.EndOfFileException;
 import exceptions.FailedCheckException;
 import org.apache.logging.log4j.LogManager;
@@ -16,21 +15,24 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServerWithProperThreads {
 
     private static final Logger logger = LogManager.getLogger(ServerWithProperThreads.class);
     private static final ExecutorService pool = Executors.newCachedThreadPool();
+    private static final AtomicBoolean globalKillFlag = new AtomicBoolean(false);
     public static CopyOnWriteArrayList<ConcurrentLinkedQueue<ByteBuffer>> messList = new CopyOnWriteArrayList<>();
     private static Collection collection;
-    private static final AtomicBoolean globalKillFlag = new AtomicBoolean(false);
     private static PostgreSQL sqlRun;
 
     public static void main(String[] args) {
 
-        try (commons.Reader reader = new Reader("properties.txt")){
+        try (commons.Reader reader = new Reader("properties.txt")) {
             ServerSocketChannel ssc = ServerSocketChannel.open();
             try {
                 ssc.bind(new InetSocketAddress(args[0], Utils.portCheck.checker(Integer.parseInt(args[1]))));
@@ -81,7 +83,7 @@ public class ServerWithProperThreads {
             logger.error("Пренудительное закрытие сервера.");
             logger.error(e.getLocalizedMessage());
         } catch (exceptions.IncorrectFileNameException | EndOfFileException e) {
-            Writer.writeln( "\u001B[31m" + "Неверное имя файла" + "\u001B[0m");
+            Writer.writeln("\u001B[31m" + "Неверное имя файла" + "\u001B[0m");
         }
         pool.shutdownNow();
         globalKillFlag.set(true);

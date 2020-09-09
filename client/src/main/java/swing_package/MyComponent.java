@@ -1,12 +1,17 @@
 package swing_package;
 
-import commons.*;
+import commons.Route;
+import commons.User;
+import commons.Utils;
 import program.MainClient;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -118,7 +123,7 @@ public class MyComponent extends JComponent implements ActionListener {
 
     private void drawMessage(Graphics2D g2d) {
         if (currentMessage != null) {
-            float cool = (float) ((Math.tanh(6 * (Math.abs(messageTime+1.5)-2)) + 0.999055) / 1.99811);
+            float cool = (float) ((Math.tanh(6 * (Math.abs(messageTime + 1.5) - 2)) + 0.999055) / 1.99811);
 
             g2d.setPaint(currentMessage.first);
             Rectangle2D messageUpper = new Rectangle2D.Float();
@@ -159,7 +164,7 @@ public class MyComponent extends JComponent implements ActionListener {
                 messageTime -= 1;
 
             g2d.setFont(f);
-            g2d.setClip((int) (WIDTH - 195 + 260 * cool), (int) ((55.0f + 90.0f) / 2 + metrics.getHeight() / 2.0f - metrics.getAscent()-1), 180,  ( metrics.getHeight() ));
+            g2d.setClip((int) (WIDTH - 195 + 260 * cool), (int) ((55.0f + 90.0f) / 2 + metrics.getHeight() / 2.0f - metrics.getAscent() - 1), 180, (metrics.getHeight()));
             g2d.drawString(currentMessage.description, WIDTH - 195 + 260 * cool - scrolling, (55.0f + 90.0f) / 2 - metrics.getHeight() / 2.0f + metrics.getAscent());
         }
     }
@@ -172,19 +177,19 @@ public class MyComponent extends JComponent implements ActionListener {
             g2d.draw(vr.q);
             float[] dist = {0.0f, 1.0f};
             Color[] colors = {vr.c, Color.BLACK};
-            RadialGradientPaint grad = new RadialGradientPaint(new Point2D.Float((float) vr.el1.getCenterX(), (float)vr.el1.getCenterY()), (float)Math.abs(vr.el1.getWidth())+10f,dist,colors);
+            RadialGradientPaint grad = new RadialGradientPaint(new Point2D.Float((float) vr.el1.getCenterX(), (float) vr.el1.getCenterY()), (float) Math.abs(vr.el1.getWidth()) + 10f, dist, colors);
             g2d.setPaint(grad);
             g2d.fill(vr.el1);
-            grad = new RadialGradientPaint(new Point2D.Float((float) vr.el2.getCenterX(), (float)vr.el2.getCenterY()), (float)Math.abs(vr.el2.getWidth())+10f,dist,colors);
+            grad = new RadialGradientPaint(new Point2D.Float((float) vr.el2.getCenterX(), (float) vr.el2.getCenterY()), (float) Math.abs(vr.el2.getWidth()) + 10f, dist, colors);
             g2d.setPaint(grad);
             g2d.fill(vr.el2);
             g2d.setPaint(MainClient.isDark ? Color.white : Color.BLACK);
             g2d.setFont(f);
             FontMetrics metrics = g2d.getFontMetrics(f);
-            if (vr.el2.getBounds().width*1.1 >= vr.el1.getBounds().width)
-                g2d.drawString("  "+vr.getRoute().getName(),(float)(vr.el2.getMaxX()),(float)(vr.el2.getCenterY() - metrics.getHeight()/2 + metrics.getAscent()));
+            if (vr.el2.getBounds().width * 1.1 >= vr.el1.getBounds().width)
+                g2d.drawString("  " + vr.getRoute().getName(), (float) (vr.el2.getMaxX()), (float) (vr.el2.getCenterY() - metrics.getHeight() / 2 + metrics.getAscent()));
             else
-                g2d.drawString("  "+vr.getRoute().getName(),(float)(vr.el1.getMaxX()),(float)(vr.el1.getCenterY() - metrics.getHeight()/2 + metrics.getAscent()));
+                g2d.drawString("  " + vr.getRoute().getName(), (float) (vr.el1.getMaxX()), (float) (vr.el1.getCenterY() - metrics.getHeight() / 2 + metrics.getAscent()));
 
             //drawCenteredString(g2d, vr.getRoute().getName(),(float) (vr.el1.getCenterX()/4+vr.el2.getCenterX()/4+vr.q.getCtrlX()/2),(float) (vr.el1.getCenterY()/4+vr.el2.getCenterY()/4+vr.q.getCtrlY()/2), f);
         }
@@ -203,7 +208,7 @@ public class MyComponent extends JComponent implements ActionListener {
         for (User user : MainClient.collection.map.keySet()) {
             for (Route route : MainClient.collection.map.get(user)) {
                 if (visualRouteList.stream().map(VisualRoute::getRoute).map(Route::getId).noneMatch(integer -> integer.equals(route.getId())))
-                    visualRouteList.add(new VisualRoute(route,Color.getHSBColor(((float) Math.abs(Utils.sha1(user.login).hashCode())) / Integer.MAX_VALUE, 1.f,  1.f)));
+                    visualRouteList.add(new VisualRoute(route, Color.getHSBColor(((float) Math.abs(Utils.sha1(user.login).hashCode())) / Integer.MAX_VALUE, 1.f, 1.f)));
             }
         }
         if (!MainClient.messages.isEmpty() && (currentMessage == null))
@@ -260,8 +265,8 @@ public class MyComponent extends JComponent implements ActionListener {
 
     class ResizeListener extends ComponentAdapter {
         public void componentResized(ComponentEvent e) {
-            setX += (double)e.getComponent().getWidth()/2 - (double) WIDTH/2;
-            setY += (double)e.getComponent().getHeight()/2 - (double) HEIGHT/2;
+            setX += (double) e.getComponent().getWidth() / 2 - (double) WIDTH / 2;
+            setY += (double) e.getComponent().getHeight() / 2 - (double) HEIGHT / 2;
             HEIGHT = e.getComponent().getHeight();
             WIDTH = e.getComponent().getWidth();
             dX = setX;

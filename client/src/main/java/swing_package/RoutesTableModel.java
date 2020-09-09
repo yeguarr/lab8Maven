@@ -7,11 +7,11 @@ import program.MainClient;
 import javax.swing.table.AbstractTableModel;
 import java.util.LinkedList;
 
-public class RoutesTableModel extends AbstractTableModel{
+public class RoutesTableModel extends AbstractTableModel {
 
-    private LinkedList<String []> dataLinkedList = new LinkedList<>();
+    private LinkedList<String[]> dataLinkedList = new LinkedList<>();
 
-    public RoutesTableModel(){
+    public RoutesTableModel() {
     }
 
     public void update() {
@@ -52,23 +52,38 @@ public class RoutesTableModel extends AbstractTableModel{
     }
 
     @Override
-    public String getColumnName(int columnIndex){
+    public String getColumnName(int columnIndex) {
         switch (columnIndex) {
-            case 0: return MainClient.stats.getString("user_name");
-            case 1: return MainClient.stats.getString("id");
-            case 2: return MainClient.stats.getString("name");
-            case 3: return MainClient.stats.getString("coordinate_x");
-            case 4: return MainClient.stats.getString("coordinate_y");
-            case 5: return MainClient.stats.getString("creationDate");
-            case 6: return MainClient.stats.getString("from_x");
-            case 7: return MainClient.stats.getString("from_y");
-            case 8: return MainClient.stats.getString("from_z");
-            case 9: return MainClient.stats.getString("from_name");
-            case 10: return MainClient.stats.getString("to_x");
-            case 11: return MainClient.stats.getString("to_y");
-            case 12: return MainClient.stats.getString("to_z");
-            case 13: return MainClient.stats.getString("to_name");
-            case 14: return MainClient.stats.getString("distance");
+            case 0:
+                return MainClient.stats.getString("user_name");
+            case 1:
+                return MainClient.stats.getString("id");
+            case 2:
+                return MainClient.stats.getString("name");
+            case 3:
+                return MainClient.stats.getString("coordinate_x");
+            case 4:
+                return MainClient.stats.getString("coordinate_y");
+            case 5:
+                return MainClient.stats.getString("creationDate");
+            case 6:
+                return MainClient.stats.getString("from_x");
+            case 7:
+                return MainClient.stats.getString("from_y");
+            case 8:
+                return MainClient.stats.getString("from_z");
+            case 9:
+                return MainClient.stats.getString("from_name");
+            case 10:
+                return MainClient.stats.getString("to_x");
+            case 11:
+                return MainClient.stats.getString("to_y");
+            case 12:
+                return MainClient.stats.getString("to_z");
+            case 13:
+                return MainClient.stats.getString("to_name");
+            case 14:
+                return MainClient.stats.getString("distance");
         }
         return "";
     }

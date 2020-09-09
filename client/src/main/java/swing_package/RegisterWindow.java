@@ -18,7 +18,7 @@ import static program.Client.SendCommand;
 public class RegisterWindow {
     JFrame frame;
 
-    public void display(){
+    public void display() {
         frame = new JFrame(MainClient.stats.getString("Register"));
         frame.setSize(350, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -30,27 +30,27 @@ public class RegisterWindow {
         panel.setLayout(null);
 
         JLabel username = new JLabel(MainClient.stats.getString("Username"));
-        username.setBounds(10,20,80,25);
+        username.setBounds(10, 20, 80, 25);
         panel.add(username);
 
         JTextField usernameText = new JTextField(20);
-        usernameText.setBounds(100,20,165,25);
+        usernameText.setBounds(100, 20, 165, 25);
         panel.add(usernameText);
 
         JLabel password = new JLabel(MainClient.stats.getString("Password"));
-        password.setBounds(10,50,80,25);
+        password.setBounds(10, 50, 80, 25);
         panel.add(password);
 
         JLabel password2 = new JLabel(MainClient.stats.getString("Password 2"));
-        password2.setBounds(10,80,80,25);
+        password2.setBounds(10, 80, 80, 25);
         panel.add(password2);
 
         JPasswordField passwordText = new JPasswordField(20);
-        passwordText.setBounds(100,50,165,25);
+        passwordText.setBounds(100, 50, 165, 25);
         panel.add(passwordText);
 
         JPasswordField passwordText2 = new JPasswordField(20);
-        passwordText2.setBounds(100,80,165,25);
+        passwordText2.setBounds(100, 80, 165, 25);
         panel.add(passwordText2);
 
         JButton goBackButton = new JButton(MainClient.stats.getString("go back"));
@@ -62,7 +62,7 @@ public class RegisterWindow {
         registerButton.setBounds(100, 130, 165, 25);
         panel.add(registerButton);
         registerButton.addActionListener(actionListener -> {
-            if (usernameText.getText().length()!=0&&Arrays.equals(passwordText.getPassword(), passwordText2.getPassword())) {
+            if (usernameText.getText().length() != 0 && Arrays.equals(passwordText.getPassword(), passwordText2.getPassword())) {
                 try {
                     Utils.loginCheck.checker(usernameText.getText());
                     MainClient.user = new User(usernameText.getText(), new String(passwordText.getPassword()));
@@ -84,7 +84,7 @@ public class RegisterWindow {
         frame.setVisible(true);
     }
 
-    class GoBackButton implements ActionListener{
+    class GoBackButton implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             LoginWindow obj = new LoginWindow();

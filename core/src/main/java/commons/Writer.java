@@ -21,26 +21,24 @@ public class Writer implements Serializable {
     }
 
     public void shatter() {
-        for (int i = 0; i < toWrite.size(); i++)
-        {
+        for (int i = 0; i < toWrite.size(); i++) {
             String s = toWrite.get(i);
-            if (s.length() > 500)
-            {
-                toWrite.set(i, s.substring(0,500));
-                toWrite.add(i+1, s.substring(500));
+            if (s.length() > 500) {
+                toWrite.set(i, s.substring(0, 500));
+                toWrite.add(i + 1, s.substring(500));
             }
         }
     }
 
     public Writer getSubWriter(int beg, int end) {
         Writer w = new Writer();
-        w.toWrite = this.toWrite.stream().skip(beg).limit(end-beg).collect(Collectors.toCollection(LinkedList::new));
+        w.toWrite = this.toWrite.stream().skip(beg).limit(end - beg).collect(Collectors.toCollection(LinkedList::new));
         return w;
     }
 
     public boolean isEnd() {
         //try {
-            return toWrite.getLast().equals("end");
+        return toWrite.getLast().equals("end");
         /*}
         catch (NoSuchElementException e) {
             return true;

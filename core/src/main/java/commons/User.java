@@ -14,14 +14,14 @@ public class User implements Serializable {
         hashPassword = Utils.sha1(password);
     }
 
-    public User secret() {
-        return new User(this.login,"password");
-    }
-
     public static User userFromHashPassword(String login, String hashPassword) {
         User user = new User(login, "password");
         user.hashPassword = hashPassword;
         return user;
+    }
+
+    public User secret() {
+        return new User(this.login, "password");
     }
 
     public void changeUser(String login, String password) {

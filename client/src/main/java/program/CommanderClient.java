@@ -1,10 +1,15 @@
 package program;
 
 import command.*;
-import commons.*;
-import swing_package.AlarmWindow;
+import commons.Collection;
+import commons.Route;
+import commons.User;
+import commons.Writer;
 import swing_package.InfoMessage;
 
+import javax.swing.*;
+import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -16,43 +21,44 @@ public class CommanderClient {
     public static void switcher(Command com, Collection c) {
         switch (com.getCurrent()) {
             case ADD:
-                 add(c, com);
-                 MainClient.rtm.update();
-                 return;
+                add(c, com);
+                MainClient.rtm.update();
+                return;
             case UPDATE:
-                 update(c, com);
-                 MainClient.rtm.update();
-                 return;
+                update(c, com);
+                MainClient.rtm.update();
+                return;
             case REMOVE_BY_ID:
-                 removeById(c, com);
-                 MainClient.rtm.update();
-                 return;
+                removeById(c, com);
+                MainClient.rtm.update();
+                return;
             case CLEAR:
-                 clear(c, com);
-                 MainClient.rtm.update();
-                 return;
+                clear(c, com);
+                MainClient.rtm.update();
+                return;
             case ADD_IF_MIN:
-                 addIfMin(c, com);
-                 MainClient.rtm.update();
-                 return;
+                addIfMin(c, com);
+                MainClient.rtm.update();
+                return;
             case REMOVE_GREATER:
-                 removeGreater(c, com);
-                 MainClient.rtm.update();
-                 return;
+                removeGreater(c, com);
+                MainClient.rtm.update();
+                return;
             case REMOVE_LOWER:
-                 removeLower(c, com);
-                 MainClient.rtm.update();
-                 return;
+                removeLower(c, com);
+                MainClient.rtm.update();
+                return;
             case INFO: {
-                MainClient.messages.add(InfoMessage.info(MainClient.stats.getString("Server Response"), translateAnswer(((Info) com).returnObj())));
+                MainClient.messages.add(InfoMessage.info(MainClient.stats.getString("Server Response"), format(((Info) com).returnObj())));
                 break;
             }
             case ERROR: {
-                MainClient.messages.add(InfoMessage.error(MainClient.stats.getString("Server Error Response"), translateAnswer(((ErrorCommand) com).returnObj())));
+                JOptionPane.showMessageDialog(null, MainClient.stats.getString(((ErrorCommand) com).returnObj()), format("Server Error Response"), JOptionPane.ERROR_MESSAGE);
+                MainClient.messages.add(InfoMessage.error(MainClient.stats.getString("Server Error Response"), format(((ErrorCommand) com).returnObj())));
                 break;
             }
             case WARNING: {
-                MainClient.messages.add(InfoMessage.warning(MainClient.stats.getString("Server Warning Response"), translateAnswer(((Warning) com).returnObj())));
+                MainClient.messages.add(InfoMessage.warning(MainClient.stats.getString("Server Warning Response"), format(((Warning) com).returnObj())));
                 break;
             }
             case SHOW: {
@@ -63,6 +69,12 @@ public class CommanderClient {
             default:
                 Writer.writeln("Такой команды нет");
         }
+    }
+
+    private static String format(String text) {
+        String[] args = text.split("/");
+        MessageFormat form = new MessageFormat(MainClient.stats.getString(args[0]));
+        return form.format(Arrays.copyOfRange(args, 1, args.length));
     }
 
     /**
@@ -87,83 +99,13 @@ public class CommanderClient {
         }
     }
 
-    public static String translateAnswer(String string){
-        switch (string){
-            case "switcher.noCommand":{
-                switch(MainClient.i){
-                    case 0:  return "Команда не существует";
-                    case 1:  return "A parancs nem létezik";
-                    case 2:  return "Command is not exist";
-                    case 3:  return "Het commando bestaat niet";
-                }
-            }
-            case "register.invalid.user":{
-                switch(MainClient.i){
-                    case 0:  return "Ошибка регитрации";
-                    case 1:  return "Regisztrációs hiba";
-                    case 2:  return "Registration error";
-                    case 3:  return "Registratiefout";
-                }
-            }
-            case "login.invalid.user":{
-                switch(MainClient.i){
-                    case 0:  return "Ошибка входа";
-                    case 1:  return "Bejelentkezési hiba";
-                    case 2:  return "Login error";
-                    case 3:  return "Aanmeldfout";
-                }
-            }
-            case "invalid.user":{
-                switch(MainClient.i){
-                    case 0:  return "Ошибка работы";
-                    case 1:  return "Működési hiba";
-                    case 2:  return "Operation error";
-                    case 3:  return "Operatiefout";
-                }
-            }
-            case "empty":{
-                switch(MainClient.i){
-                    case 0:  return "Пусто";
-                    case 1:  return "Üres";
-                    case 2:  return "Empty";
-                    case 3:  return "Leeg";
-                }
-            }
-            case "success":{
-                switch(MainClient.i){
-                    case 0:  return "Успешно";
-                    case 1:  return "Sikeresen";
-                    case 2:  return "success";
-                    case 3:  return "Succesvol";
-                }
-            }
-            case "failure":{
-                switch (MainClient.i){
-                    case 0:  return "Неудачно";
-                    case 1:  return "Sikertelenül";
-                    case 2:  return "failure";
-                    case 3:  return "Tevergeefs";
-                }
-            }
-            case "warning.route":{
-                switch (MainClient.i){
-                    case 0:  return "ошибка ввода";
-                    case 1:  return "bemeneti hiba";
-                    case 2:  return "input error";
-                    case 3:  return "invoerfout";
-                }
-            }
-        }
-        return string;
-    }
-
     /**
      * Добавляет новый элемент в коллекцию, если его значение меньше, чем у наименьшего элемента этой коллекции
      */
     public static void addIfMin(Collection c, Command com) {
         int id = c.getNextId();
         Route newRoute = routeWithId((Route) com.returnObj(), id);
-        List<Route> list = properUser( com.getUser(), c);
+        List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
             if (newRoute.compareTo(list.stream().sorted().findFirst().orElse(newRoute)) <= 0) {
                 list.add(newRoute);

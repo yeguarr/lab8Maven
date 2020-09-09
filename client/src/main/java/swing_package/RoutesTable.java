@@ -11,43 +11,39 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 public class RoutesTable {
-    JPanel panel = new JPanel();
-
-    JTable routes = new JTable(MainClient.rtm);
-    JScrollPane routesScrollPane = new JScrollPane(routes);
-    public TableRowSorter<TableModel> sorter;
-
     public static TableCellRenderer tableCellRenderer = new DefaultTableCellRenderer() {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             if (isSelected)
-                c.setBackground(column % 2 == 1 ? new Color(61,97,133) :  new Color(73,117,160));
+                c.setBackground(column % 2 == 1 ? new Color(61, 97, 133) : new Color(73, 117, 160));
             else
-                c.setBackground(column % 2 == 1 ? (MainClient.isDark ? new Color(60,63,65) : new Color(230,230,230)) : (MainClient.isDark ?  new Color(69,73,74) : Color.WHITE));
-            value = DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm z").format(ZonedDateTime.parse(value.toString()));
+                c.setBackground(column % 2 == 1 ? (MainClient.isDark ? new Color(60, 63, 65) : new Color(230, 230, 230)) : (MainClient.isDark ? new Color(69, 73, 74) : Color.WHITE));
+            value = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL).withLocale(MainClient.stats.getLocale()).format(ZonedDateTime.parse(value.toString()));
             return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         }
     };
+    public TableRowSorter<TableModel> sorter;
+    JPanel panel = new JPanel();
+    JTable routes = new JTable(MainClient.rtm);
+    JScrollPane routesScrollPane = new JScrollPane(routes);
 
-    public RoutesTable(){
+    public RoutesTable() {
         routes.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 if (isSelected)
-                    c.setBackground(column % 2 == 1 ? new Color(61,97,133) :  new Color(73,117,160));
+                    c.setBackground(column % 2 == 1 ? new Color(61, 97, 133) : new Color(73, 117, 160));
                 else
-                    c.setBackground(column % 2 == 1 ? (MainClient.isDark ? new Color(60,63,65) : new Color(230,230,230)) : (MainClient.isDark ?  new Color(69,73,74) : Color.WHITE));
+                    c.setBackground(column % 2 == 1 ? (MainClient.isDark ? new Color(60, 63, 65) : new Color(230, 230, 230)) : (MainClient.isDark ? new Color(69, 73, 74) : Color.WHITE));
                 return this;
             }
         });
@@ -78,17 +74,17 @@ public class RoutesTable {
 
         routes.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent mouseEvent) {
-                JTable table =(JTable) mouseEvent.getSource();
+                JTable table = (JTable) mouseEvent.getSource();
                 Point point = mouseEvent.getPoint();
                 int row = table.rowAtPoint(point);
                 if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
                     UpdateWindow o = new UpdateWindow();
                     int id = 0;
                     int user_name = 0;
-                    for (int i =0; i < table.getColumnCount(); i++) {
+                    for (int i = 0; i < table.getColumnCount(); i++) {
                         if (table.getColumnName(i).equals("ID"))
                             id = i;
-                        else if (table.getColumnName(i).equals(MainClient.stats.getString("Username")))
+                        else if (table.getColumnName(i).equals("Username"))
                             user_name = i;
                     }
                     Route r = MainClient.collection.getRouteById(Integer.parseInt(String.valueOf(table.getValueAt(row, id))));

@@ -13,17 +13,12 @@ public class VisualRoute {
     public Ellipse2D el2 = new Ellipse2D.Double();
     public QuadCurve2D q = new QuadCurve2D.Double();
     public Color c;
+    public Route route;
     PointPack old;
     PointPack current;
     PointPack desired;
     double a = 0;
     boolean dying = false;
-    public Route route;
-
-    public Route getRoute() {
-        return route;
-    }
-
 
     public VisualRoute(PointPack old, PointPack desired, Route route, Color c) {
         this.route = route;
@@ -35,6 +30,7 @@ public class VisualRoute {
         el2.setFrameFromCenter(current.third.getX(), current.third.getY(), current.third.getX() + current.radius.getY(), current.third.getY() - current.radius.getY());
         q.setCurve(current.first, current.second, current.third);
     }
+
 
     public VisualRoute(Route route, Color c) {
         this.route = route;
@@ -55,6 +51,10 @@ public class VisualRoute {
         q.setCurve(current.first, current.second, current.third);
     }
 
+    public Route getRoute() {
+        return route;
+    }
+
     public void kill() {
         Point2D first = new Point2D.Double();
         first.setLocation(0, 0);
@@ -67,7 +67,7 @@ public class VisualRoute {
         dying = true;
         a = 0.0;
         this.old = new PointPack(this.current);
-        this.desired =  new PointPack(first, second, third, radius);
+        this.desired = new PointPack(first, second, third, radius);
     }
 
     public void setDesired(Route route) {
@@ -91,9 +91,10 @@ public class VisualRoute {
     }
 
     public boolean isTouching(double X, double Y) {
-        if (((current.first.getX()- X)*(current.first.getX() - X)+(current.first.getY() - Y)*(current.first.getY() - Y) - current.radius.getX()*current.radius.getX() < 0.0))
+        if (((current.first.getX() - X) * (current.first.getX() - X) + (current.first.getY() - Y) * (current.first.getY() - Y) - current.radius.getX() * current.radius.getX() < 0.0))
             return true;
-        else return (((current.third.getX()- X)*(current.third.getX() - X)+(current.third.getY() - Y)*(current.third.getY() - Y) - current.radius.getY()*current.radius.getY() < 0.0));
+        else
+            return (((current.third.getX() - X) * (current.third.getX() - X) + (current.third.getY() - Y) * (current.third.getY() - Y) - current.radius.getY() * current.radius.getY() < 0.0));
     }
 
     public void updateComponents(double dX, double dY, double scale, double scaleCount, int grid) {
@@ -131,17 +132,6 @@ public class VisualRoute {
             this.second = second;
             this.third = third;
             this.radius = radius;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            PointPack pointPack = (PointPack) o;
-            return first.equals(pointPack.first) &&
-                    second.equals(pointPack.second) &&
-                    third.equals(pointPack.third) &&
-                    Objects.equals(radius, pointPack.radius);
         }
 
         public static PointPack createPointPack(Route route) {
@@ -182,6 +172,17 @@ public class VisualRoute {
                 radius.setLocation(r1, r2);
                 return new PointPack(first, second, third, radius);
             }
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            PointPack pointPack = (PointPack) o;
+            return first.equals(pointPack.first) &&
+                    second.equals(pointPack.second) &&
+                    third.equals(pointPack.third) &&
+                    Objects.equals(radius, pointPack.radius);
         }
 
         @Override
