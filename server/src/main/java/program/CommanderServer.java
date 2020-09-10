@@ -130,7 +130,7 @@ public class CommanderServer {
     public static Command averageOfDistance(Collection c, Command com) {
         List<Route> list = properUser(com.getUser(), c);
         if (list != null) {
-            if (list.size() > 0)
+            if (list.size() > 0 && list.stream().anyMatch(r -> r.getDistance() != null))
                 return new Info(com.getUser(), "server.average/" + list.stream().filter(r -> r.getDistance() != null).mapToDouble(Route::getDistance).average().orElse(Double.NaN));
             else
                 return new Info(com.getUser(), "empty");
