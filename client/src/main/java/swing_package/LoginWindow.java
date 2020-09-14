@@ -2,7 +2,9 @@ package swing_package;
 
 import command.Command;
 import command.Commands;
+import command.ErrorCommand;
 import commons.User;
+import program.CommanderClient;
 import program.MainClient;
 
 import javax.swing.*;
@@ -66,7 +68,8 @@ public class LoginWindow {
                 obj.display();
                 frame.dispose();
             } catch (IOException e) {
-                e.printStackTrace();
+                Command com = new ErrorCommand(MainClient.user, "client.error.sendcommand");
+                CommanderClient.switcher(com, MainClient.collection);
                 MainClient.globalKillFlag.set(true);
             }
         });

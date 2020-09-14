@@ -12,6 +12,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -45,10 +46,11 @@ public class MyComponent extends JComponent implements ActionListener {
     }
 
     public static String fmt(double d) {
+        NumberFormat numberFormat = NumberFormat.getInstance(MainClient.stats.getLocale());
         if (d == (long) d)
-            return String.format("%d", (long) d);
+            return numberFormat.format((long) d);
         else
-            return String.format("%s", d);
+            return numberFormat.format( d);
     }
 
     @Override
@@ -282,7 +284,6 @@ public class MyComponent extends JComponent implements ActionListener {
         public void mousePressed(MouseEvent e) {
             oldX = e.getX();
             oldY = e.getY();
-            //WIDTH - 260 + 260 * cool, 30, 60, 60
             if (e.getX() > WIDTH - 260 && e.getY() > 30 && e.getY() < 90 && messageTime <= 0 && messageTime > -3)
                 messageTime = -3;
             if (e.getClickCount() == 2) {

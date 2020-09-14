@@ -2,6 +2,8 @@ package program;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import command.Command;
+import command.ErrorCommand;
 import commons.Collection;
 import commons.Reader;
 import commons.User;
@@ -24,12 +26,12 @@ public class MainClient {
     public static Collection collection;
     public static User user = new User("login", "password");
     public static RoutesTableModel rtm = new RoutesTableModel();
-    public static ImageIcon img = new ImageIcon("client/src/main/resources/icon48.png");
+    public static ImageIcon img = new ImageIcon("/resources/images/icon48.png");
     public static boolean isDark = false;
     public static String port;
     public static String ip;
     public static java.util.Queue<InfoMessage> messages = new ConcurrentLinkedQueue<>();
-    public static int i = 2;
+    public static int currentLocale = 2;
 
     public static Locale[] locales = new Locale[]{
             new Locale("ru", "RU"),
@@ -38,30 +40,24 @@ public class MainClient {
             new Locale("nl", "NL")
     };
 
-    /*public static ResourceBundle[] Labels = new ResourceBundle[]{
-            new Label_ru_RU(),
-            new Label_hu_HU(),
-            new Label_en_IN(),
-            new Label_nl_NL(),
-    };*/
-
     public static ResourceBundle stats;
 
     public static void main(String[] args) {
-        stats = ResourceBundle.getBundle("locales.Label", locales[i]);
+        stats = ResourceBundle.getBundle("locales.Label", locales[currentLocale]);
         try (Reader reader = new Reader("client.txt")) {
             user = User.userFromHashPassword(reader.read(), reader.read());
             ip = reader.read();
             port = reader.read();
             isDark = Boolean.parseBoolean(reader.read());
-            i = Integer.parseInt(reader.read());
-            stats = ResourceBundle.getBundle("locales.Label", locales[i]);
+            currentLocale = Integer.parseInt(reader.read());
+            stats = ResourceBundle.getBundle("locales.Label", locales[currentLocale]);
         } catch (FileNotFoundException | IncorrectFileNameException | NumberFormatException | EndOfFileException ignored) {
         }
         try {
             UIManager.setLookAndFeel(MainClient.isDark ? new FlatDarculaLaf() : new FlatIntelliJLaf());
         } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
+            Command com = new ErrorCommand(MainClient.user, "client.error.lookandfeel");
+            CommanderClient.switcher(com, MainClient.collection);
         }
 
         collection = new Collection(0);

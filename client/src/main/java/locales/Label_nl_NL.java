@@ -58,7 +58,7 @@ public class Label_nl_NL extends ListResourceBundle {
             {"Update object", "Bijwerken"},
             {"Your color is", "Je kleur is"},
             {"Server Response", "Serverrespons"},
-            {"Server Error Response", "Serverfout Antwoord"},
+            {"server Error Response", "Serverfout Antwoord"},
             {"Server Warning Response", "Server Waarschuwing"},
             {"remove object", "Verwijderen"},
             {"login less", "Inloggen moet minder dan 20 tekens zijn"},
@@ -89,7 +89,16 @@ public class Label_nl_NL extends ListResourceBundle {
             {"warning.route", "Fout bij invoeren van elementgegevens"},
             {"server.distances", "De afstanden in oplopende volgorde: {0}"},
             {"server.min", "Het eerste item in uw collectie heeft een ID: {0} en Naam: \"{1}\""},
-            {"server.average", "Gemiddelde afstand van alle elementen: {0}"}
+            {"server.average", "Gemiddelde afstand van alle elementen: {0}"},
+            {"text", "{0}"},
+            {"client.error.answer", "Client fout 8921, verbinding met de server verloren, probeer opnieuw verbinding te maken met de server."},
+            {"client.error.reed", "Client fout 3780, verbinding met de server verloren, probeer opnieuw verbinding te maken met de server."},
+            {"client.error.process", "Client fout 5732, verbinding met de server verloren, probeer opnieuw verbinding te maken met de server."},
+            {"client.error.lookandfeel", "Client fout 2352, de gebruikersinterface was niet geladen."},
+            {"client.error.sendcommand", "Client fout 1863, kon geen bericht naar de server sturen."},
+            {"client.error.lang", "Client fout 3568, kan het programma niet vertalen."},
+            {"client.error.file", "Client fout 9573, kon het bestand niet opslaan."},
+            {"client Error Response", "Foutenrapport van de cliënt"}
     };
 
     @Override

@@ -4,8 +4,10 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import command.Command;
 import command.Commands;
+import command.ErrorCommand;
 import commons.Utils;
 import program.Client;
+import program.CommanderClient;
 import program.MainClient;
 
 import javax.swing.*;
@@ -141,41 +143,45 @@ public class ProgramWindow {
 
         langRus.addActionListener(actionEvent -> {
             try {
-                MainClient.i = 0;
-                MainClient.stats = ResourceBundle.getBundle("locales.Label", MainClient.locales[MainClient.i]);
+                MainClient.currentLocale = 0;
+                MainClient.stats = ResourceBundle.getBundle("locales.Label", MainClient.locales[MainClient.currentLocale]);
                 changeLanguage();
             } catch (Exception e) {
-                e.printStackTrace();
+                Command com = new ErrorCommand(MainClient.user, "client.error.lang");
+                CommanderClient.switcher(com, MainClient.collection);
             }
         });
 
         LangEng.addActionListener(actionEvent -> {
             try {
-                MainClient.i = 2;
-                MainClient.stats = ResourceBundle.getBundle("locales.Label", MainClient.locales[MainClient.i]);
+                MainClient.currentLocale = 2;
+                MainClient.stats = ResourceBundle.getBundle("locales.Label", MainClient.locales[MainClient.currentLocale]);
                 changeLanguage();
             } catch (Exception e) {
-                e.printStackTrace();
+                Command com = new ErrorCommand(MainClient.user, "client.error.lang");
+                CommanderClient.switcher(com, MainClient.collection);
             }
         });
 
         langHun.addActionListener(actionEvent -> {
             try {
-                MainClient.i = 1;
-                MainClient.stats = ResourceBundle.getBundle("locales.Label", MainClient.locales[MainClient.i]);
+                MainClient.currentLocale = 1;
+                MainClient.stats = ResourceBundle.getBundle("locales.Label", MainClient.locales[MainClient.currentLocale]);
                 changeLanguage();
             } catch (Exception e) {
-                e.printStackTrace();
+                Command com = new ErrorCommand(MainClient.user, "client.error.lang");
+                CommanderClient.switcher(com, MainClient.collection);
             }
         });
 
         LangDut.addActionListener(actionEvent -> {
             try {
-                MainClient.i = 3;
-                MainClient.stats = ResourceBundle.getBundle("locales.Label", MainClient.locales[MainClient.i]);
+                MainClient.currentLocale = 3;
+                MainClient.stats = ResourceBundle.getBundle("locales.Label", MainClient.locales[MainClient.currentLocale]);
                 changeLanguage();
             } catch (Exception e) {
-                e.printStackTrace();
+                Command com = new ErrorCommand(MainClient.user, "client.error.lang");
+                CommanderClient.switcher(com, MainClient.collection);
             }
         });
 
@@ -190,7 +196,8 @@ public class ProgramWindow {
                 panelLeft.setBackground(MainClient.isDark ? new Color(60, 63, 65) : new Color(230, 230, 230));
                 SwingUtilities.updateComponentTreeUI(frame);
             } catch (UnsupportedLookAndFeelException e) {
-                e.printStackTrace();
+                Command com = new ErrorCommand(MainClient.user, "client.error.lookandfeel");
+                CommanderClient.switcher(com, MainClient.collection);
             }
         });
 
@@ -295,10 +302,11 @@ public class ProgramWindow {
                     fileWriter.write(MainClient.ip + '\n');
                     fileWriter.write(MainClient.port + '\n');
                     fileWriter.write(String.valueOf(MainClient.isDark) + '\n');
-                    fileWriter.write(String.valueOf(MainClient.i) + '\n');
+                    fileWriter.write(String.valueOf(MainClient.currentLocale) + '\n');
                     fileWriter.close();
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    Command com = new ErrorCommand(MainClient.user, "client.error.file");
+                    CommanderClient.switcher(com, MainClient.collection);
                 }
             }
         });

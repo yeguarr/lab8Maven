@@ -1,12 +1,14 @@
 package program;
 
 import command.Command;
+import command.ErrorCommand;
 import commons.Writer;
 import swing_package.InfoMessage;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -41,8 +43,8 @@ public class Client {
                 Thread.sleep(500);
             }
         } catch (IOException | InterruptedException e) {
-            Writer.writeln("Не удалось отправить все данные.");
-            MainClient.messages.add(InfoMessage.error("Client error in answer", e.getLocalizedMessage()));
+            Command com = new ErrorCommand(MainClient.user, "client.error.answer");
+            CommanderClient.switcher(com, MainClient.collection);
         }
         System.out.println("Закрылся answer");
         MainClient.globalKillFlag.set(true);
@@ -68,17 +70,16 @@ public class Client {
                             process(buf, messages);
                         } catch (IOException | ClassNotFoundException e) {
                             MainClient.globalKillFlag.set(true);
-                            Writer.writeln("При обработке команты произошли ошибки.");
-                            Writer.writeln("Ради безопасности соединение было остановлено.");
-                            MainClient.messages.add(InfoMessage.error("Client error in process", e.getLocalizedMessage()));
+                            Command com = new ErrorCommand(MainClient.user, "client.error.process");
+                            CommanderClient.switcher(com, MainClient.collection);
                         }
                     });
                 }
                 Thread.sleep(500);
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            MainClient.messages.add(InfoMessage.error("Client error in read", e.getLocalizedMessage()));
+            Command com = new ErrorCommand(MainClient.user, "client.error.read");
+            CommanderClient.switcher(com, MainClient.collection);
         }
         Writer.writeln("reader умер");
         MainClient.globalKillFlag.set(true);

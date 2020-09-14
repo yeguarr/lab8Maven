@@ -53,8 +53,11 @@ public class CommanderClient {
                 break;
             }
             case ERROR: {
-                JOptionPane.showMessageDialog(null, MainClient.stats.getString(((ErrorCommand) com).returnObj()), format("Server Error Response"), JOptionPane.ERROR_MESSAGE);
-                MainClient.messages.add(InfoMessage.error(MainClient.stats.getString("Server Error Response"), format(((ErrorCommand) com).returnObj())));
+                String prog = ((ErrorCommand) com).returnObj().split("\\.")[0];
+                if (!prog.equals("client"))
+                    prog = "server";
+                JOptionPane.showMessageDialog(null, format(((ErrorCommand) com).returnObj()), MainClient.stats.getString(prog + " Error Response"), JOptionPane.ERROR_MESSAGE);
+                MainClient.messages.add(InfoMessage.error(MainClient.stats.getString(prog + " Error Response"), format(((ErrorCommand) com).returnObj())));
                 break;
             }
             case WARNING: {
@@ -168,7 +171,6 @@ public class CommanderClient {
         if (list != null) {
             int id = c.getNextId();
             list.add(routeWithId((Route) com.returnObj(), id));
-            Writer.writeln("add");
         }
     }
 

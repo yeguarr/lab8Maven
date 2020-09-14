@@ -199,7 +199,6 @@ public class ObjectWindow {
                 frame.dispose();
             } catch (IOException | NumberFormatException e) {
                 JOptionPane.showMessageDialog(frame, MainClient.stats.getString("Field error"), MainClient.stats.getString("ERROR"), JOptionPane.WARNING_MESSAGE);
-                //new AlarmWindow().display("ERROR", e.getMessage());
             }
         });
         frame.setResizable(false);

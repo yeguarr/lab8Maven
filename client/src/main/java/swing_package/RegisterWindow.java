@@ -2,9 +2,11 @@ package swing_package;
 
 import command.Command;
 import command.Commands;
+import command.ErrorCommand;
 import commons.User;
 import commons.Utils;
 import exceptions.FailedCheckException;
+import program.CommanderClient;
 import program.MainClient;
 
 import javax.swing.*;
@@ -74,7 +76,8 @@ public class RegisterWindow {
                     obj.display();
                     frame.dispose();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Command com = new ErrorCommand(MainClient.user, "client.error.sendcommand");
+                    CommanderClient.switcher(com, MainClient.collection);
                 } catch (FailedCheckException e) {
                     JOptionPane.showMessageDialog(frame, MainClient.stats.getString("login less"), MainClient.stats.getString("ERROR"), JOptionPane.WARNING_MESSAGE);
                 }

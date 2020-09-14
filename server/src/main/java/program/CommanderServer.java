@@ -285,6 +285,7 @@ public class CommanderServer {
             if (route == null) {
                 return new Warning(com.getUser(), "failure");
             }
+            ((Route) com.returnObj()).setCreationDate(route.getCreationDate());
             list.set(list.indexOf(route), (Route) com.returnObj());
             sqlRun.add(com);
             for (int i = 0; i < ServerWithProperThreads.messList.size(); i++) {

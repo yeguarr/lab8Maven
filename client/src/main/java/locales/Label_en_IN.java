@@ -58,7 +58,7 @@ public class Label_en_IN extends ListResourceBundle {
             {"Update object", "Update object"},
             {"Your color is", "Your color is"},
             {"Server Response", "Server Response"},
-            {"Server Error Response", "Server Error Response"},
+            {"server Error Response", "Server Error Response"},
             {"Server Warning Response", "Server Warning Response"},
             {"remove object", "Remove object"},
             {"login less", "Login should be less than 20 characters"},
@@ -89,7 +89,16 @@ public class Label_en_IN extends ListResourceBundle {
             {"warning.route", "Error entering element data"},
             {"server.distances", "The distances in ascending order: {0}"},
             {"server.min", "The first item in your collection has an ID: {0} and Name: \"{1}\""},
-            {"server.average", "Average distance of all elements: {0}"}
+            {"server.average", "Average distance of all elements: {0}"},
+            {"text", "{0}"},
+            {"client.error.answer", "Client error 8921, lost connection to the server, try connecting to the server again."},
+            {"client.error.reed", "Client error 3780, lost connection to the server, try connecting to the server again."},
+            {"client.error.process", "Client error 5732, lost connection to the server, try connecting to the server again."},
+            {"client.error.lookandfeel", "Client error 2352, the user interface was not loaded."},
+            {"client.error.sendcommand", "Client error 1863, failed to send a message to the server."},
+            {"client.error.lang", "Client error 3568, unable to translate the program."},
+            {"client.error.file", "Client error 9573, failed to save the file."},
+            {"client Error Response", "Client error report"}
     };
 
     @Override

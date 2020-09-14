@@ -58,7 +58,7 @@ public class Label_hu_HU extends ListResourceBundle {
             {"Update object", "Frissítése"},
             {"Your color is", "A színe"},
             {"Server Response", "Kiszolgáló Válasza"},
-            {"Server Error Response", "Kiszolgálói Hibaválasz"},
+            {"server Error Response", "Kiszolgálói Hibaválasz"},
             {"Server Warning Response", "Figyelmeztet"},
             {"remove object", "Eltávolítása"},
             {"login less", "A bejelentkezésnek 20 karakternél kisebbnek kell lennie"},
@@ -89,7 +89,16 @@ public class Label_hu_HU extends ListResourceBundle {
             {"warning.route", "Hiba történt az elemadatok beírásakor"},
             {"server.distances", "A távolságok növekvő sorrendben: {0}"},
             {"server.min", "A gyűjtemény első elemének azonosítója van: {0} és Neve: \"{1}\""},
-            {"server.average", "Az összes elem átlagos távolsága: {0}"}
+            {"server.average", "Az összes elem átlagos távolsága: {0}"},
+            {"text", "{0}"},
+            {"client.error.answer", "Ügyfél hiba 8921, elvesztette a kapcsolatot a szerverrel, próbálja meg újra csatlakozni a szerverhez."},
+            {"client.error.reed", "Ügyfél hiba 3780, elvesztette a kapcsolatot a szerverrel, próbálja meg újra csatlakozni a szerverhez."},
+            {"client.error.process", "Ügyfél hiba 5732, elvesztette a kapcsolatot a szerverrel, próbálja meg újra csatlakozni a szerverhez."},
+            {"client.error.lookandfeel", "Ügyfél hiba 2352, a felhasználói felület nem volt betöltve."},
+            {"client.error.sendcommand", "Ügyfél hiba 1863, nem sikerült üzenetet küldeni a kiszolgálónak."},
+            {"client.error.lang", "Ügyfél hiba 3568, nem tudja lefordítani a programot."},
+            {"client.error.file", "Ügyfél hiba 9573, nem sikerült menteni a fájlt."},
+            {"client Error Response", "Ügyfél hibajelentés"}
     };
 
     @Override
