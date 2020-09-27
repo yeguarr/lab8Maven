@@ -318,13 +318,13 @@ public class MyComponent extends JComponent implements ActionListener {
             dY += e.getPreciseWheelRotation() * (e.getY() - dY) / 50;
             scale += -e.getPreciseWheelRotation() * scale / 50;
             if (scale <= 1) { // при увеличении
-                scale = 10;
-                scaleCount *= 10;
+                scale = 2;
+                scaleCount *= 2;
                 dX = e.getX() - oldX * scale / scaleCount * GRID_SIZE;
                 dY = e.getY() - oldY * scale / scaleCount * GRID_SIZE;
-            } else if (scale > 10.0) { // при уменьшении
+            } else if (scale > 2.0) { // при уменьшении
                 scale = 1;
-                scaleCount /= 10;
+                scaleCount /= 2;
                 dX = e.getX() - oldX * scale / scaleCount * GRID_SIZE;
                 dY = e.getY() - oldY * scale / scaleCount * GRID_SIZE;
             }
