@@ -27,7 +27,8 @@ public class RoutesTable {
             else
                 c.setBackground(column % 2 == 1 ? (MainClient.isDark ? new Color(60, 63, 65) : new Color(230, 230, 230)) : (MainClient.isDark ? new Color(69, 73, 74) : Color.WHITE));
             value = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL).withLocale(MainClient.stats.getLocale()).format(ZonedDateTime.parse(value.toString()));
-            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            setValue(value);
+            return c;
         }
     };
     public TableRowSorter<TableModel> sorter;
@@ -36,6 +37,7 @@ public class RoutesTable {
     JScrollPane routesScrollPane = new JScrollPane(routes);
 
     public RoutesTable() {
+        routes.getColumnModel().getColumn(5).setCellRenderer(tableCellRenderer);
         routes.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -47,8 +49,6 @@ public class RoutesTable {
                 return this;
             }
         });
-
-        routes.getColumnModel().getColumn(5).setCellRenderer(tableCellRenderer);
 
         sorter = new TableRowSorter<>(routes.getModel());
         routes.setRowSorter(sorter);

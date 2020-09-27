@@ -281,6 +281,7 @@ public class ProgramWindow {
         JSplitPane jSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, routesTable.panel);
         jSplitPane.setDividerLocation(frame.getHeight() - 250);
         frame.add(jSplitPane);
+        coordinates.requestFocus();
         frame.setMinimumSize(frame.getSize());
 
 

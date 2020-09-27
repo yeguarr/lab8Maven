@@ -280,6 +280,7 @@ public class MyComponent extends JComponent implements ActionListener {
     class MyMouseListener extends MouseAdapter implements MouseWheelListener {
         int oldX = 0;
         int oldY = 0;
+        boolean lock = false;
 
         public void mousePressed(MouseEvent e) {
             oldX = e.getX();
@@ -293,6 +294,7 @@ public class MyComponent extends JComponent implements ActionListener {
                     o.display(vr.route, MainClient.user.login.equals(MainClient.collection.userFromRoute(vr.route).login));
                 }
             }
+            lock = true;
         }
 
         public void mouseDragged(MouseEvent e) {
@@ -304,30 +306,31 @@ public class MyComponent extends JComponent implements ActionListener {
         public void mouseReleased(MouseEvent e) {
             setX = dX;
             setY = dY;
+            lock = false;
             repaint();
         }
 
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
-            dX += e.getPreciseWheelRotation() * (e.getX() - setX) / 50;
-            dY += e.getPreciseWheelRotation() * (e.getY() - setY) / 50;
-            setX = dX;
-            setY = dY;
+            double oldX = (e.getX() - dX) / scale * scaleCount / GRID_SIZE;
+            double oldY = (e.getY() - dY) / scale * scaleCount / GRID_SIZE;
+            dX += e.getPreciseWheelRotation() * (e.getX() - dX) / 50;
+            dY += e.getPreciseWheelRotation() * (e.getY() - dY) / 50;
             scale += -e.getPreciseWheelRotation() * scale / 50;
-            if (scale < 1.0) {
-                dX -= e.getPreciseWheelRotation() * (e.getX() - setX) / 100;
-                dY -= e.getPreciseWheelRotation() * (e.getY() - setY) / 100;
-                setX = dX;
-                setY = dY;
-                scale = 2.0;
-                scaleCount *= 2;
-            } else if (scale > 2.0) {
-                dX -= e.getPreciseWheelRotation() * (e.getX() - setX) / 50;
-                dY -= e.getPreciseWheelRotation() * (e.getY() - setY) / 50;
-                setX = dX;
-                setY = dY;
+            if (scale <= 1) { // при увеличении
+                scale = 10;
+                scaleCount *= 10;
+                dX = e.getX() - oldX * scale / scaleCount * GRID_SIZE;
+                dY = e.getY() - oldY * scale / scaleCount * GRID_SIZE;
+            } else if (scale > 10.0) { // при уменьшении
                 scale = 1;
-                scaleCount /= 2;
+                scaleCount /= 10;
+                dX = e.getX() - oldX * scale / scaleCount * GRID_SIZE;
+                dY = e.getY() - oldY * scale / scaleCount * GRID_SIZE;
+            }
+            if (!lock) {
+                setX = dX;
+                setY = dY;
             }
             repaint();
         }
